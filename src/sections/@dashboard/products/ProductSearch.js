@@ -1,11 +1,11 @@
+
 import { Autocomplete, Card, TextField } from '@mui/material';
 
 const categorys = ['line 1','line 2','line 3','line 4','line 5']
 
-
-export default function ShopFilterSidebar() {
-  return (
-    <Card sx={{ p: 2, display: 'flex'}}>
+export default function ProductSearch() {
+    return (
+        <Card sx={{ p: 2, display: 'flex'}}>
             <Autocomplete
                 multiple
                 id="tags-standard"
@@ -29,5 +29,5 @@ export default function ShopFilterSidebar() {
             sx={{ width: '70%' }}
             />
         </Card>
-  );
-}
+)};
+

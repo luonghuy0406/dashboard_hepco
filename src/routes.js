@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import EditPost from './pages/EditPost';
+import AddNewPost from './pages/AddNewPost';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +24,9 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'news', element: <BlogPage /> },
+        {path:'news/:id',element:<EditPost/>},
+        {path:'news/add',element:<AddNewPost/>},
       ],
     },
     {

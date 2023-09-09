@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 // components
 import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
@@ -21,17 +22,19 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Blog | Minimal UI </title>
+        <title> Dashboard: News and Events | MEKONG MARINE SUPPLY CO., LTD </title>
       </Helmet>
 
-      <Container>
+      <Container maxWidth="xl">
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Blog
+            News and Events
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Post
-          </Button>
+          <Link to="/dashboard/news/add">
+              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+                New Post
+              </Button>
+          </Link>
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">

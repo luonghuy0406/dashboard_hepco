@@ -2,9 +2,9 @@ import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Card } from '@mui/material';
 // components
-import Iconify from '../components/iconify';
+// import Iconify from '../components/iconify';
 // sections
 import {
   AppTasks,
@@ -26,16 +26,61 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Home | MEKONG MARINE SUPPLY CO., LTD </title>
       </Helmet>
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Home
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12}>
+            <Card 
+              sx={{
+                py: 5,
+                px:3,
+                boxShadow: 0
+              }}
+            >
+              <Typography variant="h4">Banner</Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card 
+              sx={{
+                py: 5,
+                px:3,
+                boxShadow: 0
+              }}
+            >
+              <Typography variant="h4">About us</Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card 
+              sx={{
+                py: 5,
+                px:3,
+                boxShadow: 0
+              }}
+            >
+              <Typography variant="h4">Company infomations</Typography>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card 
+              sx={{
+                py: 5,
+                px:3,
+                boxShadow: 0
+              }}
+            >
+              <Typography variant="h4">Partner</Typography>
+            </Card>
+          </Grid>
+          
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
           </Grid>
 
@@ -211,7 +256,7 @@ export default function DashboardAppPage() {
                 { id: '5', label: 'Sprint Showcase' },
               ]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </>
