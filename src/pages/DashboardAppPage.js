@@ -29,7 +29,7 @@ export default function DashboardAppPage() {
         <title> Home | MEKONG MARINE SUPPLY CO., LTD </title>
       </Helmet>
 
-      <Container maxWidth="xl">
+      <Container >
         <Typography variant="h4" sx={{ mb: 5 }}>
           Home
         </Typography>

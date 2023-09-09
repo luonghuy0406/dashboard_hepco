@@ -25,7 +25,7 @@ export default function BlogPage() {
         <title> Dashboard: News and Events | MEKONG MARINE SUPPLY CO., LTD </title>
       </Helmet>
 
-      <Container maxWidth="xl">
+      <Container >
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             News and Events

@@ -17,10 +17,12 @@ import {
   CardContent,
   TextField,
   Button,
-  Divider
+  Divider,
+  Grid
 } from '@mui/material';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { fDate } from '../../../utils/formatTime';
 import EditorComponent from './EditorComponent';
 
 export default function ProductsTable(props){
@@ -41,15 +43,17 @@ export default function ProductsTable(props){
                 <TableCell>
                   <></>
                 </TableCell>
-                <TableCell component="th" scope="row">Product name</TableCell>
-                <TableCell>Product image</TableCell>
+                <TableCell>Product name</TableCell>
+                <TableCell>Product line</TableCell>
+                <TableCell>Product cover</TableCell>
                 <TableCell>Product description</TableCell>
+                <TableCell>Product specification</TableCell>
                 <TableCell>Created At</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((row) => (
-                <Row key={row.name} row={row} />
+                <Row key={row.id} row={row} />
               ))}
             </TableBody>
           </Table>
@@ -97,49 +101,76 @@ function Row(props) {
             {open ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          <Box sx={{ display: 'flex' }}>
-            <CardMedia
-              component="img"
-              sx={{ width: 100 }}
-              image={row.images.main}
-              alt={row.name}
-            />
-            <CardContent sx={{ flex: '1 0 auto' }}>
-              <Typography component="div" variant="label">
-                {row.name}
-              </Typography>
-            </CardContent>
-          </Box>
+        <TableCell >
+          {row.name}
+        </TableCell>
+        <TableCell >
+          {row.product_line}
         </TableCell>
         <TableCell>
-          image
+          <CardMedia
+              component="img"
+              sx={{ width: 200 }}
+              image={row.cover}
+              alt={row.name}
+            />
         </TableCell>
         <TableCell>
           {row.description}
         </TableCell>
         <TableCell>
-          {row.createdAt}
+          {row.specification}
+        </TableCell>
+        <TableCell>
+          {fDate(row.createdAt)}
         </TableCell>
       </TableRow>
       <TableRow style={{ borderLeft: (open ? "2px solid #6366f1" : "unset") }}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 3}}>
-              <Typography variant="h6" gutterBottom component="div">
-                Basic details
-              </Typography>
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 2},
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField id="outlined-basic" label="Product Name" variant="outlined" defaultValue={row.name}/>
-                <EditorComponent/>
-              </Box>
+              <Grid container>
+                <Grid item xs={3}>
+                  <Typography variant="h6" gutterBottom component="div">
+                    Edit product
+                  </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                  <Box
+                    component="form"
+                    sx={{
+                      '& > :not(style)': { m: 2},
+                    }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <h3>Product name</h3>
+                    <TextField defaultValue={row.name} variant="standard"  fullWidth/>
+                    <h3>Product cover</h3>
+                    <Stack  mb={5} sx={{alignItems:"center"}}>
+                        <Box
+                            sx={{
+
+                                width: '100%',
+                                maxWidth:"300px",
+                                height:'300px',
+                                backgroundImage: `url(${row.cover})`,
+                                backgroundSize: 'cover',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center'
+                            }}
+                        />
+                    </Stack>
+                    <h3>Product description</h3>
+            
+                    <EditorComponent/>
+                    <h3>Product specification</h3>
+            
+                    <EditorComponent/>
+            
+                  </Box>
+                </Grid>
+              </Grid>
               <Divider/>
               <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">

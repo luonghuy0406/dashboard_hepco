@@ -56,21 +56,12 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
-  const latestPostLarge = index === 0;
-  const latestPost = index === 1 || index === 2;
-
-  const POST_INFO = [
-    { number: comment, icon: 'eva:message-circle-fill' },
-    { number: view, icon: 'eva:eye-fill' },
-    { number: share, icon: 'eva:share-fill' },
-  ];
-
+  const { id, cover, title, createdAt, content } = post;
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{borderRadius:'0px', boxShadow:'unset'}}>
       <Link
-        to={"/dashboard/news/id1"}
+        to={`/dashboard/news/${id}`}
       >
         <Box position='relative'>
             <Box
@@ -81,7 +72,7 @@ export default function BlogPostCard({ post, index }) {
                         md: '300px',
                         lg: '250px'
                     },
-                    backgroundImage: 'linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 100%), url(https://newtecons.vn/wp-content/uploads/2023/08/MNP_0905-scaled.jpg)',
+                    backgroundImage: `linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 100%), url(${cover})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
@@ -106,7 +97,8 @@ export default function BlogPostCard({ post, index }) {
                             textDecoration:'none !important'
                         }}
                     >
-                        06 Tháng 08, 2023
+                        {fDate(createdAt)}
+
                     </Typography>
                     <Typography 
                         variant="h6"
@@ -116,9 +108,10 @@ export default function BlogPostCard({ post, index }) {
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis', 
+                            textTransform: 'uppercase'
                         }}
                     >
-                        NEWTECONS TỔ CHỨC CHUỖI HOẠT ĐỘNG CHÀO MỪNG NGÀY TRUYỀN THỐNG 2023
+                        {title}
                     </Typography>
             </Box>
         </Box>

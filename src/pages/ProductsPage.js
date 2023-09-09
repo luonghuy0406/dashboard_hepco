@@ -7,51 +7,14 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/materia
 import Iconify from '../components/iconify';
 import { ProductSort, ProductsTable, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 
-const now = new Date();
+import PRODUCTS from '../_mock/products';
 
-const data = [
-  {
-    id: '5e887ac47eed253091be10cb',
-    name: 'product1',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen boo',
-    images:{
-        main: 'https://placehold.co/600x400',
-        items: ['https://placehold.co/600x400','https://placehold.co/600x400']
-    },
-    createdAt: subDays(subHours(now, 1), 9).getTime(),
-    updatedAt: null,
-    category: 'line1'
-  },
-  {
-    id: '5e887ac47eed253091be10cc',
-    name: 'product2',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen boo',
-    images:{
-        main: 'https://placehold.co/600x400',
-        items: ['https://placehold.co/600x400','https://placehold.co/600x400']
-    },
-    createdAt: subDays(subHours(now, 1), 9).getTime(),
-    updatedAt: null,
-    category: 'line1'
-  },
-  {
-    id: '5e887ac47eed253091be10cd',
-    name: 'product3',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen boo',
-    images:{
-        main: 'https://placehold.co/600x400',
-        items: ['https://placehold.co/600x400','https://placehold.co/600x400']
-    },
-    createdAt: subDays(subHours(now, 1), 9).getTime(),
-    updatedAt: null,
-    category: 'line2'
-  }  
-];
+const now = new Date();
 
 const useProducts = (page, rowsPerPage) => {
   return useMemo(
     () => {
-      return applyPagination(data, page, rowsPerPage);
+      return applyPagination(PRODUCTS, page, rowsPerPage);
     },
     [page, rowsPerPage]
   );
@@ -92,7 +55,7 @@ export default function ProductsPage() {
         <title> Dashboard: Products | MEKONG MARINE SUPPLY CO., LTD </title>
       </Helmet>
 
-      <Container maxWidth="xl">
+      <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
               Products
@@ -102,10 +65,10 @@ export default function ProductsPage() {
           </Button>
         </Stack>
         <Stack spacing={3} mb={5}>
-          <ProductFilterSidebar />
+          <ProductFilterSidebar products={PRODUCTS}/>
         </Stack>
         <ProductsTable
-            count={data.length}
+            count={PRODUCTS.length}
             items={products}
             onDeselectAll={productsSelection.handleDeselectAll}
             onDeselectOne={productsSelection.handleDeselectOne}

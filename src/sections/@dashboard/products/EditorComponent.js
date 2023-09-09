@@ -6,7 +6,6 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 export default function EditorComponent() {
     return (
         <div>
-            <h3>Product description</h3>
             
             <CKEditor
                 editor={ Editor }
