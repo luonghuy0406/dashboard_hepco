@@ -111,7 +111,20 @@ class Editor extends ClassicEditor {
 				'tableRow',
 				'mergeTableCells'
 			]
-		}
+		},
+		simpleUpload: {
+            // The URL that the images are uploaded to.
+            uploadUrl: 'http://localhost:3001/upload/post',
+
+            // Enable the XMLHttpRequest.withCredentials property.
+            withCredentials: true,
+
+            // Headers sent along with the XMLHttpRequest to the upload server.
+            headers: {
+                'X-CSRF-TOKEN': 'CSRF-Token',
+                // Authorization: 'Bearer <JSON Web Token>'
+            }
+        }
 	};
 }
 

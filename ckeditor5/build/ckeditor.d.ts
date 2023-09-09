@@ -34,6 +34,13 @@ declare class Editor extends ClassicEditor {
         table: {
             contentToolbar: string[];
         };
+        simpleUpload: {
+            uploadUrl: string;
+            withCredentials: boolean;
+            headers: {
+                'X-CSRF-TOKEN': string;
+            };
+        };
     };
 }
 export default Editor;
