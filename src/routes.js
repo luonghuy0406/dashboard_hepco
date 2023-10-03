@@ -1,4 +1,5 @@
-import { Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -11,22 +12,40 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import EditPost from './pages/EditPost';
 import AddNewPost from './pages/AddNewPost';
+import setAuthToken from './setAuthToken';
 
-// ----------------------------------------------------------------------
+// Protected route component that redirects to login if not authenticated
+const ProtectedRoute = ({ element, ...rest }) => {
+  const token = localStorage.getItem('token');
+  let isAuthenticated = false
+  if (token) {
+    setAuthToken(token);
+    isAuthenticated = true;
+  } else {
+    isAuthenticated = false;
+  }
+  if (isAuthenticated) {
+    return element;
+  } else {
+    return <Navigate to="/login" replace />;
+  }
+};
 
 export default function Router() {
+  
+
   const routes = useRoutes([
     {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'news', element: <BlogPage /> },
-        {path:'news/:id',element:<EditPost/>},
-        {path:'news/add',element:<AddNewPost/>},
+        { path: 'app', element: <ProtectedRoute element={<DashboardAppPage />} /> },
+        { path: 'user', element: <ProtectedRoute element={<UserPage />} /> },
+        { path: 'products', element: <ProtectedRoute element={<ProductsPage />} /> },
+        { path: 'news', element: <ProtectedRoute element={<BlogPage />} /> },
+        { path: 'news/:id', element: <ProtectedRoute element={<EditPost />} /> },
+        { path: 'news/add', element: <ProtectedRoute element={<AddNewPost />} /> },
       ],
     },
     {
