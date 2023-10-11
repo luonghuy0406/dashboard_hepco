@@ -1,5 +1,6 @@
-import { Navigate, useRoutes, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Navigate, useRoutes, useLocation, Route,  } from 'react-router-dom'; 
+import React, { useEffect, useState } from 'react';
+import jwt_decode from 'jwt-decode';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -13,39 +14,32 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import EditPost from './pages/EditPost';
 import AddNewPost from './pages/AddNewPost';
 import setAuthToken from './setAuthToken';
+import axios from 'axios';
+import { checkTokenExpiration } from './api';
 
 // Protected route component that redirects to login if not authenticated
-const ProtectedRoute = ({ element, ...rest }) => {
-  const token = localStorage.getItem('token');
-  let isAuthenticated = false
-  if (token) {
-    setAuthToken(token);
-    isAuthenticated = true;
-  } else {
-    isAuthenticated = false;
-  }
-  if (isAuthenticated) {
-    return element;
-  } else {
+const PrivateRoute = ({ element, ...rest }) => {
+  const token = sessionStorage.getItem('token');
+  if(!token || checkTokenExpiration(token)){
     return <Navigate to="/login" replace />;
   }
+  return element;
+  
 };
 
 export default function Router() {
-  
-
   const routes = useRoutes([
     {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <ProtectedRoute element={<DashboardAppPage />} /> },
-        { path: 'user', element: <ProtectedRoute element={<UserPage />} /> },
-        { path: 'products', element: <ProtectedRoute element={<ProductsPage />} /> },
-        { path: 'news', element: <ProtectedRoute element={<BlogPage />} /> },
-        { path: 'news/:id', element: <ProtectedRoute element={<EditPost />} /> },
-        { path: 'news/add', element: <ProtectedRoute element={<AddNewPost />} /> },
+        { path: 'app', element: <PrivateRoute element={<DashboardAppPage />} /> },
+        { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
+        { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
+        { path: 'news', element: <PrivateRoute element={<BlogPage />} /> },
+        { path: 'news/:id', element: <PrivateRoute element={<EditPost />} /> },
+        { path: 'news/add', element: <PrivateRoute element={<AddNewPost />} /> },
       ],
     },
     {

@@ -7,26 +7,8 @@ import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
 import setAuthToken from 'src/setAuthToken';
+import { login } from 'src/api';
 
-// ----------------------------------------------------------------------
-const login = (id_user, pw) => {
-  var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
-
-var raw = JSON.stringify({ id_user, pw });
-
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
-
-return fetch("http://localhost:3001/account/login", requestOptions)
-  .then(response => response.text())
-  .then(result => result)
-  .catch(error => console.log('error', error));
-};
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -38,22 +20,13 @@ export default function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await login(userid, pw);
-      const result = JSON.parse(data)
-      if(result.status){
-        const token = JSON.parse(data).token
-        if(token){
-          localStorage.setItem('token', token);
-          // Set the token in axios headers
-          setAuthToken(token);
-          // Redirect to the dashboard page
-          navigate('/', { replace: true });
-        }
-        setError('')
-      }else{
+      const result = await login(userid,pw)
+      if(result.results){
         setError(result.results)
+      }else{
+        navigate('/', { replace: true });
+        setError('')
       }
-      
     } catch (error) {
       console.log(error);
       // Handle login error
