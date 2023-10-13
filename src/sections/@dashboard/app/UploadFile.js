@@ -1,4 +1,4 @@
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { replaceBanner } from 'src/api';
@@ -9,11 +9,17 @@ const UploadFile = (props) => {
     if(data.results){
       props.setUpdate(!props.update)
     }
-
   };
-
+  
   return (
     <div>
+      {/* <Snackbar
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+      >
+        <Alert severity={status}>This is a {status} alert — check it out!</Alert>
+      </Snackbar> */}
       <input
         accept="image/*"
         id={"file-upload-"+props.id}
@@ -23,7 +29,7 @@ const UploadFile = (props) => {
       />
 
       <label htmlFor={"file-upload-"+props.id}>
-        <Button variant="contained" color="primary" component="span">
+        <Button variant="text" color="primary" component="span">
           Replace image
         </Button>
       </label>

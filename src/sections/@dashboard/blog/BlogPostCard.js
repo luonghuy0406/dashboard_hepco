@@ -56,12 +56,12 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { id, cover, title, createdAt, content } = post;
+  const { id_post, image, name, cre_date } = post;
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{borderRadius:'0px', boxShadow:'unset'}}>
       <Link
-        to={`/dashboard/news/${id}`}
+        to={`/dashboard/news/${id_post}`}
       >
         <Box position='relative'>
             <Box
@@ -72,7 +72,7 @@ export default function BlogPostCard({ post, index }) {
                         md: '300px',
                         lg: '250px'
                     },
-                    backgroundImage: `linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 100%), url(${cover})`,
+                    backgroundImage: `linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 100%), url("${process.env.REACT_APP_API_HOST}/read_image/${image}")`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
@@ -97,7 +97,7 @@ export default function BlogPostCard({ post, index }) {
                             textDecoration:'none !important'
                         }}
                     >
-                        {fDate(createdAt)}
+                        {fDate(cre_date)}
 
                     </Typography>
                     <Typography 
@@ -111,7 +111,7 @@ export default function BlogPostCard({ post, index }) {
                             textTransform: 'uppercase'
                         }}
                     >
-                        {title}
+                        {name}
                     </Typography>
             </Box>
         </Box>

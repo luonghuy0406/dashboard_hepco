@@ -5,6 +5,8 @@ import { Grid, Container, Typography, Card, Box, Table, TableHead, TableRow, Tab
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Banner from 'src/sections/@dashboard/app/Banner';
+import AboutUs from 'src/sections/@dashboard/app/AboutUs';
+import CompanyInfo from 'src/sections/@dashboard/app/CompanyInfo';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +43,7 @@ export default function DashboardAppPage() {
                 boxShadow: 0
               }}
             >
-              <Typography variant="h4">About us</Typography>
+              <AboutUs/>
             </Card>
           </Grid>
           <Grid item xs={12}>
@@ -52,7 +54,7 @@ export default function DashboardAppPage() {
                 boxShadow: 0
               }}
             >
-              <Typography variant="h4">Company infomations</Typography>
+              <CompanyInfo/>
             </Card>
           </Grid>
           <Grid item xs={12}>

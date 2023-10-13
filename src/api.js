@@ -37,11 +37,14 @@ export const refreshToken = async (refreshToken) => {
 export const login = async (id_user, pw) => {
   try {
     const response = await api.post('/account/login', { id_user, pw });
-    const { token, refreshToken } = {token: response.data.token, refreshToken: response.data.refresh_token};
-    setAuthToken(token);
-    sessionStorage.setItem('token', token);
-    sessionStorage.setItem('refreshToken', refreshToken);
-    return { token, refreshToken };
+    if(response.data.token){
+      const { token, refreshToken } = {token: response.data.token, refreshToken: response.data.refresh_token};
+      setAuthToken(token);
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('refreshToken', refreshToken);
+      return { token, refreshToken };
+    }
+    return response.data
   } catch (error) {
     return error;
   }
@@ -82,4 +85,67 @@ export const replaceBanner = async (id, file) => {
     throw error;
   }
 }
-//-----------
+//-----------about us-----
+export const getAboutUs = async () => {
+  try {
+    const response = await api.get(`/about-us`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+//------company info-----
+export const getCompanyInfo = async () => {
+  try {
+    const response = await api.get(`/webinf/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+//Product--------------
+export const getListProducts = async () => {
+  try {
+    const response = await api.get(`/product/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteProduct = async (id) => {
+  try {
+    const response = await api.delete(`/product/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//-----post--------
+export const getPosts = async () => {
+  try {
+    const response = await api.get(`/post/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addNewPost = async (name,name_en, content, content_en, image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('name', name);
+    data.append('name_en', name_en);
+    data.append('content', content);
+    data.append('content_en', content_en);
+    data.append('image', image);
+    data.append('author', '');
+    data.append('id_user', '');
+
+    const response = await api.post('/post/add',data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

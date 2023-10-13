@@ -16,6 +16,7 @@ import AddNewPost from './pages/AddNewPost';
 import setAuthToken from './setAuthToken';
 import axios from 'axios';
 import { checkTokenExpiration } from './api';
+import AddNewProduct from './pages/AddNewProduct';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -37,6 +38,7 @@ export default function Router() {
         { path: 'app', element: <PrivateRoute element={<DashboardAppPage />} /> },
         { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
         { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
+        { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },
         { path: 'news', element: <PrivateRoute element={<BlogPage />} /> },
         { path: 'news/:id', element: <PrivateRoute element={<EditPost />} /> },
         { path: 'news/add', element: <PrivateRoute element={<AddNewPost />} /> },

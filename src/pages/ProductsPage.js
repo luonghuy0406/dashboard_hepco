@@ -1,53 +1,37 @@
 import { Helmet } from 'react-helmet-async';
-import { useCallback, useMemo, useState, useEffect } from 'react';
-import { subDays, subHours } from 'date-fns';
+import { useState, useEffect } from 'react';
 // import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
-import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
+import {  Button, Container, Stack, Typography } from '@mui/material';
 
 import Iconify from '../components/iconify';
-import { ProductSort, ProductsTable, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import {  ProductsTable, ProductFilterSidebar } from '../sections/@dashboard/products';
 
-import PRODUCTS from '../_mock/products';
+import { getListProducts } from 'src/api';
+import { Link } from 'react-router-dom';
 
-const now = new Date();
+const productGroup = {
+  '1': 'Chocking Compound',
+  '2': 'Auxiliary Machinery',
+  '3': 'Viega Pipe & Fittings',
+  '4': 'Viton/FKM rubber packing sheet'
+}
 
-const useProducts = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(PRODUCTS, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
 
-const useProductIds = (products) => {
-  return useMemo(
-    () => {
-      return products.map((product) => product.id);
-    },
-    [products]
-  );
-};
 export default function ProductsPage() {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const products = useProducts(page, rowsPerPage);
-  const productsIds = useProductIds(products);
-  const productsSelection = useSelection(productsIds);
-
-  const handlePageChange = useCallback(
-    (event, value) => {
-      setPage(value);
-    },
-    []
-  );
-
-  const handleRowsPerPageChange = useCallback(
-    (event) => {
-      setRowsPerPage(event.target.value);
-    },
-    []
-  );
+  const [productList, setProductList] = useState([])
+  const [productListTemp, setProductListTemp] = useState([])
+  const [update,setUpdate] = useState(false)
+  useEffect(()=>{
+    async function fetchData() {
+        const productLists = await getListProducts()
+        if(productLists.results){
+          setProductList(productLists.results)
+          setProductListTemp(productLists.results)
+        }
+    }
+    fetchData();
+    
+},[update])
 
   return (
     <>
@@ -60,65 +44,23 @@ export default function ProductsPage() {
           <Typography variant="h4" gutterBottom>
               Products
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New product
-          </Button>
+          <Link to="/dashboard/products/add">
+              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+                New product
+              </Button>
+          </Link>
         </Stack>
         <Stack spacing={3} mb={5}>
-          <ProductFilterSidebar products={PRODUCTS}/>
+          <ProductFilterSidebar products={productList} setProductListTemp={setProductListTemp}/>
         </Stack>
         <ProductsTable
-            count={PRODUCTS.length}
-            items={products}
-            onDeselectAll={productsSelection.handleDeselectAll}
-            onDeselectOne={productsSelection.handleDeselectOne}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            onSelectAll={productsSelection.handleSelectAll}
-            onSelectOne={productsSelection.handleSelectOne}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            selected={productsSelection.selected}
+            items={productListTemp}
+            productGroup={productGroup}
+            setUpdate={setUpdate}
+            update={update}
           />
       </Container>
     </>
   );
 }
 
-
-function applyPagination(documents, page, rowsPerPage) {
-  return documents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-}
-const useSelection = (items = []) => {
-  const [selected, setSelected] = useState([]);
-
-  useEffect(() => {
-    setSelected([]);
-  }, [items]);
-
-  const handleSelectAll = useCallback(() => {
-    setSelected([...items]);
-  }, [items]);
-
-  const handleSelectOne = useCallback((item) => {
-    setSelected((prevState) => [...prevState, item]);
-  }, []);
-
-  const handleDeselectAll = useCallback(() => {
-    setSelected([]);
-  }, []);
-
-  const handleDeselectOne = useCallback((item) => {
-    setSelected((prevState) => {
-      return prevState.filter((_item) => _item !== item);
-    });
-  }, []);
-
-  return {
-    handleDeselectAll,
-    handleDeselectOne,
-    handleSelectAll,
-    handleSelectOne,
-    selected
-  };
-};

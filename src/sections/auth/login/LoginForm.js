@@ -36,10 +36,10 @@ export default function LoginForm() {
   return (
     <>
       <Stack spacing={3} sx={{ my: 2 }}>
-        <Typography>{error}</Typography>
-        <TextField name="email" label="Email address" onChange={(e)=>{setUserId(e.target.value)}}/>
+        <TextField error={error.length > 0} helperText={error} name="email" label="Email address" onChange={(e)=>{setUserId(e.target.value)}}/>
 
         <TextField
+          error={error.length > 0} helperText={error}
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}

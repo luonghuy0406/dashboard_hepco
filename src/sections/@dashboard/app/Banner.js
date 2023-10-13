@@ -1,24 +1,18 @@
 import React from 'react'
-
-import { Grid, Container, Typography, Card, Box, Table, TableHead, TableRow, TableCell, CardMedia, TableBody, Button, Collapse, Stack } from '@mui/material';
+import {  Typography, Box, Table, TableHead, TableRow, TableCell, CardMedia, TableBody, Button, Collapse, Stack, Paper, styled } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import UploadFile from './UploadFile';
-import axios from 'axios';
 import { getBanner } from 'src/api';
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    flexGrow: 1,
+  }));
 export default function Banner() {
     const [banners,setBanners] = useState([])
     const [update,setUpdate] = useState(false)
@@ -38,43 +32,55 @@ export default function Banner() {
         <Stack direction="row" spacing={2} mb={3}>
             
             <Typography variant="h4">Banner</Typography>
-            <Button variant="text" onClick={()=>{setOpen(!open)}}>{open ? 'Show':'Hide'}</Button>
+            <Button variant="text" onClick={()=>{setOpen(!open)}}>{open ? 'Hide':'Show'}</Button>
         </Stack>
         <Box sx={{ minWidth: 800 }}>
             
             <Collapse in={open}>
             
-                <Table>
-                    <TableHead>
-                    <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                        <TableCell align="center">Id</TableCell>
-                        <TableCell  align="center">Banner</TableCell>
-                        <TableCell align="center">Action</TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {banners.map((banner) => (
-                        <TableRow key={banner.id_bn} sx={{ '& > *': { borderBottom: 'unset' } }}>
-                        <TableCell align="center">
-                            {banner.id_bn}
-                        </TableCell>
-                        <TableCell align="center">
-                            <CardMedia
-                                component="img"
-                                sx={{ width: 300,textAlign: "center" }}
-                                image={`${process.env.REACT_APP_API_HOST}/read_image/${banner.link}`}
-                                alt={banner.id_bn}
-                            />
-                        </TableCell>
-                        <TableCell align="center">
-                        <Button id={banner.id_bn} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                            <UploadFile id={banner.id_bn} update={update} setUpdate={setUpdate}/>
-                        </Button>
-                        </TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
+            <Box sx={{ width: '100%' }}>
+                <Stack 
+                    direction="row" 
+                    useFlexGap 
+                    flexWrap="wrap" 
+                >
+                    {
+                        banners.map((banner)=>{
+                            return (
+                                <Item 
+                                    sx={{ 
+                                        border: '1px dashed',
+                                        padding: '15px',
+                                        m:(theme)=>theme.spacing(1) 
+                                    }} 
+                                    key={banner.id_bn}
+                                >
+                                    <Box
+                                        sx={{display: 'flex', alignItems:'center', flexDirection:'column'}}
+                                    >
+                                        <Stack
+                                            direction="row"
+                                            justifyContent="space-between"
+                                            alignItems="baseline"
+                                            spacing={2}
+                                            sx={{width:'100%'}}
+                                        >
+                                            <Typography fontWeight={'bold'} pb={1}>{`Image ${banner.id_bn}`}</Typography>
+                                            <UploadFile id={banner.id_bn} update={update} setUpdate={setUpdate}/>
+                                        </Stack>
+                                        <CardMedia
+                                            component="img"
+                                            sx={{ width: 350,textAlign: "center" }}
+                                            image={`${process.env.REACT_APP_API_HOST}/read_image/${banner.link}`}
+                                            alt={banner.id_bn}
+                                        />
+                                    </Box>
+                                </Item>
+                            )
+                        })
+                    }
+                </Stack>
+            </Box>
             </Collapse>
         </Box>
     </>
