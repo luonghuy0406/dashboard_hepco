@@ -120,7 +120,14 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
-
+export const getSubProducts = async () => {
+  try {
+    const response = await api.get(`/sub/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 //-----post--------
 export const getPosts = async () => {
   try {
@@ -149,3 +156,39 @@ export const addNewPost = async (name,name_en, content, content_en, image) => {
     throw error;
   }
 };
+
+export const getPostById = async (id) => {
+  try {
+    const response = await api.get(`post/detail/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updatePost =  async (id,name,name_en,content,content_en, image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_post', id);
+    data.append('image', image);
+    data.append('name', name);
+    data.append('name_en', name_en);
+    data.append('content', content);
+    data.append('content_en', content_en);
+    data.append('author', '');
+    data.append('id_user', '');
+    const response = await api.put('/post/update',data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+} 
+export const deletePost = async (id)=>{
+  try {
+    const response = await api.delete(`/post/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

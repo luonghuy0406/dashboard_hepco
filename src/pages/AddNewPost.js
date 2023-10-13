@@ -33,7 +33,7 @@ export default function AddNewPost() {
       </Helmet>
 
       
-      <Container>
+      <Container maxWidth={'xl'}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" gutterBottom>
                 Add new post
@@ -121,7 +121,7 @@ export default function AddNewPost() {
                     <Button variant="text" style={{color:"gray"}}>Cancel</Button>
                 </Stack>
             </Stack>
-        </Container>
+    </Container>
     </>
   );
 }

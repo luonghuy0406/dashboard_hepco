@@ -1,10 +1,13 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
 export default function EditorComponent({des,setDes}) {
     const [value, setValue] = useState(des)
+    useEffect(()=>{
+        setValue(des)
+    },[des])
     return (
         <div>
             
