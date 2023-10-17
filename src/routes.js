@@ -13,22 +13,38 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import EditPost from './pages/EditPost';
 import AddNewPost from './pages/AddNewPost';
-import setAuthToken from './setAuthToken';
-import axios from 'axios';
-import { checkTokenExpiration } from './api';
+import { checkTokenExpiration, refreshToken } from './api';
 import AddNewProduct from './pages/AddNewProduct';
+import { setAuthToken } from './api';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
-  const token = sessionStorage.getItem('token');
-  if(!token || checkTokenExpiration(token)){
+  const token = localStorage.getItem('token');
+
+  if (token && checkTokenExpiration(token)) {
+    // If expired, refresh the access token
+    const refresh_token = localStorage.getItem('refresh_token');
+    refreshToken(refresh_token)
+    .then((newAccessToken) => {
+      if (!newAccessToken) {
+        // Redirect to login if refresh fails
+        return <Navigate to="/login" replace />;
+      }
+    })
+    .catch(() => {
+      // Redirect to login if refresh throws an error
+      return <Navigate to="/login" replace />;
+    });
+  }else if(!token){
     return <Navigate to="/login" replace />;
   }
+  setAuthToken(token) 
   return element;
   
 };
 
 export default function Router() {
+
   const routes = useRoutes([
     {
       path: '/dashboard',

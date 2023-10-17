@@ -86,9 +86,9 @@ export default function RowSubProduct({row,setUpdate,update}){
               style={{
                 'overflow': 'hidden',
                 'display': '-webkit-box',
-                '-webkit-line-clamp': '6', /* number of lines to show */
-                'line-clamp': '6', 
-                '-webkit-box-orient': 'vertical'
+                'WebkitLineClamp': '6', /* number of lines to show */
+                'lineClamp': '6', 
+                'WebkitBoxOrient': 'vertical'
             }}
               className='ck-content'
               dangerouslySetInnerHTML={{__html:row.content}}
@@ -100,9 +100,9 @@ export default function RowSubProduct({row,setUpdate,update}){
               style={{
                 'overflow': 'hidden',
                 'display': '-webkit-box',
-                '-webkit-line-clamp': '6', /* number of lines to show */
-                'line-clamp': '6', 
-                '-webkit-box-orient': 'vertical'
+                'WebkitLineClamp': '6', /* number of lines to show */
+                'lineClamp': '6', 
+                'WebkitBoxOrient': 'vertical'
             }}
               dangerouslySetInnerHTML={{__html:row.content_en}}
             />

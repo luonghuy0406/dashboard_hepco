@@ -6,7 +6,6 @@ import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, Typograph
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
-import setAuthToken from 'src/setAuthToken';
 import { login } from 'src/api';
 
 

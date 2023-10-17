@@ -13,14 +13,14 @@ export const setAuthToken = (token) => {
   }
 };
 
-export const refreshToken = async (refreshToken) => {
+export const refreshToken = async (refresh_token) => {
   try {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
         url: `${process.env.REACT_APP_API_HOST}/refresh`,
         headers: { 
-          'Authorization': refreshToken
+          'Authorization': refresh_token
         }
     };
       
@@ -39,10 +39,10 @@ export const login = async (id_user, pw) => {
     const response = await api.post('/account/login', { id_user, pw });
     if(response.data.token){
       localStorage.setItem("user",id_user)
-      const { token, refreshToken } = {token: response.data.token, refreshToken: response.data.refresh_token};
+      const { token, refresh_token } = {token: response.data.token, refresh_token: response.data.refresh_token};
       setAuthToken(token);
-      sessionStorage.setItem('token', token);
-      sessionStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('token', token);
+      localStorage.setItem('refresh_token', refresh_token);
       return { token, refreshToken };
     }
     return response.data

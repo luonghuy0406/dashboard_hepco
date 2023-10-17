@@ -98,9 +98,9 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
               style={{
                 'overflow': 'hidden',
                 'display': '-webkit-box',
-                '-webkit-line-clamp': '6', /* number of lines to show */
-                'line-clamp': '6', 
-                '-webkit-box-orient': 'vertical'
+                'WebkitLineClamp': '6', /* number of lines to show */
+                'lineClamp': '6', 
+                'WebkitBoxOrient': 'vertical'
             }}
               className='ck-content'
               dangerouslySetInnerHTML={{__html:row.des}}
@@ -112,9 +112,9 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
               style={{
                 'overflow': 'hidden',
                 'display': '-webkit-box',
-                '-webkit-line-clamp': '6', /* number of lines to show */
-                'line-clamp': '6', 
-                '-webkit-box-orient': 'vertical'
+                'WebkitLineClamp': '6', /* number of lines to show */
+                'lineClamp': '6', 
+                'WebkitBoxOrient': 'vertical'
             }}
               dangerouslySetInnerHTML={{__html:row.des_en}}
             />

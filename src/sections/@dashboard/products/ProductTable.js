@@ -38,7 +38,7 @@ export default function ProductsTable(props){
             <TableBody>
               {items.map((row) => {
                 return (
-                  <ProductRowTable key={row.id} row={row} group={productGroup[row.id_group]} setUpdate={setUpdate} update={update}/>
+                  <ProductRowTable key={"table"+row.id_product} row={row} group={productGroup[row.id_group]} setUpdate={setUpdate} update={update}/>
                 )}
               )}
             </TableBody>

@@ -20,8 +20,9 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("refreshToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
     // Redirect to the dashboard page
     navigate('/', { replace: true });
   };
