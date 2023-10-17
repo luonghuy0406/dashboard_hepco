@@ -7,9 +7,11 @@ import {
   TextField,
   Button,
   Divider,
-  Grid
+  Grid,
+  FormControl
 } from '@mui/material';
 import EditorComponent from './EditorComponent';
+import { updateProduct } from 'src/api';
 
 export default function EditProduct ({row, setOpen, setUpdate, update, handleDeleteProduct}){
     const [name,setName] = useState(row.name)
@@ -21,8 +23,16 @@ export default function EditProduct ({row, setOpen, setUpdate, update, handleDel
       setImage(URL.createObjectURL(file))
       
     };
-    const handleUpdateProduct = () =>{
-  
+    const handleUpdateProduct = async (id,name, des, des_en, id_group) =>{
+      if(name?.length > 0){
+        let image = document.getElementById("file-upload-product"+id).files[0]
+        const response = await updateProduct(id,name, des, des_en, image || '', id_group)
+        setTimeout(()=>{
+
+          setOpen(false)
+          setUpdate(!update)
+        },1000)
+      }
     }
     
     const handleCancel = () =>{
@@ -50,7 +60,17 @@ export default function EditProduct ({row, setOpen, setUpdate, update, handleDel
                     autoComplete="off"
                   >
                     <h3 style={{textAlign:"left"}}>Product name</h3>
-                    <TextField defaultValue={name} variant="standard"  fullWidth/>
+                    <FormControl required={true} fullWidth={true}>
+                        <TextField
+                            required
+                            name={"product_name"+row.id_product}
+                            onChange={(e)=>{setName(e.target.value)}}
+                            error={name?.length == 0} 
+                            value={name}
+                            helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                        />
+                    </FormControl>
+
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -62,13 +82,13 @@ export default function EditProduct ({row, setOpen, setUpdate, update, handleDel
                         <div>
                             <input
                                 accept="image/*"
-                                id={"file-upload-product"+row.id}
+                                id={"file-upload-product"+row.id_product}
                                 type="file"
                                 style={{ display: 'none' }}
                                 onChange={(e)=>{handleImageUpload(e)}}
                             />
   
-                            <label htmlFor={"file-upload-product"+row.id}>
+                            <label htmlFor={"file-upload-product"+row.id_product}>
                                 <Button variant="text" color="primary" component="span">
                                     Replace image
                                 </Button>
@@ -101,7 +121,7 @@ export default function EditProduct ({row, setOpen, setUpdate, update, handleDel
               <Divider/>
               <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                  <Button variant="contained" onClick={handleUpdateProduct}>Update</Button>
+                  <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_product,name,des,des_en,row.id_group)}}>Update</Button>
                   <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
                 <Button variant="text" color="error" onClick={()=>{handleDeleteProduct(row, setUpdate, update)}}>Delete product</Button>

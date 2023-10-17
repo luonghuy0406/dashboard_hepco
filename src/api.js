@@ -38,6 +38,7 @@ export const login = async (id_user, pw) => {
   try {
     const response = await api.post('/account/login', { id_user, pw });
     if(response.data.token){
+      localStorage.setItem("user",id_user)
       const { token, refreshToken } = {token: response.data.token, refreshToken: response.data.refresh_token};
       setAuthToken(token);
       sessionStorage.setItem('token', token);
@@ -94,10 +95,34 @@ export const getAboutUs = async () => {
     throw error;
   }
 };
+export const updateAboutUs = async (content,content_en,image1,image2,image3) => {
+  try {
+
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('content', content);
+    data.append('content_en', content_en);
+    data.append('image1', image1);
+    data.append('image2', image2);
+    data.append('image3', image3);
+    const response = await api.put(`/about/update`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 //------company info-----
 export const getCompanyInfo = async () => {
   try {
     const response = await api.get(`/webinf/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateWebinf = async (data) => {
+  try {
+    const response = await api.put('/webinf/update',data);
     return response.data;
   } catch (error) {
     throw error;
@@ -112,6 +137,39 @@ export const getListProducts = async () => {
     throw error;
   }
 };
+export const updateProduct = async (id_product, name, des, des_en, image, id_group) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_product', id_product);
+    data.append('des', des);
+    data.append('name', name);
+    data.append('des_en', des_en);
+    data.append('image', image);
+    data.append('id_group', id_group);
+    const response = await api.put(`/product/update`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const addProduct = async (name, des, des_en, image, id_group) => {
+  try {
+    let id_user = localStorage.getItem("user")
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_user', id_user);
+    data.append('des', des);
+    data.append('name', name);
+    data.append('des_en', des_en);
+    data.append('image', image);
+    data.append('id_group', id_group);
+    const response = await api.post(`/product/add`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const deleteProduct = async (id) => {
   try {
     const response = await api.delete(`/product/delete/${id}`);
@@ -120,9 +178,54 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
+
+
 export const getSubProducts = async () => {
   try {
     const response = await api.get(`/sub/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const addSubProduct = async (name, content, content_en, image, id_product) => {
+  try {
+    let id_user = localStorage.getItem("user")
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_user', id_user);
+    data.append('content', content);
+    data.append('name', name);
+    data.append('content_en', content_en);
+    data.append('image', image);
+    data.append('id_product', id_product);
+    const response = await api.post(`/sub/add`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateSubProduct = async (id_sub, name, content, content_en, image, id_product) => {
+  try {
+    let id_user = localStorage.getItem("user")
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_sub', id_sub);
+    data.append('id_user', id_user);
+    data.append('content', content);
+    data.append('name', name);
+    data.append('content_en', content_en);
+    data.append('image', image);
+    data.append('id_product', id_product);
+    const response = await api.put(`/sub/update`,data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteSubProduct = async (id) => {
+  try {
+    const response = await api.delete(`/sub/delete/${id}`);
     return response.data;
   } catch (error) {
     throw error;

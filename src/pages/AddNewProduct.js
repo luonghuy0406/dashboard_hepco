@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, Autocomplete } from '@mui/material';
+import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, Autocomplete, FormControl, FormHelperText } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import { EditorComponent } from 'src/sections/@dashboard/products';
+import { addProduct } from 'src/api';
+import Swal from 'sweetalert2';
 const gr =[
     {
       value : 1,
@@ -37,6 +39,29 @@ export default function AddNewProduct() {
     setImage(URL.createObjectURL(file))
     
   };
+  const handleAddProduct = (name, des, des_en, image, id_group) =>{
+    if(name && image){
+        let imageUpload = document.getElementById("file-upload-new-product").files[0]
+        addProduct(name, des, des_en, imageUpload, id_group)
+        setTimeout(()=>{
+            //upload success
+            Swal.fire(
+                'Success!',
+                `Add product ${name} success!`,
+                'success'
+              )
+              handleCancel()
+        },2000)
+    }
+  }
+  const handleCancel = ()=>{
+    setName('')
+    setDes('')
+    setDesEN('')
+    setImage('')
+    setGroup('')
+    document.getElementById("file-upload-new-product").value = null
+  }
   return (
     <>
       <Helmet>
@@ -57,7 +82,18 @@ export default function AddNewProduct() {
                             <Typography variant="h6" gutterBottom>
                                 Product name
                             </Typography>
-                            <TextField variant="standard" value={name} sx={{ px: 2 }}  fullWidth onChange={(e)=>{setName(e.target.value)}}/>
+                            <FormControl required={true} fullWidth={true}>
+                            <TextField
+                                required
+                                variant='standard'
+                                name={"product_name"}
+                                onChange={(e)=>{setName(e.target.value)}}
+                                error={name?.length == 0} 
+                                value={name}
+                                helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                            />
+                        </FormControl>
+
                         </Grid>
                         <Grid item xs={6} md={6} lg={6}>
                             <Typography variant="h6" gutterBottom>
@@ -113,8 +149,9 @@ export default function AddNewProduct() {
                                 </Button>
                             </label>
                         </div>
+                        
                     </Stack>
-                    <Stack  mb={5} sx={{alignItems:"center"}}>
+                    <Stack  mb={2} sx={{alignItems:"center"}}>
                         <Box
                             sx={{display: 'flex', alignItems:'center', flexDirection:'column'}}
                         >
@@ -126,6 +163,15 @@ export default function AddNewProduct() {
                             />
                         </Box>
                     </Stack>
+                    <Stack sx={{alignItems:"center"}}>
+                        {
+                            !image &&
+                            <FormHelperText error>
+                                Please upload image.
+                            </FormHelperText>
+                        }
+                    </Stack>
+
                     </Stack>
                 </Card>
             </Stack>
@@ -148,8 +194,8 @@ export default function AddNewProduct() {
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained">Save post</Button>
-                    <Button variant="text" style={{color:"gray"}}>Cancel</Button>
+                    <Button variant="contained" onClick={()=>{handleAddProduct(name, des, des_en, image, group)}}>Save post</Button>
+                    <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
             </Stack>
         </Container>

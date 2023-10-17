@@ -1,7 +1,7 @@
 import React from 'react'
 import {  Typography, Box, Table, TableHead, TableRow, TableCell, CardMedia, TableBody, Button, Collapse, Stack, Paper, styled, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getAboutUs } from 'src/api';
+import { getAboutUs, updateAboutUs } from 'src/api';
 import EditorComponent from './EditorComponent';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -14,42 +14,83 @@ const Item = styled(Paper)(({ theme }) => ({
   }));
 
 export default function AboutUs() {
-    const [aboutUs,setAboutUs] = useState([])
+    const [aboutUs,setAboutUs] = useState({})
     const [update,setUpdate] = useState(false)
     const [open,setOpen] = useState(false)
     const [image,setImage] = useState({
-        image1 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image1}`,
-        image2 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image2}`,
-        image3 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image3}`
+        image1 : ``,
+        image2 : ``,
+        image3 : ``
     })
-    const [contentEn,setContentEn] = useState(aboutUs.content_en)
-    const [content,setContent] = useState(aboutUs.content)
+    const [imageFile,setImageFile] = useState({
+        image1 : ``,
+        image2 : ``,
+        image3 : ``
+    })
+    const [contentEn,setContentEn] = useState('')
+    const [content,setContent] = useState('')
     useEffect(()=>{
         async function fetchData() {
-            const aboutUs = await getAboutUs()
-            if(aboutUs.results){
-                setAboutUs(aboutUs.results[0])
+            const ab = await getAboutUs()
+            if(ab.results){
+                setAboutUs(ab.results)
             }
         }
         fetchData();
         
     },[update])
     useEffect(()=>{
-        setImage({
-            image1 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image1}`,
-            image2 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image2}`,
-            image3 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image3}`
-        })
-        setContentEn(aboutUs.content_en)
-        setContent(aboutUs.content)
+        if(Object.keys(aboutUs).length > 0){
+            setImage({
+                image1 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image1}`,
+                image2 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image2}`,
+                image3 : `${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image3}`
+            })
+            setContentEn(aboutUs.content_en)
+            setContent(aboutUs.content)
+            let imageTemp ={...imageFile}
+            toDataURL(`${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image1}`)
+            .then(dataUrl => {
+                var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                imageTemp = {...imageTemp,image1:fileData}
+                toDataURL(`${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image2}`)
+                .then(dataUrl => {
+                    var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                    imageTemp = {...imageTemp,image2:fileData}
+                    toDataURL(`${process.env.REACT_APP_API_HOST}/read_image/${aboutUs.image3}`)
+                    .then(dataUrl => {
+                        var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                        imageTemp = {...imageTemp,image3:fileData}
+                        setImageFile({...imageTemp})
+                    })
+                })
+            })
+            
+            
+        }
   
     },[aboutUs])
+            
     const handleImageUpload = (event,id) => {
         const file = event.target.files[0];
         setImage({...image,[id]:URL.createObjectURL(file)})
         
       };
     const listImage=['image1','image2','image3']
+
+const handleUpdate = async (content_en, content, imageFile) => {
+    let image1 = document.getElementById("file-upload-image1").files[0]
+    let image2 = document.getElementById("file-upload-image2").files[0]
+    let image3 = document.getElementById("file-upload-image3").files[0]
+
+    console.log(">>>",content_en, content)
+
+    if(!image1 && !image2 && !image3){
+        updateAboutUs(content, content_en ,[],[],[])
+    }else{
+        updateAboutUs(content, content_en ,image1 || imageFile.image1, image2 || imageFile.image2, image3 || imageFile.image3)
+    }
+}
   return (
     <>
         <Stack direction="row" spacing={2} mb={3}>
@@ -122,7 +163,7 @@ export default function AboutUs() {
                             sx={{display: 'flex', alignItems:'flex-start', flexDirection:'column'}}
                         >
                             <Typography fontWeight={'bold'} pb={1}>Content EN</Typography>
-                            <EditorComponent data={contentEn} setContentEn={setContentEn}/>
+                            <EditorComponent des={contentEn} setDes={setContentEn}/>
                         </Box>
                     </Item>
                     <Item sx={{ width: '100%', mt:(theme)=>theme.spacing(2), mr:(theme)=>theme.spacing(2)}}>
@@ -130,14 +171,14 @@ export default function AboutUs() {
                             sx={{display: 'flex', alignItems:'flex-start', flexDirection:'column'}}
                         >
                             <Typography fontWeight={'bold'} pb={1}>Content VI</Typography>
-                            <EditorComponent data={content} setContent={setContent}/>
+                            <EditorComponent des={content} setDes={setContent}/>
                         </Box>
                     </Item>
                     <Item>
                         <Box
                             sx={{display: 'flex', justifyContent:'flex-end'}}
                         >
-                            <Button variant="contained">Update</Button>
+                            <Button variant="contained" onClick={()=>{handleUpdate(contentEn,content, imageFile)}}>Update</Button>
                         </Box>
                     </Item>
                 </Stack>
@@ -149,3 +190,27 @@ export default function AboutUs() {
     
   )
 }
+
+const toDataURL = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+     }))
+
+
+
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+    }
+return new File([u8arr], filename, {type:mime});
+}
+
+
+
+  

@@ -22,7 +22,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EditorComponent from './EditorComponent';
 import Swal from 'sweetalert2';
-import { deleteProduct, getSubProducts } from 'src/api';
+import { deleteSubProduct, getSubProducts } from 'src/api';
 
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
@@ -43,20 +43,20 @@ const style = {
 export default function RowSubProduct({row,setUpdate,update}){
     const [open, setOpen] = useState(false);
     const handleDeleteSubProduct = (row, setUpdate, update) =>{
-      // Swal.fire({
-      //   text: `Are you sure you want to delete product ${row.name}?`,
-      //   icon: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3085d6',
-      //   cancelButtonColor: '#d33',
-      //   confirmButtonText: 'Yes, delete it!'
-      // }).then((result) => {
-      //   if (result.isConfirmed) {
-      //     deleteProduct(row.id_product)
-      //     setOpen(false)
-      //     setUpdate(!update)
-      //   }
-      // })
+      Swal.fire({
+        text: `Are you sure you want to delete product ${row.name}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteSubProduct(row.id_sub)
+          setOpen(false)
+          setUpdate(!update)
+        }
+      })
     }
     return (
       <>

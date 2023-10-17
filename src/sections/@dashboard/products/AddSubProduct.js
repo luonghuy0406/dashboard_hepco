@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from 'react';import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, Autocomplete } from '@mui/material';
+import React, {useEffect, useState} from 'react';import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, Autocomplete, FormControl, FormHelperText } from '@mui/material';
 import EditorComponent from './EditorComponent';
+import Swal from 'sweetalert2';
+import { addSubProduct } from 'src/api';
 
 export default function AddSubProduct({row, setOpen, setUpdate, update, handleDeleteProduct}){
     const [name,setName] = useState('')
@@ -11,9 +13,21 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
       setImage(URL.createObjectURL(file))
       
     };
-    const handleUpdateProduct = () =>{
-  
-    }
+    const handleAddProduct = (name, des, des_en, image, id_product) =>{
+        if(name && image){
+            let imageUpload = document.getElementById("file-upload-new-sub-product").files[0]
+            addSubProduct(name, des, des_en, imageUpload, id_product)
+            setTimeout(()=>{
+                //upload success
+                Swal.fire(
+                    'Success!',
+                    `Add product ${name} success!`,
+                    'success'
+                  )
+                  handleCancel()
+            },2000)
+        }
+      }
     
     const handleCancel = () =>{
       setName('')
@@ -21,6 +35,7 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
       setContent('')
       setContentEN('')
       setOpen(false)
+      document.getElementById("file-upload-new-sub-product").value = null
     }
     return (
         <Box sx={{ margin: 3}}>
@@ -29,9 +44,19 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
                     <Grid container>
                         <Grid item xs={12} md={12} lg={12}>
                             <Typography variant="h6" gutterBottom>
-                                Product name
+                                Sub product name
                             </Typography>
-                            <TextField variant="standard" value={name} sx={{ px: 2 }}  fullWidth onChange={(e)=>{setName(e.target.value)}}/>
+                            <FormControl required={true} fullWidth={true}>
+                            <TextField
+                                required
+                                variant='standard'
+                                name={"product_name"}
+                                onChange={(e)=>{setName(e.target.value)}}
+                                error={name?.length == 0} 
+                                value={name}
+                                helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                            />
+                        </FormControl>
                         </Grid>
                     </Grid>
                     
@@ -51,20 +76,20 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
                         <div>
                             <input
                                 accept="image/*"
-                                id={"file-upload-new-product"}
+                                id={"file-upload-new-sub-product"}
                                 type="file"
                                 style={{ display: 'none' }}
                                 onChange={(e)=>{handleImageUpload(e)}}
                             />
 
-                            <label htmlFor={"file-upload-new-product"}>
+                            <label htmlFor={"file-upload-new-sub-product"}>
                                 <Button variant="text" color="primary" component="span">
                                    {image ?  "Replace image" : "Upload image"}
                                 </Button>
                             </label>
                         </div>
                     </Stack>
-                    <Stack  mb={5} sx={{alignItems:"center"}}>
+                    <Stack  mb={2} sx={{alignItems:"center"}}>
                         <Box
                             sx={{display: 'flex', alignItems:'center', flexDirection:'column'}}
                         >
@@ -76,6 +101,16 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
                             />
                         </Box>
                     </Stack>
+
+                    <Stack sx={{alignItems:"center"}}>
+                        {
+                            !image &&
+                            <FormHelperText error>
+                                Please upload image.
+                            </FormHelperText>
+                        }
+                    </Stack>
+
                     </Stack>
                 </Card>
             </Stack>
@@ -98,8 +133,8 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained">Save product</Button>
-                    <Button variant="text" style={{color:"gray"}}>Cancel</Button>
+                    <Button variant="contained" onClick={()=>{handleAddProduct(name, content, content_en, image, row.id_product)}}>Save product</Button>
+                    <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
             </Stack>
         </Box>

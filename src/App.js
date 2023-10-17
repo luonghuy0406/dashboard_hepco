@@ -2,6 +2,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 import './ckeditor.css';
+import './App.css';
 // routes
 import Router from './routes';
 // theme

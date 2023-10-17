@@ -7,9 +7,11 @@ import {
   TextField,
   Button,
   Divider,
-  Grid
+  Grid,
+  FormControl
 } from '@mui/material';
 import EditorComponent from './EditorComponent';
+import { updateSubProduct } from 'src/api';
 
 export default function EditSubProduct ({row, setOpen, setUpdate, update, handleDeleteProduct}){
     const [name,setName] = useState(row.name)
@@ -21,16 +23,25 @@ export default function EditSubProduct ({row, setOpen, setUpdate, update, handle
       setImage(URL.createObjectURL(file))
       
     };
-    const handleUpdateProduct = () =>{
-  
+    const handleUpdateProduct = async (id, name, content, content_en, id_product) =>{
+      if(name?.length > 0){
+        let image = document.getElementById("file-upload-sub-product"+id).files[0]
+        const response = await updateSubProduct(id,name, content, content_en, image || '', id_product)
+        setTimeout(()=>{
+          setOpen(false)
+          setUpdate(!update)
+          handleCancel(id)
+        },1000)
+      }
     }
     
-    const handleCancel = () =>{
+    const handleCancel = (id) =>{
       setName(row.name)
       setImage(`${process.env.REACT_APP_API_HOST}/read_image/${row.image}`)
       setContent(row.content)
       setContentEN(row.content_en)
       setOpen(false)
+      document.getElementById("file-upload-sub-product"+id).value = ''
     }
     return (
             <Box sx={{ margin: 3}}>
@@ -49,8 +60,17 @@ export default function EditSubProduct ({row, setOpen, setUpdate, update, handle
                     noValidate
                     autoComplete="off"
                   >
-                    <h3 style={{textAlign:"left"}}>Product name</h3>
-                    <TextField defaultValue={name} variant="standard"  fullWidth/>
+                    
+                    <FormControl required={true} fullWidth={true}>
+                        <TextField
+                            required
+                            name={"product_name"+row.id_sub}
+                            onChange={(e)=>{setName(e.target.value)}}
+                            error={name?.length == 0} 
+                            value={name}
+                            helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                        />
+                    </FormControl>
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -62,13 +82,13 @@ export default function EditSubProduct ({row, setOpen, setUpdate, update, handle
                         <div>
                             <input
                                 accept="image/*"
-                                id={"file-upload-product"+row.id}
+                                id={"file-upload-sub-product"+row.id_sub}
                                 type="file"
                                 style={{ display: 'none' }}
                                 onChange={(e)=>{handleImageUpload(e)}}
                             />
   
-                            <label htmlFor={"file-upload-product"+row.id}>
+                            <label htmlFor={"file-upload-sub-product"+row.id_sub}>
                                 <Button variant="text" color="primary" component="span">
                                     Replace image
                                 </Button>
@@ -101,8 +121,8 @@ export default function EditSubProduct ({row, setOpen, setUpdate, update, handle
               <Divider/>
               <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                  <Button variant="contained" onClick={handleUpdateProduct}>Update</Button>
-                  <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
+                  <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_sub,name,content,content_en,row.id_product)}}>Update</Button>
+                  <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel(row.id_sub)}}>Cancel</Button>
                 </Stack>
                 <Button variant="text" color="error" onClick={()=>{handleDeleteProduct(row, setUpdate, update)}}>Delete product</Button>
               </Stack>
