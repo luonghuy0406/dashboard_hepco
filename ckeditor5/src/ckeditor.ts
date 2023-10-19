@@ -119,9 +119,9 @@ class Editor extends ClassicEditor {
             withCredentials: true,
 
             // Headers sent along with the XMLHttpRequest to the upload server.
-            headers: {
-                'X-CSRF-TOKEN': 'CSRF-Token',
-            }
+            // headers: {
+            //     'X-CSRF-TOKEN': 'CSRF-Token',
+            // }
         }
 	};
 }

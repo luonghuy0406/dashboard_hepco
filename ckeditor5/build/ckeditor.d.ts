@@ -37,9 +37,6 @@ declare class Editor extends ClassicEditor {
         simpleUpload: {
             uploadUrl: string;
             withCredentials: boolean;
-            headers: {
-                'X-CSRF-TOKEN': string;
-            };
         };
     };
 }

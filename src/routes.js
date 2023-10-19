@@ -56,7 +56,7 @@ export default function Router() {
         { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },
         { path: 'news', element: <PrivateRoute element={<BlogPage />} /> },
         { path: 'news/:id', element: <PrivateRoute element={<EditPost />} /> },
-        { path: 'news/add', element: <PrivateRoute element={<AddNewPost />} /> },
+        // { path: 'news/add', element: <PrivateRoute element={<AddNewPost />} /> },
 
         { path: 'news/add', element: <AddNewPost /> },
       ],
