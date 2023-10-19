@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, Autocomplete, FormControl, FormHelperText } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
@@ -33,25 +33,25 @@ export default function AddNewProduct() {
   const [des_en,setDesEN] = useState('')
   const [image, setImage] = useState('')
   const [group, setGroup] = useState(1)
-
+  const navigate = useNavigate();
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     setImage(URL.createObjectURL(file))
     
   };
-  const handleAddProduct = (name, des, des_en, image, id_group) =>{
+  const handleAddProduct = async (name, des, des_en, image, id_group) =>{
     if(name && image){
         let imageUpload = document.getElementById("file-upload-new-product").files[0]
-        addProduct(name, des, des_en, imageUpload, id_group)
-        setTimeout(()=>{
-            //upload success
-            Swal.fire(
-                'Success!',
-                `Add product ${name} success!`,
-                'success'
-              )
-              handleCancel()
-        },2000)
+        const response = await addProduct(name, des, des_en, imageUpload, id_group)
+        if(response.results.status == 'success'){
+            handleCancel()
+            navigate('/dashboard/product', { replace: true });
+        }
+        Swal.fire(
+            response.results.status,
+            `Add product ${name} success!`,
+            response.results.status
+        )
     }
   }
   const handleCancel = ()=>{
@@ -89,8 +89,8 @@ export default function AddNewProduct() {
                                 name={"product_name"}
                                 onChange={(e)=>{setName(e.target.value)}}
                                 error={name?.length == 0} 
-                                value={name}
                                 helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                                value={name}
                             />
                         </FormControl>
 

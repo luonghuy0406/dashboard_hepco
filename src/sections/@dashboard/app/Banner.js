@@ -41,7 +41,7 @@ export default function Banner() {
             <Box sx={{ width: '100%' }}>
                 <Stack 
                     direction="row" 
-                    useFlexGap 
+                    useflexgap 
                     flexWrap="wrap" 
                 >
                     {

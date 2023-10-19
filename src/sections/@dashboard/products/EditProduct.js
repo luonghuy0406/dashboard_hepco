@@ -12,8 +12,9 @@ import {
 } from '@mui/material';
 import EditorComponent from './EditorComponent';
 import { updateProduct } from 'src/api';
+import Swal from 'sweetalert2';
 
-export default function EditProduct ({row, setOpen, setUpdate, update, handleDeleteProduct}){
+export default function EditProduct ({subList, row, setOpen, setUpdate, update, handleDeleteProduct}){
     const [name,setName] = useState(row.name)
     const [image,setImage] = useState(`${process.env.REACT_APP_API_HOST}/read_image/${row.image}`)
     const [des,setDes] = useState(row.des)
@@ -27,11 +28,16 @@ export default function EditProduct ({row, setOpen, setUpdate, update, handleDel
       if(name?.length > 0){
         let image = document.getElementById("file-upload-product"+id).files[0]
         const response = await updateProduct(id,name, des, des_en, image || '', id_group)
-        setTimeout(()=>{
-
+        Swal.fire(
+          response.results.status,
+          response.results.msg,
+          response.results.status
+        )
+        if(response.result.status == 'success'){
           setOpen(false)
           setUpdate(!update)
-        },1000)
+          handleCancel()
+        }
       }
     }
     
@@ -124,7 +130,10 @@ export default function EditProduct ({row, setOpen, setUpdate, update, handleDel
                   <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_product,name,des,des_en,row.id_group)}}>Update</Button>
                   <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
-                <Button variant="text" color="error" onClick={()=>{handleDeleteProduct(row, setUpdate, update)}}>Delete product</Button>
+                {
+                  !(subList?.length >0) &&
+                  <Button variant="text" color="error" onClick={()=>{handleDeleteProduct(row, setUpdate, update)}}>Delete product</Button>
+                }
               </Stack>
             </Box>
     )

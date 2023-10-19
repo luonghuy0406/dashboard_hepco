@@ -2,24 +2,21 @@ import { Typography, Button, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { replaceBanner } from 'src/api';
+import Swal from 'sweetalert2';
 
 const UploadFile = (props) => {
   const handleFileChange = async (event) => {
     const data = await replaceBanner(props.id,event.target.files[0])
-    if(data.results){
-      props.setUpdate(!props.update)
-    }
+    Swal.fire(
+      data.results.status,
+      data.results.msg,
+      data.results.status
+    )
+    props.setUpdate(!props.update)
   };
   
   return (
     <div>
-      {/* <Snackbar
-        autoHideDuration={2000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={open}
-      >
-        <Alert severity={status}>This is a {status} alert — check it out!</Alert>
-      </Snackbar> */}
       <input
         accept="image/*"
         id={"file-upload-"+props.id}

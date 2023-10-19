@@ -13,19 +13,25 @@ export default function AddSubProduct({row, setOpen, setUpdate, update, handleDe
       setImage(URL.createObjectURL(file))
       
     };
-    const handleAddProduct = (name, des, des_en, image, id_product) =>{
+    const handleAddProduct = async (name, des, des_en, image, id_product) =>{
         if(name && image){
             let imageUpload = document.getElementById("file-upload-new-sub-product").files[0]
-            addSubProduct(name, des, des_en, imageUpload, id_product)
-            setTimeout(()=>{
-                //upload success
+            const response = await addSubProduct(name, des, des_en, imageUpload, id_product)
+            if(response.results.status == 'success'){
+                handleCancel()
                 Swal.fire(
                     'Success!',
                     `Add product ${name} success!`,
                     'success'
+                )
+            }else{
+                Swal.fire(
+                    response.results.status,
+                    response.results.msg,
+                    response.results.status
                   )
-                  handleCancel()
-            },2000)
+            }
+            
         }
       }
     

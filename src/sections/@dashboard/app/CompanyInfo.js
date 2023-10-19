@@ -2,6 +2,7 @@ import React from 'react'
 import {  Typography, Box, Table, TableHead, TableRow, TableCell, CardMedia, TableBody, Button, Collapse, Stack, Paper, styled, Divider, TextField, makeStyles, Grid, FormControl } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getCompanyInfo, updateWebinf } from 'src/api';
+import Swal from 'sweetalert2';
 
 export default function CompanyInfo() {
     const [companyInfoInit,setCompanyInfoInit] = useState([])
@@ -85,9 +86,13 @@ export default function CompanyInfo() {
                 })
                 return newKey
             })
-            newData.forEach((data)=>{
-                updateWebinf(data)
-            })
+            const response= await updateWebinf(newData[0])
+            Swal.fire(
+                response.results.status,
+                response.results.msg,
+                response.results.status
+            )
+            updateWebinf(newData[1])
         }
     }
   return (
@@ -128,7 +133,7 @@ export default function CompanyInfo() {
                                     break;
                             }
                             return(
-                                <Grid item md={6} p={1}>
+                                <Grid item md={6} p={1} key={key}>
                                     <FormControl required={true} fullWidth={true}>
                                         <TextField
                                             InputLabelProps={{ shrink: true }}

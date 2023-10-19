@@ -1,14 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography, TextField, Box, Card, CardMedia } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Grid, Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getPostById, updatePost, deletePost } from 'src/api';
 import { useEffect, useState } from 'react';
 import { EditorComponent } from 'src/sections/@dashboard/products';
+import Swal from 'sweetalert2';
 
 export default function EditPost() {
     const { id } = useParams();
-
+    const navigate = useNavigate();
+                
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
@@ -37,13 +39,30 @@ export default function EditPost() {
     };
 
     const handleEditPost = async (id,name,name_en,content,content_en) =>{
-        const image = document.getElementById("file-upload-edit-post-"+id).files[0] || []
-        const response = await updatePost(id,name,name_en,content,content_en, image)
-        console.log(">>>",response)
+        if(name && name_en){
+            const image = document.getElementById("file-upload-edit-post-"+id).files[0] || []
+            const response = await updatePost(id,name,name_en,content,content_en, image)
+            Swal.fire(
+                response.results.status,
+                response.results.msg,
+                response.results.status
+            )
+            if(response.results.status == 'success'){
+                navigate('/dashboard/news', { replace: true });
+            }
+        }
     }
     
     const handleDeletePost = async (id)=>{
         const response = await deletePost(id)
+        Swal.fire(
+            response.results.status,
+            response.results.msg,
+            response.results.status
+        )
+        if(response.results.status == 'success'){
+            navigate('/dashboard/news', { replace: true });
+        }
     }
     return (
         <>
@@ -63,7 +82,14 @@ export default function EditPost() {
                     <Typography variant="h6" gutterBottom>
                         Post title EN
                     </Typography>
-                    <TextField variant="standard"  fullWidth value={title_en} onChange={(e)=>{setTitleEN(e.target.value)}}/>
+                    <TextField 
+                        variant="standard" 
+                        fullWidth 
+                        value={title_en} 
+                        onChange={(e)=>{setTitleEN(e.target.value)}}
+                        error={title_en?.length == 0} 
+                        helperText = {title_en?.length == 0 ? "Title cannot be empty" : ""}
+                    />
                 </Card>
             </Stack>
             <Stack  mb={5}>
@@ -71,7 +97,14 @@ export default function EditPost() {
                     <Typography variant="h6" gutterBottom>
                         Post title VI
                     </Typography>
-                    <TextField variant="standard"  fullWidth value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
+                    <TextField 
+                        variant="standard"  
+                        fullWidth 
+                        value={title} 
+                        onChange={(e)=>{setTitle(e.target.value)}}
+                        error={title?.length == 0} 
+                        helperText = {title?.length == 0 ? "Title cannot be empty" : ""}
+                    />
                 </Card>
             </Stack>
             <Stack  mb={5} >
@@ -94,12 +127,13 @@ export default function EditPost() {
                                 onChange={(e)=>{handleImageUpload(e)}}
                             />
 
-                            <label htmlFor={"file-upload-new-post"}>
+                            <label htmlFor={"file-upload-edit-post-"+id}>
                                 <Button variant="text" color="primary" component="span">
                                    {image ?  "Replace image" : "Upload image"}
                                 </Button>
                             </label>
                         </div>
+                        
                     </Stack>
                     <Stack  mb={5} sx={{alignItems:"center"}}>
                         <Box
@@ -112,6 +146,14 @@ export default function EditPost() {
                                 // alt="about 1"
                             />
                         </Box>
+                    </Stack>
+                    <Stack sx={{alignItems:"center"}}>
+                        {
+                            !image &&
+                            <FormHelperText error>
+                                Please upload image.
+                            </FormHelperText>
+                        }
                     </Stack>
                     </Stack>
                 </Card>
@@ -143,4 +185,24 @@ export default function EditPost() {
         </Container>
         </>
     );
+}
+
+const toDataURL = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+     }))
+
+
+
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+    }
+return new File([u8arr], filename, {type:mime});
 }

@@ -50,11 +50,18 @@ export default function RowSubProduct({row,setUpdate,update}){
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          deleteSubProduct(row.id_sub)
-          setOpen(false)
-          setUpdate(!update)
+          const response = await deleteSubProduct(row.id_sub)
+          if(response.result.status == 'success'){
+            setOpen(false)
+            setUpdate(!update)
+          }
+          Swal.fire(
+            response.results.status,
+            response.results.msg,
+            response.results.status
+          )
         }
       })
     }

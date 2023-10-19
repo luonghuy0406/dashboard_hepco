@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import Swal from 'sweetalert2';
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_HOST,
@@ -13,22 +14,24 @@ export const setAuthToken = (token) => {
   }
 };
 
-export const refreshToken = async (refresh_token) => {
+export const refreshToken = async () => {
+  const refresh_token = localStorage.getItem('refresh_token')
   try {
-    let config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: `${process.env.REACT_APP_API_HOST}/refresh`,
-        headers: { 
-          'Authorization': refresh_token
-        }
-    };
-      
-    axios.request(config)
-    const response = await axios.request(config)
-    const { token } = response.data.new_access_token;
-    setAuthToken(token);
-    return token;
+    if(refresh_token){
+        const config = {
+          method: 'get',
+          url: `${process.env.REACT_APP_API_HOST}/refresh`,
+          headers: { 
+            'Authorization': refresh_token
+          }
+        };
+    
+        const response = await axios(config);
+        const token = response.data.new_access_token;
+        localStorage.setItem('token', token);
+        setAuthToken(token);
+        return token;
+    }
   } catch (error) {
     throw error;
   }
@@ -51,12 +54,12 @@ export const login = async (id_user, pw) => {
   }
 };
 
-export const checkTokenExpiration = (token) => {
+export const checkTokenExpiration = () => {
+  const token = localStorage.getItem('token')
   if (token) {
     const decodedToken = jwtDecode(token);
     const currentTime = Date.now() / 1000;
     if (decodedToken.exp < currentTime) {
-      
       return true;
     }
   }
@@ -80,9 +83,21 @@ export const replaceBanner = async (id, file) => {
     let data = new FormData();
     data.append('id_bn', id);
     data.append('image', file);
-    const response = await api.put('/banner/update',data);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/banner/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/banner/update',data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 }
@@ -97,7 +112,6 @@ export const getAboutUs = async () => {
 };
 export const updateAboutUs = async (content,content_en,image1,image2,image3) => {
   try {
-
     const FormData = require('form-data');
     let data = new FormData();
     data.append('content', content);
@@ -105,9 +119,21 @@ export const updateAboutUs = async (content,content_en,image1,image2,image3) => 
     data.append('image1', image1);
     data.append('image2', image2);
     data.append('image3', image3);
-    const response = await api.put(`/about/update`,data);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put(`/about/update`,data);
+      return response.data;
+    }else{
+      const response = await api.put(`/about/update`,data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
@@ -122,9 +148,21 @@ export const getCompanyInfo = async () => {
 };
 export const updateWebinf = async (data) => {
   try {
-    const response = await api.put('/webinf/update',data);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/webinf/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/webinf/update',data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
@@ -147,14 +185,27 @@ export const updateProduct = async (id_product, name, des, des_en, image, id_gro
     data.append('des_en', des_en);
     data.append('image', image);
     data.append('id_group', id_group);
-    const response = await api.put(`/product/update`,data);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put(`/product/update`,data);
+      return response.data;
+    }else{
+      const response = await api.put(`/product/update`,data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
 export const addProduct = async (name, des, des_en, image, id_group) => {
   try {
+    
     let id_user = localStorage.getItem("user")
     const FormData = require('form-data');
     let data = new FormData();
@@ -164,17 +215,41 @@ export const addProduct = async (name, des, des_en, image, id_group) => {
     data.append('des_en', des_en);
     data.append('image', image);
     data.append('id_group', id_group);
-    const response = await api.post(`/product/add`,data);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post(`/product/add`,data);
+      return response.data;
+    }else{
+      const response = await api.post(`/product/add`,data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
 export const deleteProduct = async (id) => {
   try {
-    const response = await api.delete(`/product/delete/${id}`);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.delete(`/product/delete/${id}`);
+      return response.data;
+    }else{
+      const response = await api.delete(`/product/delete/${id}`);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
@@ -199,9 +274,22 @@ export const addSubProduct = async (name, content, content_en, image, id_product
     data.append('content_en', content_en);
     data.append('image', image);
     data.append('id_product', id_product);
-    const response = await api.post(`/sub/add`,data);
-    return response.data;
+    
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post(`/sub/add`,data);
+      return response.data;
+    }else{
+      const response = await api.post(`/sub/add`,data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
@@ -217,17 +305,42 @@ export const updateSubProduct = async (id_sub, name, content, content_en, image,
     data.append('content_en', content_en);
     data.append('image', image);
     data.append('id_product', id_product);
-    const response = await api.put(`/sub/update`,data);
-    return response.data;
+    
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put(`/sub/update`,data);
+      return response.data;
+    }else{
+      const response = await api.put(`/sub/update`,data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
 export const deleteSubProduct = async (id) => {
   try {
-    const response = await api.delete(`/sub/delete/${id}`);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.delete(`/sub/delete/${id}`);
+      return response.data;
+    }else{
+      const response = await api.delete(`/sub/delete/${id}`);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
@@ -243,6 +356,7 @@ export const getPosts = async () => {
 
 export const addNewPost = async (name,name_en, content, content_en, image) => {
   try {
+    const id_user = localStorage.getItem('user')
     const FormData = require('form-data');
     let data = new FormData();
     data.append('name', name);
@@ -251,11 +365,22 @@ export const addNewPost = async (name,name_en, content, content_en, image) => {
     data.append('content_en', content_en);
     data.append('image', image);
     data.append('author', '');
-    data.append('id_user', '');
-
-    const response = await api.post('/post/add',data);
-    return response.data;
+    data.append('id_user', id_user);
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/post/add',data);
+      return response.data;
+    }else{
+      const response = await api.post('/post/add',data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 };
@@ -271,6 +396,7 @@ export const getPostById = async (id) => {
 
 export const updatePost =  async (id,name,name_en,content,content_en, image) => {
   try {
+    const id_user = localStorage.getItem('user')
     const FormData = require('form-data');
     let data = new FormData();
     data.append('id_post', id);
@@ -280,18 +406,42 @@ export const updatePost =  async (id,name,name_en,content,content_en, image) => 
     data.append('content', content);
     data.append('content_en', content_en);
     data.append('author', '');
-    data.append('id_user', '');
-    const response = await api.put('/post/update',data);
-    return response.data;
+    data.append('id_user', id_user);
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/post/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/post/update',data);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 } 
 export const deletePost = async (id)=>{
   try {
-    const response = await api.delete(`/post/delete/${id}`);
-    return response.data;
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.delete(`/post/delete/${id}`);
+      return response.data;
+    }else{
+      const response = await api.delete(`/post/delete/${id}`);
+      return response.data;
+    }
   } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
     throw error;
   }
 }

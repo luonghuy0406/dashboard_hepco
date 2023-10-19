@@ -21,24 +21,23 @@ import { setAuthToken } from './api';
 const PrivateRoute = ({ element, ...rest }) => {
   const token = localStorage.getItem('token');
 
-  if (token && checkTokenExpiration(token)) {
+  // if (token && checkTokenExpiration()) {
     // If expired, refresh the access token
-    const refresh_token = localStorage.getItem('refresh_token');
-    refreshToken(refresh_token)
-    .then((newAccessToken) => {
-      if (!newAccessToken) {
-        // Redirect to login if refresh fails
-        return <Navigate to="/login" replace />;
-      }
-    })
-    .catch(() => {
-      // Redirect to login if refresh throws an error
-      return <Navigate to="/login" replace />;
-    });
-  }else if(!token){
-    return <Navigate to="/login" replace />;
-  }
-  setAuthToken(token) 
+  //   refreshToken()
+  //   .then((newAccessToken) => {
+  //     if (!newAccessToken) {
+  //       // Redirect to login if refresh fails
+  //       return <Navigate to="/login" replace />;
+  //     }
+  //   })
+  //   .catch(() => {
+  //     // Redirect to login if refresh throws an error
+  //     return <Navigate to="/login" replace />;
+  //   });
+  // }else if(!token){
+  //   return <Navigate to="/login" replace />;
+  // }
+  // setAuthToken(token) 
   return element;
   
 };
@@ -58,6 +57,8 @@ export default function Router() {
         { path: 'news', element: <PrivateRoute element={<BlogPage />} /> },
         { path: 'news/:id', element: <PrivateRoute element={<EditPost />} /> },
         { path: 'news/add', element: <PrivateRoute element={<AddNewPost />} /> },
+
+        { path: 'news/add', element: <AddNewPost /> },
       ],
     },
     {

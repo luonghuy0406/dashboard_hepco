@@ -1,30 +1,48 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import { EditorComponent } from 'src/sections/@dashboard/products';
 import { addNewPost } from 'src/api';
+import Swal from 'sweetalert2';
 
 export default function AddNewPost() {
+    const navigate = useNavigate();
+
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
     const [content_en,setContentEN] = useState('')
     const [image, setImage] = useState('')
-
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         setImage(URL.createObjectURL(file))
         
     };
-    const handleAddNewPost = async (title, title_en,content,content_en)=>{
-        const image = document.getElementById('file-upload-new-post').files[0]
-       const response = await addNewPost(title, title_en, content, content_en, image)
-       console.log(">>>>",response)
+    const handleAddNewPost = async (title, title_en,content,content_en, image)=>{
+        if(title && title_en && image){
+            const imageFile = document.getElementById('file-upload-new-post').files[0]
+            const response = await addNewPost(title, title_en, content, content_en, imageFile)
+            Swal.fire(
+                response.results.status,
+                response.results.msg,
+                response.results.status
+            )
+            if(response.results.status == 'success'){
+                navigate('/dashboard/news', { replace: true });
+            }
+        }
+    }
+    const handleCancel = () => {
+        setTitle('')
+        setTitleEN('')
+        setContent('')
+        setContentEN('')
+        setImage('')
     }
   return (
     <>
@@ -45,7 +63,13 @@ export default function AddNewPost() {
                     <Typography variant="h6" gutterBottom>
                         Post title EN
                     </Typography>
-                    <TextField variant="standard"  fullWidth value={title_en} onChange={(e)=>{setTitleEN(e.target.value)}}/>
+                    <TextField 
+                        variant="standard"  
+                        fullWidth value={title_en} 
+                        onChange={(e)=>{setTitleEN(e.target.value)}}
+                        error={title_en?.length == 0} 
+                        helperText = {title_en?.length == 0 ? "Title cannot be empty" : ""}
+                    />
                 </Card>
             </Stack>
             <Stack  mb={5}>
@@ -53,13 +77,20 @@ export default function AddNewPost() {
                     <Typography variant="h6" gutterBottom>
                         Post title VI
                     </Typography>
-                    <TextField variant="standard"  fullWidth value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
+                    <TextField 
+                        variant="standard" 
+                        fullWidth 
+                        value={title} 
+                        onChange={(e)=>{setTitle(e.target.value)}}
+                        error={title?.length == 0} 
+                        helperText = {title?.length == 0 ? "Title cannot be empty" : ""}
+                    />
                 </Card>
             </Stack>
             <Stack  mb={5} >
                 <Card sx={{ p: 2}}>
                     <Stack  mb={5} sx={{alignItems:"center"}}>
-                        <Stack
+                    <Stack
                         direction="row"
                         justifyContent="space-between"
                         alignItems="baseline"
@@ -95,6 +126,14 @@ export default function AddNewPost() {
                             />
                         </Box>
                     </Stack>
+                    <Stack sx={{alignItems:"center"}}>
+                        {
+                            !image &&
+                            <FormHelperText error>
+                                Please upload image.
+                            </FormHelperText>
+                        }
+                    </Stack>
                     </Stack>
                 </Card>
             </Stack>
@@ -117,8 +156,8 @@ export default function AddNewPost() {
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleAddNewPost(title, title_en,content,content_en)}}>Save post</Button>
-                    <Button variant="text" style={{color:"gray"}}>Cancel</Button>
+                    <Button variant="contained" onClick={()=>{handleAddNewPost(title, title_en,content,content_en, image)}}>Save post</Button>
+                    <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel()}}>Cancel</Button>
                 </Stack>
             </Stack>
     </Container>

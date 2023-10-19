@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import EditorComponent from './EditorComponent';
 import { updateSubProduct } from 'src/api';
+import Swal from 'sweetalert2';
 
 export default function EditSubProduct ({row, setOpen, setUpdate, update, handleDeleteProduct}){
     const [name,setName] = useState(row.name)
@@ -27,11 +28,16 @@ export default function EditSubProduct ({row, setOpen, setUpdate, update, handle
       if(name?.length > 0){
         let image = document.getElementById("file-upload-sub-product"+id).files[0]
         const response = await updateSubProduct(id,name, content, content_en, image || '', id_product)
-        setTimeout(()=>{
+        Swal.fire(
+          response.results.status,
+          response.results.msg,
+          response.results.status
+        )
+        if(response.result.status == 'success'){
           setOpen(false)
           setUpdate(!update)
           handleCancel(id)
-        },1000)
+        }
       }
     }
     

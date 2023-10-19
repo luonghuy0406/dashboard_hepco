@@ -3,6 +3,7 @@ import {  Typography, Box, Table, TableHead, TableRow, TableCell, CardMedia, Tab
 import { useEffect, useState } from 'react';
 import { getAboutUs, updateAboutUs } from 'src/api';
 import EditorComponent from './EditorComponent';
+import Swal from 'sweetalert2';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -82,14 +83,23 @@ const handleUpdate = async (content_en, content, imageFile) => {
     let image1 = document.getElementById("file-upload-image1").files[0]
     let image2 = document.getElementById("file-upload-image2").files[0]
     let image3 = document.getElementById("file-upload-image3").files[0]
-
-    console.log(">>>",content_en, content)
-
+    
     if(!image1 && !image2 && !image3){
-        updateAboutUs(content, content_en ,[],[],[])
+        const response = await updateAboutUs(content, content_en ,[],[],[])
+        Swal.fire(
+            response.results.status,
+            response.results.msg,
+            response.results.status
+          )
     }else{
-        updateAboutUs(content, content_en ,image1 || imageFile.image1, image2 || imageFile.image2, image3 || imageFile.image3)
+        const response = await updateAboutUs(content, content_en ,image1 || imageFile.image1, image2 || imageFile.image2, image3 || imageFile.image3)
+        Swal.fire(
+            response.results.status,
+            response.results.msg,
+            response.results.status
+          )
     }
+    
 }
   return (
     <>
@@ -105,7 +115,7 @@ const handleUpdate = async (content_en, content, imageFile) => {
             <Box sx={{ width: '100%' }}>
                 <Stack 
                     direction="row" 
-                    useFlexGap 
+                    useflexgap="true" 
                     flexWrap="wrap" 
                 >
                     {

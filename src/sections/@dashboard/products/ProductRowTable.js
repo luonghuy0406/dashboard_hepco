@@ -46,11 +46,18 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          deleteProduct(row.id_product)
-          setOpen(false)
-          setUpdate(!update)
+          const response = await deleteProduct(row.id_product)
+          if(response.results.status == 'success'){
+            setOpen(false)
+            setUpdate(!update)
+          }
+          Swal.fire(
+            response.results.status,
+            response.results.msg,
+            response.results.status
+          )
         }
       })
     }
@@ -165,7 +172,7 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
         <TableRow style={{ borderLeft: (open ? "2px solid #6366f1" : "unset") }}>
           <TableCell align="center" style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
             <Collapse in={open} timeout="auto" unmountOnExit>
-              <EditProduct row={row} setOpen={setOpen} setUpdate={setUpdate} update={update} handleDeleteProduct={handleDeleteProduct}/>
+              <EditProduct subList={subList} row={row} setOpen={setOpen} setUpdate={setUpdate} update={update} handleDeleteProduct={handleDeleteProduct}/>
             </Collapse>
           </TableCell>
         </TableRow>
