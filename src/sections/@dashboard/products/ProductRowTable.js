@@ -92,6 +92,14 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
           <TableCell align="center" sx={{width: 100}}>
             {group}
           </TableCell>
+          <TableCell align="center" sx={{width: 150}}>
+              {
+                row.brochure &&
+                  <a href={row.brochure} target='_blank'>
+                    Open link
+                  </a>
+              }
+          </TableCell>
           <TableCell align="center" sx={{width: 200}}>
             <CardMedia
                 component="img"

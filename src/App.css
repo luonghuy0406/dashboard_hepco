@@ -1,3 +1,6 @@
 div:where(.swal2-container){
     z-index: 99999999 !important;
 }
+.ck-editor__editable {
+    max-height: 600px;
+}

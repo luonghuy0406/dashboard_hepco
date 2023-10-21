@@ -28,6 +28,7 @@ export default function ProductsTable(props){
                 </TableCell>
                 <TableCell align="center" >Product name</TableCell>
                 <TableCell align="center" >Product line</TableCell>
+                <TableCell align="center" >Brochure</TableCell>
                 <TableCell align="center" >Product cover</TableCell>
                 <TableCell align="center" >Product description VI</TableCell>
                 <TableCell align="center" >Product description EN</TableCell>

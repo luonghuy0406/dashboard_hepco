@@ -7,6 +7,8 @@ import axios from 'axios';
 import Banner from 'src/sections/@dashboard/app/Banner';
 import AboutUs from 'src/sections/@dashboard/app/AboutUs';
 import CompanyInfo from 'src/sections/@dashboard/app/CompanyInfo';
+import Customer from 'src/sections/@dashboard/app/Partner';
+
 
 // ----------------------------------------------------------------------
 
@@ -65,7 +67,7 @@ export default function DashboardAppPage() {
                 boxShadow: 0
               }}
             >
-              <Typography variant="h4">Partner</Typography>
+              <Customer/>
             </Card>
           </Grid>
         </Grid>

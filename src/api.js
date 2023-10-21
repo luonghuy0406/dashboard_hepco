@@ -166,6 +166,16 @@ export const updateWebinf = async (data) => {
     throw error;
   }
 };
+//------partner---------
+//banner----------
+export const getCustomer = async () => {
+  try {
+    const response = await api.get(`/customer/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 //Product--------------
 export const getListProducts = async () => {
   try {
@@ -175,7 +185,7 @@ export const getListProducts = async () => {
     throw error;
   }
 };
-export const updateProduct = async (id_product, name, des, des_en, image, id_group) => {
+export const updateProduct = async (id_product, name, des, des_en, image, id_group, brochure) => {
   try {
     const FormData = require('form-data');
     let data = new FormData();
@@ -185,6 +195,7 @@ export const updateProduct = async (id_product, name, des, des_en, image, id_gro
     data.append('des_en', des_en);
     data.append('image', image);
     data.append('id_group', id_group);
+    data.append('brochure', brochure);
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
@@ -203,7 +214,7 @@ export const updateProduct = async (id_product, name, des, des_en, image, id_gro
     throw error;
   }
 };
-export const addProduct = async (name, des, des_en, image, id_group) => {
+export const addProduct = async (name, des, des_en, image, id_group, brochure) => {
   try {
     
     let id_user = localStorage.getItem("user")
@@ -215,6 +226,7 @@ export const addProduct = async (name, des, des_en, image, id_group) => {
     data.append('des_en', des_en);
     data.append('image', image);
     data.append('id_group', id_group);
+    data.append('brochure', brochure);
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;

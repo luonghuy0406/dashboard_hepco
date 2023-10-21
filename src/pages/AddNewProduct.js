@@ -33,16 +33,17 @@ export default function AddNewProduct() {
   const [des_en,setDesEN] = useState('')
   const [image, setImage] = useState('')
   const [group, setGroup] = useState(1)
+  const [brochure, setBrochure] = useState('')
   const navigate = useNavigate();
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     setImage(URL.createObjectURL(file))
     
   };
-  const handleAddProduct = async (name, des, des_en, image, id_group) =>{
+  const handleAddProduct = async (name, des, des_en, image, id_group, brochure) =>{
     if(name && image){
         let imageUpload = document.getElementById("file-upload-new-product").files[0]
-        const response = await addProduct(name, des, des_en, imageUpload, id_group)
+        const response = await addProduct(name, des, des_en, imageUpload, id_group, brochure)
         if(response.results.status == 'success'){
             handleCancel()
             navigate('/dashboard/product', { replace: true });
@@ -60,6 +61,7 @@ export default function AddNewProduct() {
     setDesEN('')
     setImage('')
     setGroup('')
+    setBrochure('')
     document.getElementById("file-upload-new-product").value = null
   }
   return (
@@ -83,17 +85,16 @@ export default function AddNewProduct() {
                                 Product name
                             </Typography>
                             <FormControl required={true} fullWidth={true}>
-                            <TextField
-                                required
-                                variant='standard'
-                                name={"product_name"}
-                                onChange={(e)=>{setName(e.target.value)}}
-                                error={name?.length == 0} 
-                                helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
-                                value={name}
-                            />
-                        </FormControl>
-
+                                <TextField
+                                    required
+                                    variant='standard'
+                                    name={"product_name"}
+                                    onChange={(e)=>{setName(e.target.value)}}
+                                    error={name?.length == 0} 
+                                    helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                                    value={name}
+                                />
+                            </FormControl>
                         </Grid>
                         <Grid item xs={6} md={6} lg={6}>
                             <Typography variant="h6" gutterBottom>
@@ -120,7 +121,20 @@ export default function AddNewProduct() {
                             />
                         </Grid>
                     </Grid>
-                    
+                    <Grid item xs={12} md={12} lg={12}>
+                        <Typography variant="h6" gutterBottom>
+                            Brochure
+                        </Typography>
+                        <FormControl required={true} fullWidth={true}>
+                            <TextField
+                                required
+                                variant='standard'
+                                name={"brochure"}
+                                onChange={(e)=>{setBrochure(e.target.value)}}
+                                value={brochure}
+                            />
+                        </FormControl>
+                    </Grid>
                 </Card>
             </Stack>
             <Stack  mb={5} >
@@ -194,7 +208,7 @@ export default function AddNewProduct() {
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleAddProduct(name, des, des_en, image, group)}}>Save post</Button>
+                    <Button variant="contained" onClick={()=>{handleAddProduct(name, des, des_en, image, group,brochure)}}>Save post</Button>
                     <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
             </Stack>

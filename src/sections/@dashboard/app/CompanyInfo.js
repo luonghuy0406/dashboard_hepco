@@ -108,7 +108,7 @@ export default function CompanyInfo() {
             
             <Box sx={{ width: '100%' }}>
                 <Typography component="h3" variant="h5" gutterBottom>
-                    Head Office
+                    HO CHI MINH OFFICE
                 </Typography>
                 <Divider />
                 <br/>

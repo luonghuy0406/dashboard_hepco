@@ -19,15 +19,16 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
     const [image,setImage] = useState(`${process.env.REACT_APP_API_HOST}/read_image/${row.image}`)
     const [des,setDes] = useState(row.des)
     const [des_en,setDesEN] = useState(row.des_en)
+    const [brochure,setBrochure] = useState(row.brochure)
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       setImage(URL.createObjectURL(file))
       
     };
-    const handleUpdateProduct = async (id,name, des, des_en, id_group) =>{
+    const handleUpdateProduct = async (id,name, des, des_en, id_group,brochure) =>{
       if(name?.length > 0){
         let image = document.getElementById("file-upload-product"+id).files[0]
-        const response = await updateProduct(id,name, des, des_en, image || '', id_group)
+        const response = await updateProduct(id,name, des, des_en, image || '', id_group, brochure)
         Swal.fire(
           response.results.status,
           response.results.msg,
@@ -47,6 +48,7 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
       setDes(row.des)
       setDesEN(row.des_en)
       setOpen(false)
+      setBrochure(row.brochure)
     }
     return (
             <Box sx={{ margin: 3}}>
@@ -76,7 +78,14 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
                             helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
                         />
                     </FormControl>
-
+                    <h3 style={{textAlign:"left"}}>Brochure</h3>
+                    <FormControl required={true} fullWidth={true}>
+                        <TextField
+                            name={"brochure"+row.id_product}
+                            onChange={(e)=>{setBrochure(e.target.value)}}
+                            value={brochure}
+                        />
+                    </FormControl>
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -127,7 +136,7 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
               <Divider/>
               <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                  <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_product,name,des,des_en,row.id_group)}}>Update</Button>
+                  <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_product,name,des,des_en,row.id_group,brochure)}}>Update</Button>
                   <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
                 {
