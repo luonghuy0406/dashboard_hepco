@@ -20,8 +20,7 @@ import { setAuthToken } from './api';
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
   const token = localStorage.getItem('token');
-
-  if (token && checkTokenExpiration()) {
+  if (token && token != 'undefined' && checkTokenExpiration()) {
     // If expired, refresh the access token
     refreshToken()
     .then((newAccessToken) => {
@@ -34,10 +33,10 @@ const PrivateRoute = ({ element, ...rest }) => {
       // Redirect to login if refresh throws an error
       return <Navigate to="/login" replace />;
     });
-  }else if(!token){
+  }else if(!token || token == 'undefined'){
     return <Navigate to="/login" replace />;
   }
-  if(token){
+  if(token && token != 'undefined'){
     setAuthToken(token) 
   }else{
     localStorage.removeItem('token')

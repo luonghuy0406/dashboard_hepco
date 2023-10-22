@@ -45,7 +45,7 @@ export default function DashboardAppPage() {
                 boxShadow: 0
               }}
             >
-              <AboutUs/>
+              {/* <AboutUs/> */}
             </Card>
           </Grid>
           <Grid item xs={12}>
@@ -56,7 +56,7 @@ export default function DashboardAppPage() {
                 boxShadow: 0
               }}
             >
-              <CompanyInfo/>
+              {/* <CompanyInfo/> */}
             </Card>
           </Grid>
           <Grid item xs={12}>

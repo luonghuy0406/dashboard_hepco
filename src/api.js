@@ -7,7 +7,7 @@ const api = axios.create({
 });
 
 export const setAuthToken = (token) => {
-  if (token) {
+  if (token && token != 'undefined') {
     api.defaults.headers.common['Authorization'] = `${token}`;
   } else {
     delete api.defaults.headers.common['Authorization'];
@@ -28,8 +28,10 @@ export const refreshToken = async () => {
     
         const response = await axios(config);
         const token = response.data.new_access_token;
-        localStorage.setItem('token', token);
-        setAuthToken(token);
+        if(token && token != 'undefined'){
+          localStorage.setItem('token', token);
+          setAuthToken(token);
+        }
         return token;
     }
   } catch (error) {
@@ -41,9 +43,10 @@ export const login = async (id_user, pw) => {
   try {
     const response = await api.post('/account/login', { id_user, pw });
     if(response.data.token){
-      localStorage.setItem("user",id_user)
       const { token, refresh_token } = {token: response.data.token, refresh_token: response.data.refresh_token};
       setAuthToken(token);
+      localStorage.setItem("user",response.data.username)
+      localStorage.setItem("name",response.data.name)
       localStorage.setItem('token', token);
       localStorage.setItem('refresh_token', refresh_token);
       return { token, refreshToken };
@@ -167,7 +170,6 @@ export const updateWebinf = async (data) => {
   }
 };
 //------partner---------
-//banner----------
 export const getCustomer = async () => {
   try {
     const response = await api.get(`/customer/list`);
@@ -176,6 +178,83 @@ export const getCustomer = async () => {
     throw error;
   }
 };
+
+export const addNewCustomer = async (name, image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('name', name);
+    data.append('image', image);
+    data.append('name_en', '');
+    data.append('detail', '');
+    data.append('detail_en', '');
+    if(checkTokenExpiration){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/customer/add',data);
+      return response.data;
+    }else{
+      const response = await api.post('/customer/add',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+};
+export const updateCustomer =  async (id,name, image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id', id);
+    
+    data.append('name', name);
+    data.append('image', image);
+    data.append('name_en', '');
+    data.append('detail', '');
+    data.append('detail_en', '');
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/customer/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/customer/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+} 
+export const deleteCustomer = async (id)=>{
+  try {
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.delete(`/customer/delete/${id}`);
+      return response.data;
+    }else{
+      const response = await api.delete(`/customer/delete/${id}`);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
 //Product--------------
 export const getListProducts = async () => {
   try {
@@ -366,9 +445,20 @@ export const getPosts = async () => {
   }
 };
 
+
+export const getPostById = async (id) => {
+  try {
+    const response = await api.get(`post/detail/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const addNewPost = async (name,name_en, content, content_en, image) => {
   try {
     const id_user = localStorage.getItem('user')
+    const author = localStorage.getItem('name')
     const FormData = require('form-data');
     let data = new FormData();
     data.append('name', name);
@@ -376,7 +466,7 @@ export const addNewPost = async (name,name_en, content, content_en, image) => {
     data.append('content', content);
     data.append('content_en', content_en);
     data.append('image', image);
-    data.append('author', '');
+    data.append('author', author);
     data.append('id_user', id_user);
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
@@ -396,19 +486,10 @@ export const addNewPost = async (name,name_en, content, content_en, image) => {
     throw error;
   }
 };
-
-export const getPostById = async (id) => {
-  try {
-    const response = await api.get(`post/detail/${id}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const updatePost =  async (id,name,name_en,content,content_en, image) => {
   try {
     const id_user = localStorage.getItem('user')
+    const author = localStorage.getItem('name')
     const FormData = require('form-data');
     let data = new FormData();
     data.append('id_post', id);
@@ -417,7 +498,7 @@ export const updatePost =  async (id,name,name_en,content,content_en, image) => 
     data.append('name_en', name_en);
     data.append('content', content);
     data.append('content_en', content_en);
-    data.append('author', '');
+    data.append('author', author);
     data.append('id_user', id_user);
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
