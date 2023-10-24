@@ -114,7 +114,7 @@ class Editor extends ClassicEditor {
 		},
 		simpleUpload: {
             // The URL that the images are uploaded to.
-            uploadUrl: 'http://localhost:3001/post/upimg',
+            uploadUrl: 'https://api.mmsvn.com/post/upimg',
             // Enable the XMLHttpRequest.withCredentials property.
             // withCredentials: true,
 

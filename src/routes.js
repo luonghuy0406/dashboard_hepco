@@ -70,13 +70,13 @@ export default function Router() {
       element: <SimpleLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: '404', element: <Page404 /> },
-        { path: '*', element: <Navigate to="/404" /> },
+        { path: '404', element: <Navigate to="/" /> },
+        { path: '*', element: <Navigate to="/" /> },
       ],
     },
     {
       path: '*',
-      element: <Navigate to="/404" replace />,
+      element: <Navigate to="/" replace />,
     },
   ]);
 
