@@ -26,6 +26,9 @@ export default function ProductsTable(props){
                 <TableCell align="center">
                   <></>
                 </TableCell>
+                <TableCell align="center">
+                  <></>
+                </TableCell>
                 <TableCell align="center" >Product name</TableCell>
                 <TableCell align="center" >Product line</TableCell>
                 <TableCell align="center" >Brochure</TableCell>
@@ -37,9 +40,9 @@ export default function ProductsTable(props){
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((row) => {
+              {items.map((row, index) => {
                 return (
-                  <ProductRowTable key={"table"+row.id_product} row={row} group={productGroup[row.id_group]} setUpdate={setUpdate} update={update}/>
+                  <ProductRowTable index={index} key={"table"+row.id_product} row={row} group={productGroup[row.id_group]} setUpdate={setUpdate} update={update}/>
                 )}
               )}
             </TableBody>

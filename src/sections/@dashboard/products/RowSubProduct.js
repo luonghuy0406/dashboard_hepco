@@ -53,7 +53,7 @@ export default function RowSubProduct({row,setUpdate,update}){
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await deleteSubProduct(row.id_sub)
-          if(response.result.status == 'success'){
+          if(response.results.status == 'success'){
             setOpen(false)
             setUpdate(!update)
           }

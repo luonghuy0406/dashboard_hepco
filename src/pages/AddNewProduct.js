@@ -3,9 +3,6 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, Autocomplete, FormControl, FormHelperText } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import Editor from 'ckeditor5-custom-build/build/ckeditor';
-import { CKEditor } from '@ckeditor/ckeditor5-react'
 import { EditorComponent } from 'src/sections/@dashboard/products';
 import { addProduct } from 'src/api';
 import Swal from 'sweetalert2';
@@ -46,7 +43,7 @@ export default function AddNewProduct() {
         const response = await addProduct(name, des, des_en, imageUpload, id_group, brochure)
         if(response.results.status == 'success'){
             handleCancel()
-            navigate('/dashboard/product', { replace: true });
+            navigate('/dashboard/products', { replace: true });
         }
         Swal.fire(
             response.results.status,

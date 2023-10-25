@@ -34,7 +34,7 @@ const style = {
   width: '90%'
 }
 
-export default function ProductRowTable({row, group, setUpdate, update}) {
+export default function ProductRowTable({row,index, group, setUpdate, update}) {
     const [open, setOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [addNew, setAddNew] = useState(false)
@@ -77,6 +77,7 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
     return (
       <>
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} style={{ borderLeft: (open ? "2px solid #6366f1" : "unset") }}>
+          
           <TableCell align="center" sx={{width: 30}}>
             <IconButton
               aria-label="expand row"
@@ -85,6 +86,9 @@ export default function ProductRowTable({row, group, setUpdate, update}) {
             >
               {open ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
             </IconButton>
+          </TableCell>
+          <TableCell align="center" sx={{width: 100}}>
+            {index+1}
           </TableCell>
           <TableCell align="center" sx={{width: 100}}>
             {row.name}

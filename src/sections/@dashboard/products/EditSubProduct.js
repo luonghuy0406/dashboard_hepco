@@ -33,7 +33,7 @@ export default function EditSubProduct ({row, setOpen, setUpdate, update, handle
           response.results.msg,
           response.results.status
         )
-        if(response.result.status == 'success'){
+        if(response.results.status == 'success'){
           setOpen(false)
           setUpdate(!update)
           handleCancel(id)

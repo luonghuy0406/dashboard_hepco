@@ -8,18 +8,40 @@ import {
   Button,
   Divider,
   Grid,
-  FormControl
+  FormControl,
+  Autocomplete
 } from '@mui/material';
 import EditorComponent from './EditorComponent';
 import { updateProduct } from 'src/api';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
+const gr =[
+  {
+    value : 1,
+    label: 'Chocking Compound'
+  },
+  {
+    value : 2,
+    label: 'Auxiliary Machinery'
+  },
+  {
+    value : 3,
+    label : 'Viega Pipe & Fittings'
+  },
+  {
+    value : 4,
+    label : 'Viton/FKM rubber packing sheet'
+  }
+]
 export default function EditProduct ({subList, row, setOpen, setUpdate, update, handleDeleteProduct}){
     const [name,setName] = useState(row.name)
     const [image,setImage] = useState(`${process.env.REACT_APP_API_HOST}/read_image/${row.image}`)
     const [des,setDes] = useState(row.des)
     const [des_en,setDesEN] = useState(row.des_en)
     const [brochure,setBrochure] = useState(row.brochure)
+    const [group, setGroup] = useState(row.id_group)
+
     const handleImageUpload = (event) => {
       const file = event.target.files[0];
       setImage(URL.createObjectURL(file))
@@ -34,7 +56,7 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
           response.results.msg,
           response.results.status
         )
-        if(response.result.status == 'success'){
+        if(response.results.status == 'success'){
           setOpen(false)
           setUpdate(!update)
           handleCancel()
@@ -49,6 +71,7 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
       setDesEN(row.des_en)
       setOpen(false)
       setBrochure(row.brochure)
+      setGroup(row.id_group)
     }
     return (
             <Box sx={{ margin: 3}}>
@@ -78,6 +101,27 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
                             helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
                         />
                     </FormControl>
+                    <h3 style={{textAlign:"left"}}>Product group</h3>
+                    
+                    <Autocomplete
+                          fullWidth
+                          options={gr}
+                          getOptionLabel={(option) => option.label}
+                          onChange={(e,value)=>{
+                              setGroup(value.value)
+                          }}
+                          defaultValue={()=>{
+                            let a = ''
+                            return a = gr.filter((pr)=>{return pr.value == row.id_group})[0]
+                          }}
+                          renderInput={(params) => (
+                          <TextField
+                          {...params}
+                              variant="standard" 
+                          />
+                          )}
+                          sx={{ width: '100%', px: 2 }}
+                      />
                     <h3 style={{textAlign:"left"}}>Brochure</h3>
                     <FormControl required={true} fullWidth={true}>
                         <TextField
@@ -136,7 +180,7 @@ export default function EditProduct ({subList, row, setOpen, setUpdate, update, 
               <Divider/>
               <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                  <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_product,name,des,des_en,row.id_group,brochure)}}>Update</Button>
+                  <Button variant="contained" onClick={()=>{handleUpdateProduct(row.id_product,name,des,des_en,group,brochure)}}>Update</Button>
                   <Button variant="text" style={{color:"gray"}} onClick={handleCancel}>Cancel</Button>
                 </Stack>
                 {

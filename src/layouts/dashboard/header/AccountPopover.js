@@ -20,12 +20,16 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+  const logout  = ()=>{
+    setOpen(null);
     localStorage.removeItem("token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user");
+    localStorage.removeItem("name");
     // Redirect to the dashboard page
     navigate('/', { replace: true });
-  };
+  }
 
   return (
     <>
@@ -71,7 +75,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={logout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>
