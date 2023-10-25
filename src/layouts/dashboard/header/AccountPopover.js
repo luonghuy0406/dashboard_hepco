@@ -73,8 +73,7 @@ export default function AccountPopover() {
         }}
       >
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
+        
         <MenuItem onClick={logout} sx={{ m: 1 }}>
           Logout
         </MenuItem>

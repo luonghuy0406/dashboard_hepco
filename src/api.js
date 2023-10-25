@@ -134,17 +134,17 @@ export const updateAboutUs = async (content,content_en,image1,image2,image3) => 
     let data = new FormData();
     data.append('content', content);
     data.append('content_en', content_en);
-    if(typeof image1 == 'object'){
+    if(typeof image1 == 'object' && image1?.name){
       data.append('image1', image1, Date.now());
     }else{
       data.append('image1', image1);
     }
-    if(typeof image2 == 'object'){
+    if(typeof image2 == 'object' && image2?.name){
       data.append('image2', image2, Date.now());
     }else{
       data.append('image2', image2);
     }
-    if(typeof image3 == 'object'){
+    if(typeof image3 == 'object' && image3?.name){
       data.append('image3', image3, Date.now());
     }else{
       data.append('image3', image3);
@@ -211,7 +211,7 @@ export const addNewCustomer = async (name, image) => {
     const FormData = require('form-data');
     let data = new FormData();
     data.append('name', name);
-    if(typeof image == 'object'){
+    if(typeof image == 'object' && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
@@ -244,7 +244,7 @@ export const updateCustomer =  async (id,name, image) => {
     data.append('id', id);
     
     data.append('name', name);
-    if(typeof image == 'object'){
+    if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
@@ -307,7 +307,7 @@ export const updateProduct = async (id_product, name, des, des_en, image, id_gro
     data.append('des', des);
     data.append('name', name);
     data.append('des_en', des_en);
-    if(typeof image == 'object'){
+    if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
@@ -342,7 +342,7 @@ export const addProduct = async (name, des, des_en, image, id_group, brochure) =
     data.append('des', des);
     data.append('name', name);
     data.append('des_en', des_en);
-    if(typeof image == 'object'){
+    if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
@@ -404,7 +404,7 @@ export const addSubProduct = async (name, content, content_en, image, id_product
     let data = new FormData();
     data.append('id_user', id_user);
     data.append('content', content);
-    data.append('name', name);
+    data.append('name', name  && image?.name);
     data.append('content_en', content_en);
     if(typeof image == 'object'){
       data.append('image', image, Date.now());
@@ -441,7 +441,7 @@ export const updateSubProduct = async (id_sub, name, content, content_en, image,
     data.append('content', content);
     data.append('name', name);
     data.append('content_en', content_en);
-    if(typeof image == 'object'){
+    if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
@@ -516,7 +516,7 @@ export const addNewPost = async (name,name_en, content, content_en, image) => {
     data.append('name_en', name_en);
     data.append('content', content);
     data.append('content_en', content_en);
-    if(typeof image == 'object'){
+    if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
@@ -548,12 +548,12 @@ export const updatePost =  async (id,name,name_en,content,content_en, image) => 
     const FormData = require('form-data');
     let data = new FormData();
     data.append('id_post', id);
-    data.append('image', image);
-    if(typeof image == 'object'){
+    if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
       data.append('image', image);
     }
+    data.append('name', name);
     data.append('name_en', name_en);
     data.append('content', content);
     data.append('content_en', content_en);

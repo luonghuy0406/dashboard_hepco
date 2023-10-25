@@ -54,15 +54,27 @@ export default function EditPost() {
     }
     
     const handleDeletePost = async (id)=>{
-        const response = await deletePost(id)
-        Swal.fire(
-            response.results.status,
-            response.results.msg,
-            response.results.status
-        )
-        if(response.results.status == 'success'){
-            navigate('/dashboard/news', { replace: true });
-        }
+        Swal.fire({
+            text: `Are you sure you want to delete post?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deletePost(id)
+                Swal.fire(
+                    response.results.status,
+                    response.results.msg,
+                    response.results.status
+                )
+                if(response.results.status == 'success'){
+                    navigate('/dashboard/news', { replace: true });
+                }
+            }
+          })
+        
     }
     return (
         <>

@@ -58,8 +58,8 @@ export default function LoginPage() {
         <Logo
           sx={{
             position: 'fixed',
-            top: { xs: 16, sm: 24, md: 40 },
-            left: { xs: 16, sm: 24, md: 40 },
+            top: { xs: 24, sm: 35, md: 100 },
+            left: { xs: 24, sm: 35, md: 100 },
           }}
         />
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to Dashboard
+              Sign in to MMS dashboard
             </Typography>
 
             <LoginForm />
