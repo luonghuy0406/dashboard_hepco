@@ -22,7 +22,7 @@ export const refreshToken = async () => {
         const decodedToken = jwtDecode(refresh_token);
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
-          window.location.replace(`${process.env.REACT_APP_API_HOST}/login`)
+          window.location.replace(`/login`)
         }
         const config = {
           method: 'get',
@@ -35,7 +35,7 @@ export const refreshToken = async () => {
         const token = response.data.new_access_token;
         
         if(response.data =="Mã không hợp lệ"){
-          window.location.replace(`${process.env.REACT_APP_API_HOST}/login`)
+          window.location.replace(`/login`)
         }
         if(token && token != 'undefined'){
           localStorage.setItem('token', token);
@@ -44,7 +44,7 @@ export const refreshToken = async () => {
         return token;
     }
   } catch (error) {
-    window.location.replace(`${process.env.REACT_APP_API_HOST}/login`)
+    window.location.replace(`/login`)
     throw error;
   }
 };
