@@ -7,35 +7,152 @@ const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ 
 
 const navConfig = [
   {
-    title: 'home',
+    title: 'Trang chủ',
     path: '/dashboard/app',
     icon: icon('ic_analytics'),
+    child: [
+      {
+        title: 'Thông tin công ty',
+        path: '/thongtin',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Banner',
+        path: '/banner',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Tầm nhìn - Sứ mệnh - Giá trị cốt lõi',
+        path: '/tamnhin',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Đối tác - Khách hàng',
+        path: '/doitac',
+        icon: icon('ic_analytics'),
+      }
+    ]
   },
-  // {
-  //   title: 'user',
-  //   path: '/dashboard/user',
-  //   icon: icon('ic_user'),
-  // },
   {
-    title: 'product',
-    path: '/dashboard/products',
-    icon: icon('ic_cart'),
+    title: 'Giới thiệu',
+    path: '/dashboard/gioithieu',
+    icon: icon('ic_analytics'),
+    child: [
+      {
+        title: 'Về Hepco',
+        path: '/vehepco',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Chức năng - Giấy phép',
+        path: '/chucnang',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Sơ đồ tổ chức',
+        path: '/sodo',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Thành tựu',
+        path: '/thanhtuu',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Hồ sơ năng lực',
+        path: '/hosonangluc',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Thư viện ảnh',
+        path: '/thuvien',
+        icon: icon('ic_analytics'),
+      }
+    ]
   },
   {
-    title: 'News',
-    path: '/dashboard/news',
+    title: 'Dịch vụ',
+    path: '/dashboard/dichvu',
+    icon: icon('ic_analytics'),
+    child: [
+      {
+        title: 'Thu gom vận chuyển xử lý rác sinh hoạt',
+        path: '/sinhhoat',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Thu gom vận chuyển xử lý rác nguy hại',
+        path: '/nguyhai',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Cơ khí - Xây dựng',
+        path: '/cokhi-xaydung',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Thoát nước - Điện chiếu sáng',
+        path: '/thoatnuoc-chieusang',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Quản trang',
+        path: '/quantrang',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Kinh doanh khác',
+        path: '/kinhdoanhkhac',
+        icon: icon('ic_analytics'),
+      }
+    ]
+  },
+  {
+    title: 'Tin tức',
+    path: '/dashboard/tintuc',
     icon: icon('ic_blog'),
+    child: []
+  },
+  {
+    title: 'Dự án',
+    path: '/dashboard/duan',
+    icon: icon('ic_blog'),
+    child: [
+      {
+        title: 'Dự án đầu tư',
+        path: '/dautu',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Hợp tác trong nước',
+        path: '/trongnuoc',
+        icon: icon('ic_analytics'),
+      },
+      {
+        title: 'Hợp tác nước ngoài',
+        path: '/nuocngoai',
+        icon: icon('ic_analytics'),
+      },
+    ]
+  },
+  {
+    title: 'Cổ đông',
+    path: '/dashboard/codong',
+    icon: icon('ic_blog'),
+    child: []
+  },
+  {
+    title: 'Câu hỏi',
+    path: '/dashboard/cauhoi',
+    icon: icon('ic_blog'),
+    child: []
   },
   // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: icon('ic_lock'),
+  //   title: 'product',
+  //   path: '/products',
+  //   icon: icon('ic_cart'),
   // },
-  // {
-  //   title: 'Not found',
-  //   path: '/404',
-  //   icon: icon('ic_disabled'),
-  // },
+  
 ];
 
 export default navConfig;

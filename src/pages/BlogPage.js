@@ -33,7 +33,7 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: News and Events | MEKONG MARINE SUPPLY CO., LTD </title>
+        <title> Dashboard: News and Events | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       <Container maxWidth={'xl'}>
@@ -41,7 +41,7 @@ export default function BlogPage() {
           <Typography variant="h4" gutterBottom>
             News and Events
           </Typography>
-          <Link to="/dashboard/news/add">
+          <Link to="/dashboard/tintuc/add">
               <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
                 New Post
               </Button>

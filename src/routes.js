@@ -57,9 +57,9 @@ export default function Router() {
         { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
         { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
         { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },
-        { path: 'news', element: <PrivateRoute element={<BlogPage />} /> },
-        { path: 'news/:id', element: <PrivateRoute element={<EditPost />} /> },
-        { path: 'news/add', element: <PrivateRoute element={<AddNewPost />} /> },
+        { path: 'tintuc', element: <PrivateRoute element={<BlogPage />} /> },
+        { path: 'tintuc/:id', element: <PrivateRoute element={<EditPost />} /> },
+        { path: 'tintuc/add', element: <PrivateRoute element={<AddNewPost />} /> },
       ],
     },
     {

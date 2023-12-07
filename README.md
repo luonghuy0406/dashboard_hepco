@@ -18,10 +18,10 @@
 
 ## Page demo
 
-- [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
-- [Users](https://minimal-kit-react.vercel.app/dashboard/user)
-- [Product](https://minimal-kit-react.vercel.app/dashboard/products)
-- [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
+- [Dashboard](https://minimal-kit-react.vercel.app/app)
+- [Users](https://minimal-kit-react.vercel.app/user)
+- [Product](https://minimal-kit-react.vercel.app/products)
+- [Blog](https://minimal-kit-react.vercel.app/blog)
 - [Login](https://minimal-kit-react.vercel.app/login)
 - [Not Found](https://minimal-kit-react.vercel.app/404)
 

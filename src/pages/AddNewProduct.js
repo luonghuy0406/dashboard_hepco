@@ -64,7 +64,7 @@ export default function AddNewProduct() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Add new product | MEKONG MARINE SUPPLY CO., LTD </title>
+        <title> Dashboard: Add new product | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       

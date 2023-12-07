@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Box, Link } from '@mui/material';
+import { Box, Link,Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -14,14 +14,15 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
       ref={ref}
       component="div"
       sx={{
-        width: 150,
+        width: 100,
         height: 'auto',
         display: 'inline-flex',
+        alignItems:'center',
         ...sx,
       }}
       {...other}
     >
-      <img src='/mms_logo.png' alt='logo'/>
+      <img src='/logo1.png' alt='logo'/>
     </Box>
   );
 

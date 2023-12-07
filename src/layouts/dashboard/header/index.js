@@ -53,9 +53,11 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
-        {/* <Searchbar /> */}
-        <Box sx={{ flexGrow: 1 }} />
-
+        <Box
+          sx={{padding: '16px', flexGrow: 1}}
+        >
+          <Typography variant="h4" textAlign={"center"} fontWeight={700} color={'#000'}>CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ</Typography>
+        </Box>
         <Stack
           direction="row"
           alignItems="center"

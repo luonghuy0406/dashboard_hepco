@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2021 MEKONG MARINE SUPPLY CO., LTD ([https://minimals.cc/](https://minimals.cc/))
+Copyright (c) 2021 HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ ([https://minimals.cc/](https://minimals.cc/))
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

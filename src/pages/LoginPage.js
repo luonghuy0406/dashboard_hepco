@@ -51,7 +51,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | MEKONG MARINE SUPPLY CO., LTD </title>
+        <title> Login | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       <StyledRoot>
@@ -75,7 +75,7 @@ export default function LoginPage() {
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to MMS dashboard
+              Sign in to HEPCO dashboard
             </Typography>
 
             <LoginForm />

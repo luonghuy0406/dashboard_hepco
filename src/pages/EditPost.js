@@ -48,7 +48,7 @@ export default function EditPost() {
                 response.results.status
             )
             if(response.results.status == 'success'){
-                navigate('/dashboard/news', { replace: true });
+                navigate('/dashboard/tintuc', { replace: true });
             }
         }
     }
@@ -70,7 +70,7 @@ export default function EditPost() {
                     response.results.status
                 )
                 if(response.results.status == 'success'){
-                    navigate('/dashboard/news', { replace: true });
+                    navigate('/dashboard/tintuc', { replace: true });
                 }
             }
           })
@@ -79,7 +79,7 @@ export default function EditPost() {
     return (
         <>
         <Helmet>
-            <title> Dashboard: Edit post | MEKONG MARINE SUPPLY CO., LTD </title>
+            <title> Dashboard: Edit post | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
         </Helmet>
 
         <Container maxWidth={'xl'}>

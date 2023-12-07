@@ -36,7 +36,7 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Products | MEKONG MARINE SUPPLY CO., LTD </title>
+        <title> Dashboard: Products | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       <Container maxWidth={'xl'}>

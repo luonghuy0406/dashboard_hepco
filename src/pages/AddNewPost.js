@@ -33,7 +33,7 @@ export default function AddNewPost() {
                 response.results.status
             )
             if(response.results.status == 'success'){
-                navigate('/dashboard/news', { replace: true });
+                navigate('/dashboard/tintuc', { replace: true });
             }
         }
     }
@@ -47,7 +47,7 @@ export default function AddNewPost() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Add new post | MEKONG MARINE SUPPLY CO., LTD </title>
+        <title> Dashboard: Add new post | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       

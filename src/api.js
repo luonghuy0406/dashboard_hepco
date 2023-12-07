@@ -4,7 +4,8 @@ import { redirect } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_HOST,
+  // baseURL: process.env.REACT_APP_API_HOST,
+    baseURL: 'https://api.mmsvn.com'
 });
 
 export const setAuthToken = (token) => {

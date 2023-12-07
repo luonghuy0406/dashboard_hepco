@@ -61,7 +61,7 @@ export default function BlogPostCard({ post, index }) {
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{borderRadius:'0px', boxShadow:'unset'}}>
       <Link
-        to={`/dashboard/news/${id_post}`}
+        to={`/dashboard/tintuc/${id_post}`}
       >
         <Box position='relative'>
             <Box

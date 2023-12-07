@@ -17,7 +17,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Home | MEKONG MARINE SUPPLY CO., LTD </title>
+        <title> Home | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       <Container maxWidth={'xl'}>
