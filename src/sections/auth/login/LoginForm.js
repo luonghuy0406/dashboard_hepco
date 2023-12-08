@@ -35,12 +35,12 @@ export default function LoginForm() {
   return (
     <>
       <Stack spacing={3} sx={{ my: 2 }}>
-        <TextField error={error.length > 0} helperText={error} name="email" label="Email address" onChange={(e)=>{setUserId(e.target.value)}}/>
+        <TextField error={error.length > 0} helperText={error} name="email" label="Tên đăng nhập" onChange={(e)=>{setUserId(e.target.value)}}/>
 
         <TextField
           error={error.length > 0} helperText={error}
           name="password"
-          label="Password"
+          label="Mật khẩu"
           type={showPassword ? 'text' : 'password'}
           onChange={(e)=>{setPw(e.target.value)}}
           InputProps={{
@@ -56,7 +56,7 @@ export default function LoginForm() {
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleLogin}>
-        Login
+        Đăng nhập
       </LoadingButton>
     </>
   );

@@ -41,7 +41,8 @@ const Accordion = styled((props) => (
       border: `none`
 }));
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: "0px 16px"
+  padding: '0px',
+  marginLeft: '16px'
 }));
 
 NavItem.propTypes = {
@@ -57,7 +58,7 @@ function NavItem({ item }) {
   };
   return (
       <Accordion sx={{background: 'unset'}} key={path+"nav"} expanded={expanded === `pannel${path}`} onChange={handleChange(`pannel${path}`)}>
-        <AccordionSummary sx={{padding:'10px 0'}}  expandIcon={child?.length > 0 ? <ExpandMoreIcon /> : <></>} aria-controls={`pannel${path}d-content`} id={`pannel${path}d-header`}>
+        <AccordionSummary sx={{padding:'0'}}  expandIcon={child?.length > 0 ? <ExpandMoreIcon /> : <></>} aria-controls={`pannel${path}d-content`} id={`pannel${path}d-header`}>
           <StyledNavItem
               component={RouterLink}
               to={path}
@@ -83,6 +84,7 @@ function NavItem({ item }) {
                     component={RouterLink}
                     to={`${path}${ch.path}`}
                     sx={{
+                      margin: '5px 0',
                       '&.active': {
                         color: 'text.primary',
                         bgcolor: 'action.selected',
@@ -90,9 +92,7 @@ function NavItem({ item }) {
                       },
                     }}
                   >
-                    {/* <StyledNavItemIcon>{icon && icon}</StyledNavItemIcon> */}
-      
-                    <ListItemText disableTypography primary={ch.title} />
+                    <ListItemText disableTypography primary={ch.title} sx={{padding: '0 10px'}}/>
       
                 </StyledNavItem>
                 )

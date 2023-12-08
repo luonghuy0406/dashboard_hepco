@@ -16,6 +16,11 @@ import AddNewPost from './pages/AddNewPost';
 import { checkTokenExpiration, refreshToken } from './api';
 import AddNewProduct from './pages/AddNewProduct';
 import { setAuthToken } from './api';
+import CompanyInformations from './pages/Home/CompanyImformations';
+import Banners from './pages/Home/Banners';
+import Customer from './pages/Home/Customer';
+import VisionMission from './pages/Home/VisionMission';
+import FAQ from './pages/FAQ/FAQ';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -53,13 +58,19 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <PrivateRoute element={<DashboardAppPage />} /> },
-        { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
-        { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
-        { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },
+        { path: 'app', element: <PrivateRoute element={<CompanyInformations />} /> },
+        { path: 'app/thongtin', element: <PrivateRoute element={<CompanyInformations />} /> },
+        { path: 'app/banner', element: <PrivateRoute element={<Banners />} /> },
+        { path: 'app/tamnhin', element: <PrivateRoute element={<VisionMission />} /> },
+        { path: 'app/doitac', element: <PrivateRoute element={<Customer />} /> },
+        { path: 'cauhoi', element: <PrivateRoute element={<FAQ />} /> },
         { path: 'tintuc', element: <PrivateRoute element={<BlogPage />} /> },
         { path: 'tintuc/:id', element: <PrivateRoute element={<EditPost />} /> },
         { path: 'tintuc/add', element: <PrivateRoute element={<AddNewPost />} /> },
+
+        { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
+        { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
+        { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },
       ],
     },
     {

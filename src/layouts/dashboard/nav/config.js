@@ -9,7 +9,7 @@ const navConfig = [
   {
     title: 'Trang chủ',
     path: '/dashboard/app',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_home'),
     child: [
       {
         title: 'Thông tin công ty',
@@ -36,7 +36,7 @@ const navConfig = [
   {
     title: 'Giới thiệu',
     path: '/dashboard/gioithieu',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_about'),
     child: [
       {
         title: 'Về Hepco',
@@ -73,7 +73,7 @@ const navConfig = [
   {
     title: 'Dịch vụ',
     path: '/dashboard/dichvu',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_service'),
     child: [
       {
         title: 'Thu gom vận chuyển xử lý rác sinh hoạt',
@@ -110,13 +110,13 @@ const navConfig = [
   {
     title: 'Tin tức',
     path: '/dashboard/tintuc',
-    icon: icon('ic_blog'),
+    icon: icon('ic_news'),
     child: []
   },
   {
     title: 'Dự án',
     path: '/dashboard/duan',
-    icon: icon('ic_blog'),
+    icon: icon('ic_project'),
     child: [
       {
         title: 'Dự án đầu tư',
@@ -138,13 +138,13 @@ const navConfig = [
   {
     title: 'Cổ đông',
     path: '/dashboard/codong',
-    icon: icon('ic_blog'),
+    icon: icon('ic_notif'),
     child: []
   },
   {
     title: 'Câu hỏi',
     path: '/dashboard/cauhoi',
-    icon: icon('ic_blog'),
+    icon: icon('ic_faq'),
     child: []
   },
   // {

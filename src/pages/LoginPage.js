@@ -59,7 +59,7 @@ export default function LoginPage() {
           sx={{
             position: 'fixed',
             top: { xs: 24, sm: 35, md: 100 },
-            left: { xs: 24, sm: 35, md: 100 },
+            left: { xs: 24, sm: 35, md: 140 },
           }}
         />
 
@@ -72,10 +72,11 @@ export default function LoginPage() {
           </StyledSection>
         )}
 
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <StyledContent>
+
             <Typography variant="h4" gutterBottom>
-              Sign in to HEPCO dashboard
+              Đăng nhập vào trang quản lý HEPCO
             </Typography>
 
             <LoginForm />
