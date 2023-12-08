@@ -48,21 +48,21 @@ const navConfig = [
         path: '/chucnang',
         icon: icon('ic_analytics'),
       },
-      {
-        title: 'Sơ đồ tổ chức',
-        path: '/sodo',
-        icon: icon('ic_analytics'),
-      },
+      // {
+      //   title: 'Sơ đồ tổ chức',
+      //   path: '/sodo',
+      //   icon: icon('ic_analytics'),
+      // },
       {
         title: 'Thành tựu',
         path: '/thanhtuu',
         icon: icon('ic_analytics'),
       },
-      {
-        title: 'Hồ sơ năng lực',
-        path: '/hosonangluc',
-        icon: icon('ic_analytics'),
-      },
+      // {
+      //   title: 'Hồ sơ năng lực',
+      //   path: '/hosonangluc',
+      //   icon: icon('ic_analytics'),
+      // },
       {
         title: 'Thư viện ảnh',
         path: '/thuvien',

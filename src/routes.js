@@ -21,6 +21,8 @@ import Banners from './pages/Home/Banners';
 import Customer from './pages/Home/Customer';
 import VisionMission from './pages/Home/VisionMission';
 import FAQ from './pages/FAQ/FAQ';
+import About from './pages/About/About';
+import Function from './pages/About/Function';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -67,6 +69,9 @@ export default function Router() {
         { path: 'tintuc', element: <PrivateRoute element={<BlogPage />} /> },
         { path: 'tintuc/:id', element: <PrivateRoute element={<EditPost />} /> },
         { path: 'tintuc/add', element: <PrivateRoute element={<AddNewPost />} /> },
+        { path: 'gioithieu', element: <PrivateRoute element={<About />} /> },
+        { path: 'gioithieu/vehepco', element: <PrivateRoute element={<About />} /> },
+        { path: 'gioithieu/chucnang', element: <PrivateRoute element={<Function />} /> },
 
         { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
         { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },

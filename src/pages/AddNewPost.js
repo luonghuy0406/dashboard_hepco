@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import Editor from 'ckeditor5-custom-build/build/ckeditor';
+import Editor from 'ckeditor5-custom-build';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import { EditorComponent } from 'src/sections/@dashboard/products';
 import { addNewPost } from 'src/api';

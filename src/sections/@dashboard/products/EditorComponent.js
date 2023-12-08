@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import Editor from 'ckeditor5-custom-build/build/ckeditor';
+import Editor from 'ckeditor5-custom-build';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
 export default function EditorComponent({des,setDes}) {

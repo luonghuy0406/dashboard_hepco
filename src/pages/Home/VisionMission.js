@@ -40,6 +40,8 @@ const VisMis = () =>{
                         InputLabelProps={{ shrink: true }}
                         required
                         label={"Tầm nhìn"}
+                        multiline
+                        maxRows={4}
                         // name={"head_"+key}
                         // error={companyInfo?.[0]?.[key]?.invalid}
                         // helperText={companyInfo?.[0]?.[key]?.msg}
@@ -55,6 +57,8 @@ const VisMis = () =>{
                         InputLabelProps={{ shrink: true }}
                         required
                         label={"Tầm nhìn (EN)"}
+                        multiline
+                        maxRows={4}
                         // name={"head_"+key}
                         // error={companyInfo?.[0]?.[key]?.invalid}
                         // helperText={companyInfo?.[0]?.[key]?.msg}
@@ -70,6 +74,8 @@ const VisMis = () =>{
                         InputLabelProps={{ shrink: true }}
                         required
                         label={"Sứ mệnh"}
+                        multiline
+                        maxRows={4}
                         // name={"head_"+key}
                         // error={companyInfo?.[0]?.[key]?.invalid}
                         // helperText={companyInfo?.[0]?.[key]?.msg}
@@ -85,6 +91,8 @@ const VisMis = () =>{
                         InputLabelProps={{ shrink: true }}
                         required
                         label={"Sứ mệnh (EN)"}
+                        multiline
+                        maxRows={4}
                         // name={"head_"+key}
                         // error={companyInfo?.[0]?.[key]?.invalid}
                         // helperText={companyInfo?.[0]?.[key]?.msg}
@@ -222,7 +230,7 @@ const CoreValuesItem = ({id}) =>{
                     required
                     label={"Nội dung"}
                     multiline
-                    rows={4}
+                    maxRows={4}
                     // name={"head_"+key}
                     // error={companyInfo?.[0]?.[key]?.invalid}
                     // helperText={companyInfo?.[0]?.[key]?.msg}
@@ -239,7 +247,7 @@ const CoreValuesItem = ({id}) =>{
                     required
                     label={"Nội dung (EN)"}
                     multiline
-                    rows={4}
+                    maxRows={4}
                     // name={"head_"+key}
                     // error={companyInfo?.[0]?.[key]?.invalid}
                     // helperText={companyInfo?.[0]?.[key]?.msg}

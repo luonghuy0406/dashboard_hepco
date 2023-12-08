@@ -2,15 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import Editor from 'ckeditor5-custom-build';
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-// https://fullstack.edu.vn/blog/using-ckeditor-5-in-reactjs-include-upload-images-and-many-cool-functionalities.html
-export default function EditorComponent({des,setDes}) {
-    const [value, setValue] = useState(des)
+
+export default function EditorComponent({val,setVal}) {
+    const [value, setValue] = useState(val)
     useEffect(()=>{
-        setValue(des)
-    },[des])
+        setValue(val)
+    },[val])
     return (
-        <div style={{width:"100%"}}>
+        <div>
+            
             <CKEditor
+                style={{height:'300px'}}
                 editor={ Editor }
                 data={value}
                 onChange={ ( event, editor ) => {
@@ -19,9 +21,8 @@ export default function EditorComponent({des,setDes}) {
                 } }
                 onBlur={ ( event, editor ) => {
                     const data = editor.getData();
-                    setDes(data)
+                    setVal(data)
                 } }
-                
             />
         </div>
     )
