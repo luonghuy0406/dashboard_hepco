@@ -23,6 +23,11 @@ import VisionMission from './pages/Home/VisionMission';
 import FAQ from './pages/FAQ/FAQ';
 import About from './pages/About/About';
 import Function from './pages/About/Function';
+import Achievements from './pages/About/Achievements';
+import Gallery from './pages/About/Gallery';
+import Shareholder from './pages/Shareholder';
+import AddNewShareholder from './pages/AddNewShareholder';
+import EditShareHolder from './pages/EditShareholder';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -72,7 +77,11 @@ export default function Router() {
         { path: 'gioithieu', element: <PrivateRoute element={<About />} /> },
         { path: 'gioithieu/vehepco', element: <PrivateRoute element={<About />} /> },
         { path: 'gioithieu/chucnang', element: <PrivateRoute element={<Function />} /> },
-
+        { path: 'gioithieu/thanhtuu', element: <PrivateRoute element={<Achievements />} /> },
+        { path: 'gioithieu/thuvien', element: <PrivateRoute element={<Gallery />} /> },
+        { path: 'codong', element: <PrivateRoute element={<Shareholder />} /> },
+        { path: 'codong/:id', element: <PrivateRoute element={<EditShareHolder />} /> },
+        { path: 'codong/add', element: <PrivateRoute element={<AddNewShareholder />} /> },
         { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
         { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
         { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },

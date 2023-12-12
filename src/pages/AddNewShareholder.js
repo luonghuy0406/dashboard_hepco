@@ -10,16 +10,14 @@ import { EditorComponent } from 'src/sections/@dashboard/products';
 import { addNewPost } from 'src/api';
 import Swal from 'sweetalert2';
 
-export default function AddNewPost() {
+export default function AddNewShareholder() {
     const navigate = useNavigate();
     const categories = {
         // '0': {name: 'Tất cả tin', value:'0'},
-        '1': {name: 'Hoạt động công ty', value:'1'},
-        '2': {name: 'Đảng Đoàn thể', value:'2'},
-        '3': {name: 'Pháp luật môi trường', value:'3'},
-        '4': {name: 'Tin tức khác', value:'4'},
+        '1': {name: 'Thông báo', value:'1'},
+        '2': {name: 'Báo cáo', value:'2'}
     }
-    const [category, setCategory] = useState({name: 'Hoạt động công ty', value:'1'}) 
+    const [category, setCategory] = useState({name: 'Thông báo', value:'1'}) 
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
@@ -40,7 +38,7 @@ export default function AddNewPost() {
                 response.results.status
             )
             if(response.results.status == 'success'){
-                navigate('/dashboard/tintuc', { replace: true });
+                navigate('/dashboard/codong', { replace: true });
             }
         }
     }

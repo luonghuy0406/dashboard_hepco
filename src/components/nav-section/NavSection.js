@@ -24,7 +24,7 @@ NavSection.propTypes = {
 
 export default function NavSection({ data = [], ...other }) {
   return (
-    <Box {...other}>
+    <Box {...other} sx={{maxHeight:'calc( 100vh - 200px )', overflow: 'auto'}}>
       <List disablePadding sx={{ p: 1 }}>
         {data.map((item) => (
           <NavItem key={item.title} item={item} />

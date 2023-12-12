@@ -91,15 +91,15 @@ export default function BlogPostCard({ post, index }) {
                     }}
                 >
                     <Typography 
-                        sx={{
-                            color: 'white',
-                            fontSize:'13px',
-                            textDecoration:'none !important'
-                        }}
-                    >
-                        {fDate(cre_date)}
+                          sx={{
+                              color: 'white',
+                              fontSize:'13px',
+                              textDecoration:'none !important'
+                          }}
+                      >
+                          {`${fDate(cre_date)} - ${fDate(cre_date)}`} 
 
-                    </Typography>
+                      </Typography>
                     <Typography 
                         variant="h6"
                         sx={{

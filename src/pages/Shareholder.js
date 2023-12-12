@@ -14,14 +14,12 @@ import {  getPosts } from 'src/api';
 
 // ----------------------------------------------------------------------
 
-export default function BlogPage() {
+export default function Shareholder() {
   const categories = {
-    '0': {name: 'Tất cả tin', value:'0'},
-    '1': {name: 'Hoạt động công ty', value:'1'},
-    '2': {name: 'Đảng Đoàn thể', value:'2'},
-    '3': {name: 'Pháp luật môi trường', value:'3'},
-    '4': {name: 'Tin tức khác', value:'4'},
-}
+      '0': {name: 'Tất cả tin', value:'0'},
+      '1': {name: 'Thông báo', value:'1'},
+      '2': {name: 'Báo cáo', value:'2'}
+  }
   const [postList, setPostList] = useState([])
   const [postListTemp, setPostListTemp] = useState([])
   const [update,setUpdate] = useState(false)
@@ -39,15 +37,15 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: News and Events | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
+        <title> Dashboard: Cổ đông | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       <Container maxWidth={'xl'}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            News and Events
+            Cổ đông
           </Typography>
-          <Link to="/dashboard/tintuc/add">
+          <Link to="/dashboard/codong/add">
               <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
                 New Post
               </Button>

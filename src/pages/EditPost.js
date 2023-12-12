@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText } from '@mui/material';
+import { Grid, Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText, Autocomplete } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPostById, updatePost, deletePost } from 'src/api';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,14 @@ import Swal from 'sweetalert2';
 export default function EditPost() {
     const { id } = useParams();
     const navigate = useNavigate();
-                
+    const categories = {
+        // '0': {name: 'Tất cả tin', value:'0'},
+        '1': {name: 'Hoạt động công ty', value:'1'},
+        '2': {name: 'Đảng Đoàn thể', value:'2'},
+        '3': {name: 'Pháp luật môi trường', value:'3'},
+        '4': {name: 'Tin tức khác', value:'4'},
+    }
+    const [category, setCategory] = useState()     
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
@@ -88,26 +95,35 @@ export default function EditPost() {
                 Edit post {id}
             </Typography>
             </Stack>
-            
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
                     <Typography variant="h6" gutterBottom>
-                        Post title EN
+                        Loại tin
                     </Typography>
-                    <TextField 
-                        variant="standard" 
-                        fullWidth 
-                        value={title_en} 
-                        onChange={(e)=>{setTitleEN(e.target.value)}}
-                        error={title_en?.length == 0} 
-                        helperText = {title_en?.length == 0 ? "Title cannot be empty" : ""}
+                    <Autocomplete
+                        id="tags-standard"
+                        options={Object.values(categories)}
+                        getOptionLabel={(option) => option.name}
+                        value={category}
+                        renderInput={(params) => (
+                            <TextField
+                            {...params}
+                            variant="outlined"
+                            placeholder={"Chọn loại tin tức"}
+                            />
+                        )}
+
+                        onChange={(e,value)=>{
+                            setCategory(value)
+                        }}
                     />
                 </Card>
             </Stack>
+
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
                     <Typography variant="h6" gutterBottom>
-                        Post title VI
+                        Tiêu đề
                     </Typography>
                     <TextField 
                         variant="standard"  
@@ -116,6 +132,21 @@ export default function EditPost() {
                         onChange={(e)=>{setTitle(e.target.value)}}
                         error={title?.length == 0} 
                         helperText = {title?.length == 0 ? "Title cannot be empty" : ""}
+                    />
+                </Card>
+            </Stack>
+            <Stack  mb={5}>
+                <Card sx={{ p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Tiêu đề (EN)
+                    </Typography>
+                    <TextField 
+                        variant="standard" 
+                        fullWidth 
+                        value={title_en} 
+                        onChange={(e)=>{setTitleEN(e.target.value)}}
+                        error={title_en?.length == 0} 
+                        helperText = {title_en?.length == 0 ? "Title cannot be empty" : ""}
                     />
                 </Card>
             </Stack>
@@ -129,7 +160,7 @@ export default function EditPost() {
                         spacing={2}
                         sx={{width:'100%'}}
                     >
-                        <h3>Post Cover</h3>
+                        <h3>Ảnh nền</h3>
                         <div>
                             <input
                                 accept="image/*"
@@ -170,29 +201,30 @@ export default function EditPost() {
                     </Stack>
                 </Card>
             </Stack>
+
             <Stack  mb={5} >
                 <Card sx={{ p: 2}}>
                     <Typography variant="h6" gutterBottom>
-                        Post Content EN
+                        Nội dung
                     </Typography>
-                    <EditorComponent des={content_en} setDes={setContentEN}/>
+                    <EditorComponent des={content} setDes={setContent}/>
                 </Card>
             </Stack>
             <Stack  mb={5} >
                 <Card sx={{ p: 2}}>
                     <Typography variant="h6" gutterBottom>
-                        Post Content VI
+                        Nội dung (EN)
                     </Typography>
-                    <EditorComponent des={content} setDes={setContent}/>
+                    <EditorComponent des={content_en} setDes={setContentEN}/>
                 </Card>
             </Stack>
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleEditPost(id,title,title_en,content,content_en)}}>Save post</Button>
-                    <Button variant="text" style={{color:"gray"}}>Cancel</Button>
+                    <Button variant="contained" onClick={()=>{handleEditPost(id,title,title_en,content,content_en)}}>Lưu bài đăng</Button>
+                    <Button variant="text" style={{color:"gray"}}>Huỷ</Button>
                 </Stack>
-                <Button variant="text" color="error" onClick={()=>{handleDeletePost(id)}}>Delete product</Button>
+                <Button variant="text" color="error" onClick={()=>{handleDeletePost(id)}}>Xoá bài đăng</Button>
             </Stack>
         </Container>
         </>
