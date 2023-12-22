@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-// @mui
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, Typography } from '@mui/material';
+import { Stack, IconButton, InputAdornment, TextField} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// components
 import Iconify from '../../../components/iconify';
 import { login } from 'src/api';
 
@@ -28,7 +25,6 @@ export default function LoginForm() {
       }
     } catch (error) {
       console.log(error);
-      // Handle login error
     }
   };
 

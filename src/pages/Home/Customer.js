@@ -99,7 +99,7 @@ export default function Customer() {
                                     <CardMedia
                                         component="img"
                                         sx={{ width: 350,textAlign: "center" }}
-                                        image={`${process.env.REACT_APP_API_HOST}/read_image/${row.image}`}
+                                        image={`http://localhost:3001/read_image/${row.image}`}
                                         alt={row.name}
                                     />
                                 </Box>
@@ -153,11 +153,11 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
         customers = customers.filter((customer)=> customer.id == id)
     }
     const [name,setName] = useState(add ? '' : customers[0].name)
-    const [image, setImage] = useState(add ? '' : `${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
+    const [image, setImage] = useState(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
     const [imageFile, setImageFile] = useState('')
     useEffect(()=>{
         if(customers?.length > 0){
-            toDataURL(`${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
+            toDataURL(`http://localhost:3001/read_image/${customers[0].image}`)
             .then(dataUrl => {
                 var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                 setImageFile(fileData)
@@ -202,7 +202,7 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
             document.getElementById("file-upload-new-customer"+id).value = ''
         }else{
             setName(add ? '' : customers[0].name)
-            setImage(add ? '' : `${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
+            setImage(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
             document.getElementById("file-upload-new-customer"+id).value = ''
         }
         setOpenModal(false)

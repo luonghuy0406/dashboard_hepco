@@ -1,18 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-// @mui
-import { Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Grid, Button, Container, Stack, Typography, Pagination, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
-// components
 import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSearch } from '../sections/@dashboard/blog';
-// mock
 import {  getPosts } from 'src/api';
-
-// ----------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------
 
 export default function BlogPage() {
   const categories = {
@@ -21,48 +13,87 @@ export default function BlogPage() {
     '2': {name: 'Đảng Đoàn thể', value:'2'},
     '3': {name: 'Pháp luật môi trường', value:'3'},
     '4': {name: 'Tin tức khác', value:'4'},
-}
+  }
+
+  const [valueFilter, setValueFilter] = useState({name: 'Tất cả tin', value:'0'})
+  const [keyword, setKeyword] = useState('')
   const [postList, setPostList] = useState([])
-  const [postListTemp, setPostListTemp] = useState([])
-  const [update,setUpdate] = useState(false)
-  useEffect(()=>{
-    async function fetchData() {
-        const postLists = await getPosts()
-        if(postLists.results){
-          setPostList(postLists.results)
-          setPostListTemp(postLists.results)
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 12;
+  const [totalPages,setTotalPages] = useState(0);
+  const handlePageChange = (event, value) => {
+      setPage(value)
+  }
+
+  const didMount = useRef(false)
+  useEffect(() => {
+    const timeOutId = keyword && setTimeout(() => doneTyping(), 300);
+    function doneTyping () {
+        if(didMount.current){
+          async function fetchData() {
+            const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
+            if(postLists.result){
+              setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
+              setPostList(postLists.result.data)
+              setPage(1)
+            }
+        }
+        fetchData()
         }
     }
-    fetchData();
-    
-},[update])
+    didMount.current = true
+    return () => clearTimeout(timeOutId);
+  }, [keyword])
+  useEffect(()=>{
+    async function fetchData() {
+        const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
+        if(postLists.result){
+          setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
+          setPostList(postLists.result.data)
+          setPage(1)
+        }
+    }
+    fetchData()
+  },[itemsPerPage,valueFilter,page])
   return (
     <>
       <Helmet>
-        <title> Dashboard: News and Events | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
+        <title> Dashboard: Tin tức | HEPCO - CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ CÔNG TRÌNH ĐÔ THỊ HUẾ </title>
       </Helmet>
 
       <Container maxWidth={'xl'}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            News and Events
+            Tin tức
           </Typography>
           <Link to="/dashboard/tintuc/add">
               <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                New Post
+                Thêm tin mới
               </Button>
           </Link>
         </Stack>
 
         <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <BlogPostsSearch posts={postList} categories={categories}/>
+          <BlogPostsSearch setPostList={setPostList} categories={categories} valueFilter={valueFilter} setValueFilter={setValueFilter} keyword={keyword} setKeyword={setKeyword}/>
         </Stack>
 
         <Grid container spacing={3}>
-          {postListTemp.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
+          {postList.map((post, index) => (
+            <BlogPostCard key={post.id_post} post={post} categories={categories} />
           ))}
         </Grid>
+
+        <Box sx={{width:'100%', marginTop: "20px", display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Pagination
+                variant="outlined" 
+                color="primary"
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                boundaryCount={1} 
+                siblingCount={1}
+            />
+        </Box>
       </Container>
     </>
   );

@@ -4,7 +4,7 @@ import { Grid, Button, Container, Stack, Typography, TextField, Box, Card, CardM
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPostById, updatePost, deletePost } from 'src/api';
 import { useEffect, useState } from 'react';
-import { EditorComponent } from 'src/sections/@dashboard/products';
+import EditorComponent from 'src/sections/@dashboard/blog/EditorComponent';
 import Swal from 'sweetalert2';
 
 export default function EditShareHolder() {
@@ -30,7 +30,7 @@ export default function EditShareHolder() {
                 setTitleEN(post.name_en)
                 setContent(post.content)
                 setContentEN(post.content_en)
-                setImage(`${process.env.REACT_APP_API_HOST}/read_image/${post.image}`)
+                setImage(`http://localhost:3001/read_image/${post.image}`)
             }
         }
         fetchData();

@@ -117,23 +117,7 @@ const navConfig = [
     title: 'Dự án',
     path: '/dashboard/duan',
     icon: icon('ic_project'),
-    child: [
-      {
-        title: 'Dự án đầu tư',
-        path: '/dautu',
-        icon: icon('ic_analytics'),
-      },
-      {
-        title: 'Hợp tác trong nước',
-        path: '/trongnuoc',
-        icon: icon('ic_analytics'),
-      },
-      {
-        title: 'Hợp tác nước ngoài',
-        path: '/nuocngoai',
-        icon: icon('ic_analytics'),
-      },
-    ]
+    child: []
   },
   {
     title: 'Cổ đông',

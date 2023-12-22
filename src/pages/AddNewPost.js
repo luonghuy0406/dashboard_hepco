@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText, Autocomplete } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-
-import Editor from 'ckeditor5-custom-build';
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import { EditorComponent } from 'src/sections/@dashboard/products';
+import { Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText, Autocomplete } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { addNewPost } from 'src/api';
 import Swal from 'sweetalert2';
+import EditorComponent from 'src/sections/@dashboard/blog/EditorComponent';
 
 export default function AddNewPost() {
     const navigate = useNavigate();
@@ -30,26 +27,28 @@ export default function AddNewPost() {
         setImage(URL.createObjectURL(file))
         
     };
-    const handleAddNewPost = async (title, title_en,content,content_en, image)=>{
+    const handleAddNewPost = async (type_id,title, title_en,content,content_en, image)=>{
         if(title && title_en && image){
             const imageFile = document.getElementById('file-upload-new-post').files[0]
-            const response = await addNewPost(title, title_en, content, content_en, imageFile)
+            const response = await addNewPost(type_id, title, title_en, content, content_en, imageFile)
             Swal.fire(
-                response.results.status,
-                response.results.msg,
-                response.results.status
+                response.result.status,
+                response.result.msg,
+                response.result.status
             )
-            if(response.results.status == 'success'){
+            if(response.result.status == 'success'){
                 navigate('/dashboard/tintuc', { replace: true });
             }
         }
     }
     const handleCancel = () => {
+        setCategory({name: 'Hoạt động công ty', value:'1'})
         setTitle('')
         setTitleEN('')
         setContent('')
         setContentEN('')
         setImage('')
+        navigate('/dashboard/tintuc', { replace: true })
     }
   return (
     <>
@@ -188,7 +187,7 @@ export default function AddNewPost() {
             </Stack>
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleAddNewPost(title, title_en,content,content_en, image)}}>Lưu bài viết</Button>
+                    <Button variant="contained" onClick={()=>{handleAddNewPost(category.value,title, title_en,content,content_en, image)}}>Lưu bài viết</Button>
                     <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel()}}>Huỷ</Button>
                 </Stack>
             </Stack>

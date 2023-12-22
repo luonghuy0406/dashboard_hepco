@@ -71,7 +71,7 @@ export default function Banner() {
                                         <CardMedia
                                             component="img"
                                             sx={{ width: 350,textAlign: "center" }}
-                                            image={`${process.env.REACT_APP_API_HOST}/read_image/${banner.link}`}
+                                            image={`http://localhost:3001/read_image/${banner.link}`}
                                             alt={banner.id_bn}
                                         />
                                     </Box>

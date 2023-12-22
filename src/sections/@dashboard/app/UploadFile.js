@@ -1,18 +1,18 @@
 import { Typography, Button, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { replaceBanner } from 'src/api';
+// import { replaceBanner } from 'src/api';
 import Swal from 'sweetalert2';
 
 const UploadFile = (props) => {
   const handleFileChange = async (event) => {
-    const data = await replaceBanner(props.id,event.target.files[0])
-    Swal.fire(
-      data.results.status,
-      data.results.msg,
-      data.results.status
-    )
-    props.setUpdate(!props.update)
+    // const data = await replaceBanner(props.id,event.target.files[0])
+    // Swal.fire(
+    //   data.results.status,
+    //   data.results.msg,
+    //   data.results.status
+    // )
+    // props.setUpdate(!props.update)
   };
   
   return (

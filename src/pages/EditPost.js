@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Grid, Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText, Autocomplete } from '@mui/material';
+import {  Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPostById, updatePost, deletePost } from 'src/api';
 import { useEffect, useState } from 'react';
-import { EditorComponent } from 'src/sections/@dashboard/products';
+import EditorComponent from 'src/sections/@dashboard/blog/EditorComponent';
 import Swal from 'sweetalert2';
 
 export default function EditPost() {
@@ -26,17 +26,22 @@ export default function EditPost() {
     useEffect(()=>{
         async function fetchData() {
             const postLists = await getPostById(id)
-            if(postLists.results){
-                const post = postLists.results 
-                setTitle(post.name)
-                setTitleEN(post.name_en)
-                setContent(post.content)
-                setContentEN(post.content_en)
-                setImage(`${process.env.REACT_APP_API_HOST}/read_image/${post.image}`)
+            if(postLists.result){
+                try {
+                    const post = postLists.result 
+                    setTitle(post.name || '')
+                    setTitleEN(post.name_en || '')
+                    setContent(post.content || '')
+                    setContentEN(post.content_en || '')
+                    setCategory(categories[String(post.type_id)] || '')
+                    // setImage(`http://localhost:3001/read_image/${post.image}`)
+                    setImage(`http://localhost:3001/read_image/${post.image}`)
+                } catch (error) {
+                    
+                }
             }
         }
-        fetchData();
-        
+        fetchData()
     },[id])
 
     const handleImageUpload = (event) => {
@@ -45,21 +50,23 @@ export default function EditPost() {
         
     };
 
-    const handleEditPost = async (id,name,name_en,content,content_en) =>{
+    const handleEditPost = async (id,type_id,name,name_en,content,content_en) =>{
         if(name && name_en){
             const image = document.getElementById("file-upload-edit-post-"+id).files[0] || []
-            const response = await updatePost(id,name,name_en,content,content_en, image)
+            const response = await updatePost(id,type_id,name,name_en,content,content_en, image)
             Swal.fire(
-                response.results.status,
-                response.results.msg,
-                response.results.status
+                response.result.status,
+                response.result.msg,
+                response.result.status
             )
-            if(response.results.status == 'success'){
+            if(response.result.status == 'success'){
                 navigate('/dashboard/tintuc', { replace: true });
             }
         }
     }
-    
+    const handleCancel = () => {
+        navigate('/dashboard/tintuc', { replace: true })
+    }
     const handleDeletePost = async (id)=>{
         Swal.fire({
             text: `Are you sure you want to delete post?`,
@@ -72,11 +79,11 @@ export default function EditPost() {
             if (result.isConfirmed) {
                 const response = await deletePost(id)
                 Swal.fire(
-                    response.results.status,
-                    response.results.msg,
-                    response.results.status
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
                 )
-                if(response.results.status == 'success'){
+                if(response.result.status == 'success'){
                     navigate('/dashboard/tintuc', { replace: true });
                 }
             }
@@ -95,31 +102,6 @@ export default function EditPost() {
                 Edit post {id}
             </Typography>
             </Stack>
-            <Stack  mb={5}>
-                <Card sx={{ p: 2}}>
-                    <Typography variant="h6" gutterBottom>
-                        Loại tin
-                    </Typography>
-                    <Autocomplete
-                        id="tags-standard"
-                        options={Object.values(categories)}
-                        getOptionLabel={(option) => option.name}
-                        value={category}
-                        renderInput={(params) => (
-                            <TextField
-                            {...params}
-                            variant="outlined"
-                            placeholder={"Chọn loại tin tức"}
-                            />
-                        )}
-
-                        onChange={(e,value)=>{
-                            setCategory(value)
-                        }}
-                    />
-                </Card>
-            </Stack>
-
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
                     <Typography variant="h6" gutterBottom>
@@ -221,32 +203,12 @@ export default function EditPost() {
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleEditPost(id,title,title_en,content,content_en)}}>Lưu bài đăng</Button>
-                    <Button variant="text" style={{color:"gray"}}>Huỷ</Button>
+                    <Button variant="contained" onClick={()=>{handleEditPost(id,category.value,title,title_en,content,content_en)}}>Lưu bài đăng</Button>
+                    <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel()}}>Huỷ</Button>
                 </Stack>
                 <Button variant="text" color="error" onClick={()=>{handleDeletePost(id)}}>Xoá bài đăng</Button>
             </Stack>
         </Container>
         </>
     );
-}
-
-const toDataURL = url => fetch(url)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
-     }))
-
-
-
-function dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-    u8arr[n] = bstr.charCodeAt(n);
-    }
-return new File([u8arr], filename, {type:mime});
 }

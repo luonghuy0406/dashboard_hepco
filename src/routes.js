@@ -9,12 +9,9 @@ import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
-import ProductsPage from './pages/ProductsPage';
-import DashboardAppPage from './pages/DashboardAppPage';
 import EditPost from './pages/EditPost';
 import AddNewPost from './pages/AddNewPost';
 import { checkTokenExpiration, refreshToken } from './api';
-import AddNewProduct from './pages/AddNewProduct';
 import { setAuthToken } from './api';
 import CompanyInformations from './pages/Home/CompanyImformations';
 import Banners from './pages/Home/Banners';
@@ -28,6 +25,9 @@ import Gallery from './pages/About/Gallery';
 import Shareholder from './pages/Shareholder';
 import AddNewShareholder from './pages/AddNewShareholder';
 import EditShareHolder from './pages/EditShareholder';
+import ProjectPage from './pages/ProjectPage';
+import EditProject from './pages/EditProject';
+import AddNewProject from './pages/AddNewProject';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -82,9 +82,10 @@ export default function Router() {
         { path: 'codong', element: <PrivateRoute element={<Shareholder />} /> },
         { path: 'codong/:id', element: <PrivateRoute element={<EditShareHolder />} /> },
         { path: 'codong/add', element: <PrivateRoute element={<AddNewShareholder />} /> },
+        { path: 'duan', element: <PrivateRoute element={<ProjectPage />} /> },
+        { path: 'duan/:id', element: <PrivateRoute element={<EditProject />} /> },
+        { path: 'duan/add', element: <PrivateRoute element={<AddNewProject />} /> },
         { path: 'user', element: <PrivateRoute element={<UserPage />} /> },
-        { path: 'products', element: <PrivateRoute element={<ProductsPage />} /> },
-        { path: 'products/add', element: <PrivateRoute element={<AddNewProduct />} /> },
       ],
     },
     {

@@ -113,16 +113,7 @@ class Editor extends ClassicEditor {
 			]
 		},
 		simpleUpload: {
-            // The URL that the images are uploaded to.
-            uploadUrl: 'https://api.mmsvn.com/post/upimg',
-            // Enable the XMLHttpRequest.withCredentials property.
-            // withCredentials: true,
-
-            // Headers sent along with the XMLHttpRequest to the upload server.
-            // headers: {
-            //     // 'X-CSRF-TOKEN': 'CSRF-Token',
-			// 	'Content-Type'  :'multipart/form-data; boundary=<calculated when request is sent>'
-            // }
+            uploadUrl: 'http://localhost:3001/post/upimg',
         }
 	};
 }

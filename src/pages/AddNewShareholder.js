@@ -2,11 +2,8 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Grid, Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText, Autocomplete } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-
-import Editor from 'ckeditor5-custom-build';
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import { EditorComponent } from 'src/sections/@dashboard/products';
+import { useNavigate } from 'react-router-dom';
+import EditorComponent from 'src/sections/@dashboard/blog/EditorComponent';
 import { addNewPost } from 'src/api';
 import Swal from 'sweetalert2';
 

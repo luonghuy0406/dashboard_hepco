@@ -341,7 +341,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     const [imageFile, setImageFile] = useState('')
     // useEffect(()=>{
     //     if(customers?.length > 0){
-    //         toDataURL(`${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
+    //         toDataURL(`http://localhost:3001/read_image/${customers[0].image}`)
     //         .then(dataUrl => {
     //             var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
     //             setImageFile(fileData)
@@ -386,7 +386,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     //         document.getElementById("file-upload-new-customer"+id).value = ''
     //     }else{
     //         setName(add ? '' : customers[0].name)
-    //         setImage(add ? '' : `${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
+    //         setImage(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
     //         document.getElementById("file-upload-new-customer"+id).value = ''
     //     }
     //     setOpenModal(false)

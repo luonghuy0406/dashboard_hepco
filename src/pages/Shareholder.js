@@ -1,18 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-// @mui
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-// components
 import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSearch } from '../sections/@dashboard/blog';
-// mock
 import {  getPosts } from 'src/api';
-
-// ----------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------
 
 export default function Shareholder() {
   const categories = {

@@ -4,8 +4,8 @@ import { redirect } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const api = axios.create({
-  // baseURL: process.env.REACT_APP_API_HOST,
-    baseURL: 'https://api.mmsvn.com'
+  // baseURL: http://localhost:3001,
+    baseURL: 'http://localhost:3001'
 });
 
 export const setAuthToken = (token) => {
@@ -27,7 +27,7 @@ export const refreshToken = async () => {
         }
         const config = {
           method: 'get',
-          url: `${process.env.REACT_APP_API_HOST}/refresh`,
+          url: `http://localhost:3001/refresh`,
           headers: { 
             'Authorization': refresh_token
           }
@@ -52,7 +52,7 @@ export const refreshToken = async () => {
 
 export const login = async (id_user, pw) => {
   try {
-    const response = await api.post('/account/login', { id_user, pw });
+    const response = await api.post('/user/login', { id_user, pw });
     if(response.data.token){
       const { token, refresh_token } = {token: response.data.token, refresh_token: response.data.refresh_token};
       setAuthToken(token);
@@ -90,16 +90,57 @@ export const getBanner = async () => {
     throw error;
   }
 };
+export const deleteBanner = async (id) => {
+  try {
+    const response = await api.delete(`/banner/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-export const replaceBanner = async (id, file) => {
+export const addBanner = async (content1,content1EN,content2,content2EN,image) => {
   try {
     const FormData = require('form-data');
     let data = new FormData();
-    data.append('id_bn', id);
-    if(typeof file == 'object'){
-      data.append('image', file, Date.now());
+    data.append('name', content1);
+    data.append('name_en', content1EN);
+    data.append('quote', content2);
+    data.append('quote_en', content2EN);
+    data.append('image', image);
+    
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/banner/add',data);
+      return response.data;
     }else{
-      data.append('image', file);
+      const response = await api.post('/banner/add',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+export const updateBanner = async (id,content1,content1EN,content2,content2EN,image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_banner', id);
+    data.append('name', content1);
+    data.append('name_en', content1EN);
+    data.append('quote', content2);
+    data.append('quote_en', content2EN);
+    if(typeof image == 'object'){
+      data.append('image', image, Date.now());
+    }else{
+      data.append('image', image);
     }
     
     if(checkTokenExpiration()){
@@ -108,7 +149,83 @@ export const replaceBanner = async (id, file) => {
       const response = await api.put('/banner/update',data);
       return response.data;
     }else{
-      const response = await api.put('/banner/update',data);
+      const response = await api.post('/banner/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+//---------archieve------------
+
+
+export const addNewAchieve= async (name,name_en, content, content_en, image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('name', name);
+    data.append('name_en', name_en);
+    data.append('content', content);
+    data.append('content_en', content_en);
+    if(typeof image == 'object'  && image?.name){
+      data.append('image', image, Date.now());
+    }else{
+      data.append('image', image);
+    }
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/achieve/add',data);
+      return response.data;
+    }else{
+      const response = await api.post('/achieve/add',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+};
+export const getAchieve = async () => {
+  try {
+    const response = await api.get(`/achieve/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateAchieve = async (id,content,contentEN,name,nameEN,image) => {
+  try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    data.append('id_achieve', id);
+    data.append('name', name);
+    data.append('name_en', nameEN);
+    data.append('content', content);
+    data.append('content_en', contentEN);
+    if(typeof image == 'object'){
+      data.append('image', image, Date.now());
+    }else{
+      data.append('image', image);
+    }
+    
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/achieve/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/achieve/update',data);
       return response.data;
     }
   } catch (error) {
@@ -488,9 +605,9 @@ export const deleteSubProduct = async (id) => {
   }
 };
 //-----post--------
-export const getPosts = async () => {
+export const getPosts = async (itemsPerPage=12,type_id=0, keyword='',page=1) => {
   try {
-    const response = await api.get(`/post/list`);
+    const response = await api.get(`/post/list?c=${itemsPerPage}&type_id=${type_id}&title=${keyword}&p=${page-1}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -507,12 +624,13 @@ export const getPostById = async (id) => {
   }
 };
 
-export const addNewPost = async (name,name_en, content, content_en, image) => {
+export const addNewPost = async (type_id, name,name_en, content, content_en, image) => {
   try {
     const id_user = localStorage.getItem('user')
     const author = localStorage.getItem('name')
     const FormData = require('form-data');
     let data = new FormData();
+    data.append('type_id',type_id)
     data.append('name', name);
     data.append('name_en', name_en);
     data.append('content', content);
@@ -542,13 +660,14 @@ export const addNewPost = async (name,name_en, content, content_en, image) => {
     throw error;
   }
 };
-export const updatePost =  async (id,name,name_en,content,content_en, image) => {
+export const updatePost =  async (id,type_id,name,name_en,content,content_en, image) => {
   try {
     const id_user = localStorage.getItem('user')
     const author = localStorage.getItem('name')
     const FormData = require('form-data');
     let data = new FormData();
     data.append('id_post', id);
+    data.append('type_id', type_id);
     if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{

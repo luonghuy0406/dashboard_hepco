@@ -1,12 +1,11 @@
 import { Helmet } from 'react-helmet-async';
-import React from 'react'
+import React, { useEffect } from 'react'
 import {  Container,Divider, Typography, Box, Button, Grid,Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
     Modal,
-    Backdrop,
     TextField,
     FormControl,
     Stack,
@@ -19,13 +18,28 @@ import { useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/EditorComponent';
 import CloseIcon from '@mui/icons-material/Close';
 import Iconify from 'src/components/iconify/Iconify';
+import { addNewAchieve, getAchieve, updateAchieve } from 'src/api';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 
 
 // ----------------------------------------------------------------------
 
 export default function Achievements() {
-    
+
+    const [achieveData,setAchieveData] = useState([]) 
+    const awardData = achieveData?.slice(3) || []
+    const awardData2 = achieveData?.slice(0,3) || []
+    useEffect(()=>{
+        async function fetchData() {
+            const archieveData = await getAchieve()
+            if(archieveData.result){
+                setAchieveData(archieveData.result)
+            }
+        }
+        fetchData()
+    },[])
   return (
     <>
       <Helmet>
@@ -34,107 +48,66 @@ export default function Achievements() {
 
       <Container maxWidth={'xl'}>
         <Box sx={{ minWidth: 800 }}>
-            <Government/>
+            <Government awardData={awardData}/>
             <Divider/>
-            <Others/>
+            <Others data={awardData2}/>
         </Box>
       </Container>
     </>
   );
 }
 
-const Others = () =>{
-    const data = [
-        {
-            id: 1,
-            title : 'KHEN THƯỞNG BỘ, BAN NGÀNH, HỘI NGHỀ NGHIỆP TRUNG ƯƠNG',
-            content: 'Năm 1975, sau khi giải phóng hoàn toàn Miền nam, ngày 01/5/1975 Phòng Quản lý Đô thị và Nhà đất được thành lập, là tiền thân của đơn vị hiện nay',
-            contentEN: 'Năm 1975, sau khi giải phóng hoàn toàn Miền nam, ngày 01/5/1975 Phòng Quản lý Đô thị và Nhà đất được thành lập, là tiền thân của đơn vị hiện nay'
-        },
-        {
-            id: 2,
-            title : 'KHEN THƯỞNG CỦA UBND TỈNH VÀ CÁC CƠ QUAN CẤP TỈNH',
-            content: 'UBND thành phố Huế ban hành Quyết định số 59/QĐ-UB thành lập Công ty Quản lý Công trình Đô thị Huế',
-            contentEN: 'UBND thành phố Huế ban hành Quyết định số 59/QĐ-UB thành lập Công ty Quản lý Công trình Đô thị Huế'
-        },
-        ,
-        {
-            id: 3,
-            title : 'KHEN THƯỞNG CÔNG TÁC ĐẢNG - ĐOÀN THỂ',
-            content: 'UBND thành phố Huế ban hành Quyết định số 501/QĐ-UB thành lập Trung tâm Quản lý Vệ sinh Môi trường Đô thị Huế',
-            contentEN: 'UBND thành phố Huế ban hành Quyết định số 501/QĐ-UB thành lập Trung tâm Quản lý Vệ sinh Môi trường Đô thị Huế'
-        }
-    ]
+const Others = ({data}) =>{
     return (
         <Grid container spacing={3}>
-            <Grid item xs={12}>
-                <Typography variant="h4" sx={{ mb: 2,mt: 2 }}>
-                    Khen thưởng khác
-                </Typography>
-            </Grid>
             {
                 data.map((dt, index)=>{
-                    return <OthersItem key={index+'-giaithuong'} title={dt.title} content={dt.content} contentEN={dt.contentEN}/>
+                    return <OthersItem key={index+'-giaithuong'} id={dt.id_achieve} name={dt.name} content={dt.content} content_en={dt.content_en}/>
                 })
-            }
+            }            
+        </Grid>
+    )
+}
+const OthersItem = ({id,name,content, content_en}) =>{
+    const [val, setVal] = useState(content)
+    const [valEN, setValEN] = useState(content_en)
 
+    const navigate = useNavigate();
+    const handleUpdate = async (id,content,contentEN,name,image)=>{
+        const response = await updateAchieve(id,content,contentEN,name,name,image)
+        Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            navigate('/dashboard/gioithieu/thanhtuu', { replace: true });
+        }
+    }
+    return (
+        <>
+            <Grid item xs={6}>
+                <Typography variant="h5" sx={{paddingBottom:2}} fontWeight={700}>{name}</Typography>
+                <EditorComponent val={val} setVal={setVal}/>
+            </Grid>
+            <Grid item xs={6}>
+                <Typography variant="h5" sx={{paddingBottom:2}} fontWeight={700}>{name +' (EN)'}</Typography>
+                <EditorComponent val={valEN} setVal={setValEN}/>
+            </Grid>
             <Grid item xs={12}>
                 <Box
                     sx={{display: 'flex', justifyContent:'flex-end', mb: 5, mt: 5}}
                 >
-                    <Button variant="contained" onClick={()=>{}}>Lưu</Button>
+                    <Button variant="contained" onClick={()=>{handleUpdate(id,val,valEN,name,[])}}>Lưu</Button>
                 </Box>
-            </Grid>
-        </Grid>
-    )
-}
-const OthersItem = ({title,content, contentEN}) =>{
-    const [val, setVal] = useState(content)
-    const [valEN, setValEN] = useState(contentEN)
-    return (
-        <>
-            <Grid item xs={6}>
-                <Typography sx={{paddingBottom:2}} fontWeight={700}>{title}</Typography>
-                <EditorComponent val={val} setVal={setVal}/>
-            </Grid>
-            <Grid item xs={6}>
-                <Typography sx={{paddingBottom:2}} fontWeight={700}>{title +' (EN)'}</Typography>
-                <EditorComponent val={valEN} setVal={setValEN}/>
             </Grid>
         </>
     )
 }
 
 
-const datas = [
-    {
-        id: 1,
-        name : 'Huân chương 1',
-        image: 'https://icdn.dantri.com.vn/thumb_w/680/2022/06/16/huan-chuong-lao-dong-1655346540689.png'    
-    },
-    {
-        id: 2,
-        name : 'Huân chương 2',
-        image: 'https://icdn.dantri.com.vn/thumb_w/680/2022/06/16/huan-chuong-lao-dong-1655346540689.png'    
-    },
-    {
-        id: 3,
-        name : 'Bằng khen 1',
-        image: 'https://secoin.com/uploaded/gioi-thieu/Giai%20thuong%20va%20thanh%20tich/1%20BK%20Thu%20tuong%20chinh%20phu%20Cty%20CP%20Secoin%202019%20a.jpg'
-    },
-    {
-        id: 4,
-        name : 'Bằng khen 1',
-        image: 'https://secoin.com/uploaded/gioi-thieu/Giai%20thuong%20va%20thanh%20tich/1%20BK%20Thu%20tuong%20chinh%20phu%20Cty%20CP%20Secoin%202019%20a.jpg'
-    },
-    {
-        id: 5,
-        name : 'Cờ thi đua',
-        image: 'https://rccgroup.vn/wp-content/uploads/2021/10/CTD-CP-2006-2-768x768.png'
-    }
-]
-const Government= () =>{
-    const [data,setData] = useState(datas)
+const Government= ({awardData}) =>{
+    const data= awardData
     const [update,setUpdate] = useState(false)
     const [openModal,setOpenModal] = useState(false)
     const [add, setAdd] = useState(true)
@@ -163,6 +136,8 @@ const Government= () =>{
                       <TableHead>
                         <TableRow>
                           <TableCell align="center">Tên</TableCell>
+                          <TableCell align="center">Tên(EN)</TableCell>
+                          <TableCell align="center">Nội dung</TableCell>
                           <TableCell align="center">Ảnh</TableCell>
                           <TableCell align="center">Hành động</TableCell>
                         </TableRow>
@@ -173,12 +148,18 @@ const Government= () =>{
                             <TableCell component="th" scope="row" align="center">
                               {row.name}
                             </TableCell>
+                            <TableCell component="th" scope="row" align="center">
+                              {row.name_en}
+                            </TableCell>
+                            <TableCell component="th" scope="row" align="center">
+                              {row.content}
+                            </TableCell>
                             <TableCell align="center">
                               <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <CardMedia
                                   component="img"
                                   sx={{ width: 350, textAlign: 'center' }}
-                                  image={`${row.image}`}
+                                  image={`${process.env.REACT_APP_HOST}/read_image/${row.image}`}
                                   alt={row.name}
                                 />
                               </Box>
@@ -189,7 +170,7 @@ const Government= () =>{
                                 onClick={() => {
                                   setOpenModal(true);
                                   setAdd(false);
-                                  setId(row.id);
+                                  setId(row.id_achieve);
                                 }}
                               >
                                 Update
@@ -230,67 +211,80 @@ const style = {
   }
 const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     if(id){
-        data = data.filter((dt)=> dt.id == id)
+        data = data.filter((dt)=> dt.id_achieve == id)
     }
     const [name,setName] = useState(add ? '' : data[0].name)
-    const [image, setImage] = useState(add ? '' : `${data[0].image}`)
+    const [nameEN,setNameEN] = useState(add ? '' : data[0].name_en)
+    const [content,setContent] = useState(add ? '' : data[0].content)
+    const [contentEN,setContentEN] = useState(add ? '' : data[0].content_en)
+    const [image, setImage] = useState(add ? '' : `http://localhost:3001/read_image/${data[0].image}`)
     const [imageFile, setImageFile] = useState('')
-    // useEffect(()=>{
-    //     if(customers?.length > 0){
-    //         toDataURL(`${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
-    //         .then(dataUrl => {
-    //             var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
-    //             setImageFile(fileData)
-    //         })
-    //     }
-    // },[id])
+    useEffect(()=>{
+        if(data?.length > 0){
+            toDataURL(`http://localhost:3001/read_image/${data[0].image}`)
+            .then(dataUrl => {
+                var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                setImageFile(fileData)
+            })
+        }
+    },[id])
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
+        setImageFile(file)
         setImage(URL.createObjectURL(file))
-        
-    };
-    // const handleAddNew = async (name, image, id, update, add, customers, file)=>{
-    //     if(name && image){
-    //         const imageFile = document.getElementById("file-upload-new-customer"+id).files[0] || file
-    //         if(add){
-    //             const response = await addNewCustomer(name, imageFile)
-    //             Swal.fire(
-    //                 response.results.status,
-    //                 response.results.msg,
-    //                 response.results.status
-    //             )
-    //             setOpenModal(false)
-    //             setUpdate(!update)
-    //             handleCancel(add,id, customers)
-    //         }else{
-    //             const response = await updateCustomer(id, name, imageFile)
-    //             Swal.fire(
-    //                 response.results.status,
-    //                 response.results.msg,
-    //                 response.results.status
-    //             )
-    //             setOpenModal(false)
-    //             setUpdate(!update)
-    //             handleCancel(add,id, customers)
-    //         }
-    //     }
-    // }
-    // const handleCancel = (add,id, customers) => {
-    //     if(add){
-    //         setName('')
-    //         setImage('')
-    //         document.getElementById("file-upload-new-customer"+id).value = ''
-    //     }else{
-    //         setName(add ? '' : customers[0].name)
-    //         setImage(add ? '' : `${process.env.REACT_APP_API_HOST}/read_image/${customers[0].image}`)
-    //         document.getElementById("file-upload-new-customer"+id).value = ''
-    //     }
-    //     setOpenModal(false)
-    // }
+    }
+    const handleAddNew = async (achieve_id, name,name_en, content, content_en,  file)=>{
+        if(name && image){
+            if(add){
+                const response = await addNewAchieve(name,name_en, content, content_en, file)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                setOpenModal(false)
+                handleCancel(add,id, data)
+            }else{
+                const response = await updateAchieve(achieve_id,content, content_en,name,name_en,  file)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                setOpenModal(false)
+                handleCancel(add,id, data)
+            }
+        }
+    }
+    const handleCancel = (add,id, data) => {
+        if(add){
+            setName('')
+            setNameEN('')
+            setContent('')
+            setContentEN('')
+
+            setImage('')
+            setImageFile('')
+            document.getElementById("file-upload-new-achieve"+id).value = ''
+        }else{
+            setName(data[0].name)
+            setNameEN(data[0].name_en)
+            setContent(data[0].content)
+            setContentEN(data[0].content_en)
+            setImage(`http://localhost:3001/read_image/${data[0].image}`)
+            toDataURL(`http://localhost:3001/read_image/${data[0].image}`)
+            .then(dataUrl => {
+                var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                setImageFile(fileData)
+            })
+            document.getElementById("file-upload-new-achieve"+id).value = ''
+        }
+        setOpenModal(false)
+    }
     return(
         <Box sx={{ ...style}}>
             <Box>
-                <Typography variant="h4" p={2} sx={{display:'inline-block'}}>{add ? 'Thêm giấy phép - chứng nhận' : 'Chỉnh sửa giấy phép - chứng nhận'}</Typography>
+                <Typography variant="h4" p={2} sx={{display:'inline-block'}}>{add ? 'Thêm thành tựu' : 'Chỉnh sửa thành tựu'}</Typography>
                 <IconButton aria-label="close" color="error" sx={{margin:'10px', float:'right'}} onClick={()=>{setOpenModal(false)}}>
                     <CloseIcon />
                 </IconButton>
@@ -299,22 +293,64 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
             
                 <Stack  mb={5}>
                     <Card sx={{ p: 2}}>
-                        <Grid container>
-                            <Grid item xs={12} md={12} lg={12}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6} md={6} lg={6}>
                                 <Typography variant="h6" gutterBottom>
                                     Tên
                                 </Typography>
                                 <FormControl required={true} fullWidth={true}>
-                                <TextField
-                                    required
-                                    variant='standard'
-                                    name={"customer_name"}
-                                    onChange={(e)=>{setName(e.target.value)}}
-                                    error={name?.length == 0} 
-                                    value={name}
-                                    helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
-                                />
-                            </FormControl>
+                                    <TextField
+                                        required
+                                        variant='standard'
+                                        onChange={(e)=>{setName(e.target.value)}}
+                                        error={name?.length == 0} 
+                                        value={name}
+                                        helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6} md={6} lg={6}>
+                                <Typography variant="h6" gutterBottom>
+                                    Tên(EN)
+                                </Typography>
+                                <FormControl required={true} fullWidth={true}>
+                                    <TextField
+                                        required
+                                        variant='standard'
+                                        onChange={(e)=>{setNameEN(e.target.value)}}
+                                        error={nameEN?.length == 0} 
+                                        value={nameEN}
+                                        helperText = {nameEN?.length == 0 ? "Name cannot be empty" : ""}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6} md={6} lg={6}>
+                                <Typography variant="h6" gutterBottom>
+                                    Nội dung
+                                </Typography>
+                                <FormControl required={true} fullWidth={true}>
+                                    <TextField
+                                        required
+                                        variant='standard'
+                                        onChange={(e)=>{setContent(e.target.value)}}
+                                        // error={content?.length == 0} 
+                                        value={content}
+                                        // helperText = {content?.length == 0 ? "content cannot be empty" : ""}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6} md={6} lg={6}>
+                                <Typography variant="h6" gutterBottom>
+                                    Nội dung(EN)
+                                </Typography>
+                                <FormControl required={true} fullWidth={true}>
+                                    <TextField
+                                        required
+                                        variant='standard'
+                                        onChange={(e)=>{setContentEN(e.target.value)}}
+                                        value={contentEN}
+                                    />
+                                </FormControl>
                             </Grid>
                         </Grid>
                         
@@ -334,13 +370,13 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                             <div>
                                 <input
                                     accept="image/*"
-                                    id={"file-upload-new-customer"+id}
+                                    id={"file-upload-new-achieve"+id}
                                     type="file"
                                     style={{ display: 'none' }}
                                     onChange={(e)=>{handleImageUpload(e)}}
                                 />
 
-                                <label htmlFor={"file-upload-new-customer"+id}>
+                                <label htmlFor={"file-upload-new-achieve"+id}>
                                     <Button variant="text" color="primary" component="span">
                                     {image ?  "Replace image" : "Upload image"}
                                     </Button>
@@ -375,8 +411,8 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
             
                 <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                     <Stack spacing={2} direction="row">
-                        <Button variant="contained">Save</Button>
-                        <Button variant="text" style={{color:"gray"}}>Cancel</Button>
+                        <Button variant="contained" onClick={()=>{handleAddNew(id,name,nameEN,content,contentEN,imageFile)}}>Save</Button>
+                        <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel(add, id,data)}}>Cancel</Button>
                     </Stack>
                 </Stack>    
             </Box>
