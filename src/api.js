@@ -237,6 +237,26 @@ export const updateAchieve = async (id,content,contentEN,name,nameEN,image) => {
     throw error;
   }
 }
+export const deleteAchieve = async (id)=>{
+  try {
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.delete(`/achieve/delete/${id}`);
+      return response.data;
+    }else{
+      const response = await api.delete(`/achieve/delete/${id}`);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
 //-----------about us-----
 export const getAboutUs = async () => {
   try {

@@ -12,8 +12,8 @@ export default function EditShareHolder() {
     const navigate = useNavigate();
     const categories = {
         // '0': {name: 'Tất cả tin', value:'0'},
-        '1': {name: 'Thông báo', value:'1'},
-        '2': {name: 'Báo cáo', value:'2'}
+        '5': {name: 'Thông báo', value:'5'},
+        '6': {name: 'Báo cáo', value:'6'}
     }
     const [category, setCategory] = useState()     
     const [title,setTitle] = useState('')

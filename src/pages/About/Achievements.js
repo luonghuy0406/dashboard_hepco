@@ -18,9 +18,11 @@ import { useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/EditorComponent';
 import CloseIcon from '@mui/icons-material/Close';
 import Iconify from 'src/components/iconify/Iconify';
-import { addNewAchieve, getAchieve, updateAchieve } from 'src/api';
+import { addNewAchieve, deleteAchieve, getAchieve, updateAchieve } from 'src/api';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { toDataURL } from 'src/functions';
+import { dataURLtoFile } from 'src/functions';
 
 
 
@@ -28,6 +30,7 @@ import Swal from 'sweetalert2';
 
 export default function Achievements() {
 
+    const [update,setUpdate] = useState(false)
     const [achieveData,setAchieveData] = useState([]) 
     const awardData = achieveData?.slice(3) || []
     const awardData2 = achieveData?.slice(0,3) || []
@@ -39,7 +42,7 @@ export default function Achievements() {
             }
         }
         fetchData()
-    },[])
+    },[update])
   return (
     <>
       <Helmet>
@@ -48,9 +51,9 @@ export default function Achievements() {
 
       <Container maxWidth={'xl'}>
         <Box sx={{ minWidth: 800 }}>
-            <Government awardData={awardData}/>
+            <Government awardData={awardData} update={update} setUpdate={setUpdate}/>
             <Divider/>
-            <Others data={awardData2}/>
+            <Others data={awardData2} />
         </Box>
       </Container>
     </>
@@ -106,12 +109,34 @@ const OthersItem = ({id,name,content, content_en}) =>{
 }
 
 
-const Government= ({awardData}) =>{
+const Government= ({awardData, update, setUpdate}) =>{
     const data= awardData
-    const [update,setUpdate] = useState(false)
     const [openModal,setOpenModal] = useState(false)
     const [add, setAdd] = useState(true)
     const [id, setId] = useState('')
+    const handleDelete = async (id)=>{
+        Swal.fire({
+            text: `Bạn có chắc muốn xoá không?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đúng!'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deleteAchieve(id)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                if(response.result.status == 'success'){
+                    setUpdate(!update)
+                }
+            }
+          })
+        
+    }
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -175,7 +200,7 @@ const Government= ({awardData}) =>{
                               >
                                 Update
                               </Button>
-                              <Button variant="text" color="error">
+                              <Button variant="text" color="error" onClick={()=>{handleDelete(row.id_achieve)}}>
                                 Delete
                               </Button>
                             </TableCell>
@@ -244,6 +269,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                 )
                 setOpenModal(false)
                 handleCancel(add,id, data)
+                setUpdate(!update)
             }else{
                 const response = await updateAchieve(achieve_id,content, content_en,name,name_en,  file)
                 Swal.fire(
@@ -253,6 +279,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                 )
                 setOpenModal(false)
                 handleCancel(add,id, data)
+                setUpdate(!update)
             }
         }
     }
@@ -333,9 +360,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                                         required
                                         variant='standard'
                                         onChange={(e)=>{setContent(e.target.value)}}
-                                        // error={content?.length == 0} 
                                         value={content}
-                                        // helperText = {content?.length == 0 ? "content cannot be empty" : ""}
                                     />
                                 </FormControl>
                             </Grid>
@@ -420,23 +445,3 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     )
 }
 
-
-const toDataURL = url => fetch(url)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
-     }))
-
-
-
-function dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-    u8arr[n] = bstr.charCodeAt(n);
-    }
-return new File([u8arr], filename, {type:mime});
-}

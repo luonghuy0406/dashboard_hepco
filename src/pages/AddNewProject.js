@@ -10,13 +10,11 @@ import EditorComponent from 'src/sections/@dashboard/blog/EditorComponent';
 export default function AddNewProject() {
     const navigate = useNavigate();
     const categories = {
-        // '0': {name: 'Tất cả tin', value:'0'},
-        '1': {name: 'Hoạt động công ty', value:'1'},
-        '2': {name: 'Đảng Đoàn thể', value:'2'},
-        '3': {name: 'Pháp luật môi trường', value:'3'},
-        '4': {name: 'Tin tức khác', value:'4'},
+        '7': {name: 'Dự án đầu tư', value:'7'},
+        '8': {name: 'Hợp tác trong nước', value:'8'},
+        '9': {name: 'Hợp tác nước ngoài', value:'9'}
     }
-    const [category, setCategory] = useState({name: 'Hoạt động công ty', value:'1'}) 
+    const [category, setCategory] = useState({name: 'Dự án đầu tư', value:'7'}) 
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')

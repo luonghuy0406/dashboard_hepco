@@ -10,11 +10,10 @@ import Swal from 'sweetalert2';
 export default function AddNewShareholder() {
     const navigate = useNavigate();
     const categories = {
-        // '0': {name: 'Tất cả tin', value:'0'},
-        '1': {name: 'Thông báo', value:'1'},
-        '2': {name: 'Báo cáo', value:'2'}
+        '5': {name: 'Thông báo', value:'5'},
+        '6': {name: 'Báo cáo', value:'6'}
     }
-    const [category, setCategory] = useState({name: 'Thông báo', value:'1'}) 
+    const [category, setCategory] = useState({name: 'Thông báo', value:'5'}) 
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
