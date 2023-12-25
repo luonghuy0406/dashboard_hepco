@@ -45,16 +45,6 @@ export default function Banners() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Banner
         </Typography>
-        <Button 
-            variant="contained" 
-            sx={{float:'right', m:2}} 
-            onClick={()=>{
-                setOpenModal(true)
-            }} 
-            startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-            Thêm banner 
-        </Button>
         <Divider />
         <br/>
         <Box sx={{ minWidth: 800 }}>
@@ -79,10 +69,10 @@ export default function Banners() {
 const BannerItem = ({banner,index, update,setUpdate}) =>{
     const [image, setImage] = useState(`http://localhost:3001/read_image/${banner.image}`)
     const [imageFile, setImageFile] = useState()
-    const [content1, setContent1] = useState(banner.name)
-    const [content2, setContent2] = useState(banner.quote)
-    const [content1EN, setContent1EN] = useState('')
-    const [content2EN, setContent2EN] = useState('')
+    const [content1, setContent1] = useState(banner.content_1)
+    const [content2, setContent2] = useState(banner.content_2)
+    const [content1EN, setContent1EN] = useState(banner.content_1_en)
+    const [content2EN, setContent2EN] = useState(banner.content_2_en)
     useEffect(()=>{
         if(banner.image){
             toDataURL(`http://localhost:3001/read_image/${banner.image}`)
@@ -99,39 +89,15 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
         
     };
     const handleEditBanner = async (id,content1,content1EN,content2,content2EN,image) =>{
-        if(content1 && content2){
-            const response = await updateBanner(id,content1,content1EN,content2,content2EN,image)
-            Swal.fire(
-                response.result.status,
-                response.result.msg,
-                response.result.status
-            )
-            if(response.result.status == 'success'){
-                setUpdate(!update)
-            }
+        const response = await updateBanner(id,content1,content1EN,content2,content2EN,image)
+        Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            setUpdate(!update)
         }
-    }
-    const handleDeleteBanner = async (id) =>{
-        Swal.fire({
-            text: `Bạn có chắc chắn muốn xoá banner này không?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const response = await deleteBanner(id)
-                Swal.fire(
-                    response.result.status,
-                    response.result.msg,
-                    response.result.status
-                )
-                if(response.result.status == 'success'){
-                    setUpdate(!update)
-                }
-            }
-        })
     }
     return (
     <Grid item xs={12}>
@@ -149,14 +115,9 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
                 <FormControl required={true} fullWidth={true}>
                     <TextField
                         InputLabelProps={{ shrink: true }}
-                        required
                         label={"Nội dung 1"}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
                         onChange={(e)=>{setContent1(e.target.value)}}
                         value={content1}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
                     />
                 </FormControl>
             </Grid>
@@ -164,14 +125,9 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
                 <FormControl required={true} fullWidth={true}>
                     <TextField
                         InputLabelProps={{ shrink: true }}
-                        required
                         label={"Nội dung 2"}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
                         onChange={(e)=>{setContent2(e.target.value)}}
                         value={content2}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
                     />
                 </FormControl>
             </Grid>
@@ -179,14 +135,9 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
                 <FormControl required={true} fullWidth={true}>
                     <TextField
                         InputLabelProps={{ shrink: true }}
-                        required
                         label={"Nội dung 1 (EN)"}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
                         onChange={(e)=>{setContent1EN(e.target.value)}}
                         value={content1EN}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
                     />
                 </FormControl>
             </Grid>
@@ -194,17 +145,15 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
                 <FormControl required={true} fullWidth={true}>
                     <TextField
                         InputLabelProps={{ shrink: true }}
-                        required
                         label={"Nội dung 2 (EN)"}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
                         onChange={(e)=>{setContent2EN(e.target.value)}}
                         value={content2EN}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
                     />
                 </FormControl>
             </Grid>
+
+            <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh banner có tỉ lệ 3:1 và size tối đa 3MB để có thể hiển thị tốt nhất</Typography>
+                
             <Grid item xs={12} sx={{display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative'}}>
                 <CardMedia
                     component="img"
@@ -232,8 +181,7 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
                 <Box
                     sx={{display: 'flex', justifyContent:'flex-end'}}
                 >
-                    <Button variant="text" color="error" sx={{marginRight:2}} onClick={()=>{handleDeleteBanner(banner.id_banner)}}>Xoá banner</Button>
-                    <Button variant="contained" onClick={()=>{handleEditBanner(banner.id_banner,content1,content2,content1EN,content2EN,imageFile)}}>Lưu</Button>
+                    <Button variant="contained" onClick={()=>{handleEditBanner(banner.id_banner,content1,content1EN,content2,content2EN,imageFile)}}>Lưu</Button>
                 </Box>
             </Grid>
             </Grid>

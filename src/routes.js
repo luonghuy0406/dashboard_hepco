@@ -28,6 +28,7 @@ import EditShareHolder from './pages/EditShareholder';
 import ProjectPage from './pages/ProjectPage';
 import EditProject from './pages/EditProject';
 import AddNewProject from './pages/AddNewProject';
+import Service from './pages/Service/Service';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -79,6 +80,14 @@ export default function Router() {
         { path: 'gioithieu/chucnang', element: <PrivateRoute element={<Function />} /> },
         { path: 'gioithieu/thanhtuu', element: <PrivateRoute element={<Achievements />} /> },
         { path: 'gioithieu/thuvien', element: <PrivateRoute element={<Gallery />} /> },
+        { path: 'dichvu', element: <PrivateRoute element={<Service id={'ser_01'} />} /> },
+        { path: 'dichvu/sinhhoat', element: <PrivateRoute element={<Service id={'ser_01'} />} /> },
+        { path: 'dichvu/nguyhai', element: <PrivateRoute element={<Service id={'ser_02'} />} /> }, 
+        { path: 'dichvu/cokhi', element: <PrivateRoute element={<Service id={'ser_03'} />} /> },
+        { path: 'dichvu/thoatnuoc', element: <PrivateRoute element={<Service id={'ser_04'} />} /> },
+
+        { path: 'dichvu/quantrang', element: <PrivateRoute element={<Service id={'ser_05'} />} /> },
+        { path: 'dichvu/khac', element: <PrivateRoute element={<Service id={'ser_06'} />} /> },
         { path: 'codong', element: <PrivateRoute element={<Shareholder />} /> },
         { path: 'codong/:id', element: <PrivateRoute element={<EditShareHolder />} /> },
         { path: 'codong/add', element: <PrivateRoute element={<AddNewShareholder />} /> },

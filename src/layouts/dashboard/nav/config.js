@@ -87,12 +87,12 @@ const navConfig = [
       },
       {
         title: 'Cơ khí - Xây dựng',
-        path: '/cokhi-xaydung',
+        path: '/cokhi',
         icon: icon('ic_analytics'),
       },
       {
         title: 'Thoát nước - Điện chiếu sáng',
-        path: '/thoatnuoc-chieusang',
+        path: '/thoatnuoc',
         icon: icon('ic_analytics'),
       },
       {
@@ -102,7 +102,7 @@ const navConfig = [
       },
       {
         title: 'Kinh doanh khác',
-        path: '/kinhdoanhkhac',
+        path: '/khac',
         icon: icon('ic_analytics'),
       }
     ]

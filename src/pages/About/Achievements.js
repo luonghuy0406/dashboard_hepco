@@ -392,6 +392,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                             sx={{width:'100%'}}
                         >
                             <h3>Ảnh</h3>
+                            <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh có tỉ lệ 1:1 hoặc 1:2 và size tối đa 1MB để có thể hiển thị tốt nhất</Typography>
                             <div>
                                 <input
                                     accept="image/*"

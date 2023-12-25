@@ -1,11 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import {  Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText } from '@mui/material';
+import {  Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText, Checkbox } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPostById, updatePost, deletePost } from 'src/api';
 import { useEffect, useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/blog/EditorComponent';
 import Swal from 'sweetalert2';
+import { dataURLtoFile, toDataURL } from 'src/functions';
 
 export default function EditPost() {
     const { id } = useParams();
@@ -23,6 +24,8 @@ export default function EditPost() {
     const [content,setContent] = useState('')
     const [content_en,setContentEN] = useState('')
     const [image, setImage] = useState('')
+    const [imageFile, setImageFile] = useState([])
+    const [key_post,setKeyPost] = useState(0)
     useEffect(()=>{
         async function fetchData() {
             const postLists = await getPostById(id)
@@ -34,8 +37,14 @@ export default function EditPost() {
                     setContent(post.content || '')
                     setContentEN(post.content_en || '')
                     setCategory(categories[String(post.type_id)] || '')
+                    setKeyPost(post.key_post || 0)
                     // setImage(`http://localhost:3001/read_image/${post.image}`)
                     setImage(`http://localhost:3001/read_image/${post.image}`)
+                    toDataURL(`http://localhost:3001/read_image/${post.image}`)
+                    .then(dataUrl => {
+                        var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
+                        setImageFile(fileData)
+                    })
                 } catch (error) {
                     
                 }
@@ -46,14 +55,13 @@ export default function EditPost() {
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
+        setImageFile(file)
         setImage(URL.createObjectURL(file))
-        
-    };
+    }
 
-    const handleEditPost = async (id,type_id,name,name_en,content,content_en) =>{
+    const handleEditPost = async (id,type_id,name,name_en,content,content_en,key_post,imageFile) =>{
         if(name && name_en){
-            const image = document.getElementById("file-upload-edit-post-"+id).files[0] || []
-            const response = await updatePost(id,type_id,name,name_en,content,content_en, image)
+            const response = await updatePost(id,type_id,name,name_en,content,content_en, imageFile,key_post)
             Swal.fire(
                 response.result.status,
                 response.result.msg,
@@ -98,9 +106,26 @@ export default function EditPost() {
 
         <Container maxWidth={'xl'}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h4" gutterBottom>
-                Edit post {id}
-            </Typography>
+                <Typography variant="h4" gutterBottom>
+                    Edit post {id}
+                </Typography>
+            </Stack>
+            <Stack  mb={5}>
+                <Card sx={{ p: 2}}>
+                    <Typography variant="h6" gutterBottom>
+                        Tin nổi bật
+                    </Typography>
+                    <Checkbox 
+                        checked={key_post == 1}
+                        onChange={(e)=>{
+                            if(e.target.checked){
+                                setKeyPost(1)
+                            }else{
+                                setKeyPost(0)
+                            }
+                        }}
+                    />
+                </Card>
             </Stack>
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
@@ -203,7 +228,7 @@ export default function EditPost() {
             
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="space-between">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleEditPost(id,category.value,title,title_en,content,content_en)}}>Lưu bài đăng</Button>
+                    <Button variant="contained" onClick={()=>{handleEditPost(id,category.value,title,title_en,content,content_en,key_post,imageFile)}}>Lưu bài đăng</Button>
                     <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel()}}>Huỷ</Button>
                 </Stack>
                 <Button variant="text" color="error" onClick={()=>{handleDeletePost(id)}}>Xoá bài đăng</Button>

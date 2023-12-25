@@ -1,11 +1,12 @@
 import React from 'react'
-import {  Container, Divider, Card, Typography, Box, Table, TableHead, TableRow, TableCell, CardMedia, TableBody, Button, Collapse, Stack, Paper, styled, Modal, IconButton, FormControl, FormHelperText, Grid, TextField } from '@mui/material';
+import {  Container, Divider, Card, Typography, Box, Table, TableHead, TableRow, TableCell, CardMedia, TableBody, Button, Stack, Paper, styled, Modal, IconButton, FormControl, FormHelperText, Grid, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { addNewCustomer, deleteCustomer, getCustomer, updateCustomer } from 'src/api';
 import Iconify from 'src/components/iconify/Iconify';
 import Swal from 'sweetalert2';
 import CloseIcon from '@mui/icons-material/Close';
 import { Helmet } from 'react-helmet-async';
+import { dataURLtoFile, toDataURL } from 'src/functions';
 
 
 
@@ -14,15 +15,14 @@ import { Helmet } from 'react-helmet-async';
 export default function Customer() {
     const [customers,setCustomers] = useState([])
     const [update,setUpdate] = useState(false)
-    const [open,setOpen] = useState(false)
     const [openModal,setOpenModal] = useState(false)
     const [add, setAdd] = useState(true)
     const [id, setId] = useState('')
     useEffect(()=>{
         async function fetchData() {
             const customer = await getCustomer()
-            if(customer.results){
-                setCustomers(customer.results)
+            if(customer.data){
+                setCustomers(customer.data)
             }
         }
         fetchData();
@@ -38,15 +38,15 @@ export default function Customer() {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-            const response = await deleteCustomer(row.id)
-            if(response.results.status == 'success'){
+            const response = await deleteCustomer(row.id_customer)
+            if(response.result.status == 'success'){
                 setOpenModal(false)
                 setUpdate(!update)
             }
             Swal.fire(
-                response.results.status,
-                response.results.msg,
-                response.results.status
+                response.result.status,
+                response.result.msg,
+                response.result.status
             )
             }
         })
@@ -99,7 +99,7 @@ export default function Customer() {
                                     <CardMedia
                                         component="img"
                                         sx={{ width: 350,textAlign: "center" }}
-                                        image={`http://localhost:3001/read_image/${row.image}`}
+                                        image={`http://localhost:3001/read_image/${row.logo}`}
                                         alt={row.name}
                                     />
                                 </Box>
@@ -110,7 +110,7 @@ export default function Customer() {
                                     onClick={()=>{
                                         setOpenModal(true)
                                         setAdd(false)
-                                        setId(row.id)
+                                        setId(row.id_customer)
                                     }}
                                 >Update</Button>
                                 <Button variant="text" color="error" onClick={()=>{handleDelete(row, update, setUpdate)}}>Delete</Button>
@@ -150,9 +150,10 @@ const style = {
   }
 const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
     if(id){
-        customers = customers.filter((customer)=> customer.id == id)
+        customers = customers.filter((customer)=> customer.id_customer == id)
     }
     const [name,setName] = useState(add ? '' : customers[0].name)
+    
     const [image, setImage] = useState(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
     const [imageFile, setImageFile] = useState('')
     useEffect(()=>{
@@ -167,17 +168,17 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         setImage(URL.createObjectURL(file))
-        
+        setImageFile(file)
     };
-    const handleAddNew = async (name, image, id, update, add, customers, file)=>{
+    const handleAddNew = async (name, id, update, add, customers, imageFile)=>{
+        console.log(">>>",name, id, update, add, customers, imageFile)
         if(name && image){
-            const imageFile = document.getElementById("file-upload-new-customer"+id).files[0] || file
             if(add){
                 const response = await addNewCustomer(name, imageFile)
                 Swal.fire(
-                    response.results.status,
-                    response.results.msg,
-                    response.results.status
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
                 )
                 setOpenModal(false)
                 setUpdate(!update)
@@ -185,9 +186,9 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
             }else{
                 const response = await updateCustomer(id, name, imageFile)
                 Swal.fire(
-                    response.results.status,
-                    response.results.msg,
-                    response.results.status
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
                 )
                 setOpenModal(false)
                 setUpdate(!update)
@@ -202,7 +203,7 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
             document.getElementById("file-upload-new-customer"+id).value = ''
         }else{
             setName(add ? '' : customers[0].name)
-            setImage(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
+            setImage(add ? '' : `http://localhost:3001/read_image/${customers[0].logo}`)
             document.getElementById("file-upload-new-customer"+id).value = ''
         }
         setOpenModal(false)
@@ -295,32 +296,11 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
             
                 <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                     <Stack spacing={2} direction="row">
-                        <Button variant="contained" onClick={()=>{handleAddNew(name, image, id, update,add, customers, imageFile)}}>Save</Button>
+                        <Button variant="contained" onClick={()=>{handleAddNew(name, id, update,add, customers, imageFile)}}>Save</Button>
                         <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel(add,id, customers)}}>Cancel</Button>
                     </Stack>
                 </Stack>    
             </Box>
         </Box>
     )
-}
-
-
-const toDataURL = url => fetch(url)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
-     }))
-
-
-
-function dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-    u8arr[n] = bstr.charCodeAt(n);
-    }
-return new File([u8arr], filename, {type:mime});
 }

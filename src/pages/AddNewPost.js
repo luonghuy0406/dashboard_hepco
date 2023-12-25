@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText, Autocomplete } from '@mui/material';
+import { Button, Container, Stack, Typography, TextField, Card, CardMedia, Box, FormHelperText, Autocomplete, Checkbox, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { addNewPost } from 'src/api';
 import Swal from 'sweetalert2';
@@ -18,6 +18,7 @@ export default function AddNewPost() {
     }
     const [category, setCategory] = useState({name: 'Hoạt động công ty', value:'1'}) 
     const [title,setTitle] = useState('')
+    const [key_post,setKeyPost] = useState(0)
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
     const [content_en,setContentEN] = useState('')
@@ -27,10 +28,10 @@ export default function AddNewPost() {
         setImage(URL.createObjectURL(file))
         
     };
-    const handleAddNewPost = async (type_id,title, title_en,content,content_en, image)=>{
+    const handleAddNewPost = async (type_id,title, title_en,content,content_en, image,key_post)=>{
         if(title && title_en && image){
             const imageFile = document.getElementById('file-upload-new-post').files[0]
-            const response = await addNewPost(type_id, title, title_en, content, content_en, imageFile)
+            const response = await addNewPost(type_id, title, title_en, content, content_en, imageFile,key_post)
             Swal.fire(
                 response.result.status,
                 response.result.msg,
@@ -48,6 +49,7 @@ export default function AddNewPost() {
         setContent('')
         setContentEN('')
         setImage('')
+        setKeyPost(0)
         navigate('/dashboard/tintuc', { replace: true })
     }
   return (
@@ -66,29 +68,46 @@ export default function AddNewPost() {
 
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
-                    <Typography variant="h6" gutterBottom>
-                        Loại tin
-                    </Typography>
-                    <Autocomplete
-                        id="tags-standard"
-                        options={Object.values(categories)}
-                        getOptionLabel={(option) => option.name}
-                        value={category}
-                        renderInput={(params) => (
-                            <TextField
-                            {...params}
-                            variant="outlined"
-                            placeholder={"Chọn loại tin tức"}
-                            />
-                        )}
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                                <Typography variant="h6" gutterBottom>
+                                    Loại tin
+                                </Typography>
+                                <Autocomplete
+                                    id="tags-standard"
+                                    options={Object.values(categories)}
+                                    getOptionLabel={(option) => option.name}
+                                    value={category}
+                                    renderInput={(params) => (
+                                        <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        placeholder={"Chọn loại tin tức"}
+                                        />
+                                    )}
 
-                        onChange={(e,value)=>{
-                            setCategory(value)
-                        }}
-                    />
+                                    onChange={(e,value)=>{
+                                        setCategory(value)
+                                    }}
+                                />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" gutterBottom>
+                                Tin nổi bật
+                            </Typography>
+                            <Checkbox  
+                            onChange={(e)=>{
+                                if(e.target.checked){
+                                    setKeyPost(1)
+                                }else{
+                                    setKeyPost(0)
+                                }
+                            }}
+                            />
+                        </Grid>
+                    </Grid>
                 </Card>
             </Stack>
-
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
                     <Typography variant="h6" gutterBottom>
@@ -187,7 +206,7 @@ export default function AddNewPost() {
             </Stack>
             <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={()=>{handleAddNewPost(category.value,title, title_en,content,content_en, image)}}>Lưu bài viết</Button>
+                    <Button variant="contained" onClick={()=>{handleAddNewPost(category.value,title, title_en,content,content_en, image,key_post)}}>Lưu bài viết</Button>
                     <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel()}}>Huỷ</Button>
                 </Stack>
             </Stack>

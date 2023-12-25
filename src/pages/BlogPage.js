@@ -13,6 +13,7 @@ export default function BlogPage() {
     '2': {name: 'Đảng Đoàn thể', value:'2'},
     '3': {name: 'Pháp luật môi trường', value:'3'},
     '4': {name: 'Tin tức khác', value:'4'},
+    '5': {name: 'Tin nổi bật', value:'5'},
   }
 
   const [valueFilter, setValueFilter] = useState({name: 'Tất cả tin', value:'0'})
@@ -29,7 +30,7 @@ export default function BlogPage() {
   useEffect(() => {
     const timeOutId = keyword && setTimeout(() => doneTyping(), 300);
     function doneTyping () {
-        if(didMount.current){
+        if(didMount.current && valueFilter.value !=5){
           async function fetchData() {
             const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
             if(postLists.result){
@@ -53,7 +54,16 @@ export default function BlogPage() {
           setPage(1)
         }
     }
-    fetchData()
+    if(valueFilter.value !=5){
+      fetchData()
+    }else{
+     let  outstanding = postList.filter((post)=>{
+        return post.key_post == 1
+     })
+     setTotalPages(Math.ceil(outstanding.length/itemsPerPage))
+     setPostList(outstanding)
+     setPage(1)
+    }
   },[itemsPerPage,valueFilter,page])
   return (
     <>
