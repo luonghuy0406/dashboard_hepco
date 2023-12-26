@@ -26,14 +26,14 @@ export default function AddNewShareholder() {
     };
     const handleAddNewPost = async (title, title_en,content,content_en, image)=>{
         if(title && title_en && image){
-            const imageFile = document.getElementById('file-upload-new-post').files[0]
-            const response = await addNewPost(title, title_en, content, content_en, imageFile)
+            const imageFile = document.getElementById('file-upload-new-shareholder').files[0]
+            const response = await addNewPost('shareholder',category.value,title, title_en, content, content_en, imageFile)
             Swal.fire(
-                response.results.status,
-                response.results.msg,
-                response.results.status
+                response.result.status,
+                response.result.msg,
+                response.result.status
             )
-            if(response.results.status == 'success'){
+            if(response.result.status == 'success'){
                 navigate('/dashboard/codong', { replace: true });
             }
         }
@@ -127,13 +127,13 @@ export default function AddNewShareholder() {
                         <div>
                             <input
                                 accept="image/*"
-                                id={"file-upload-new-post"}
+                                id={"file-upload-new-shareholder"}
                                 type="file"
                                 style={{ display: 'none' }}
                                 onChange={(e)=>{handleImageUpload(e)}}
                             />
 
-                            <label htmlFor={"file-upload-new-post"}>
+                            <label htmlFor={"file-upload-new-shareholder"}>
                                 <Button variant="text" color="primary" component="span">
                                    {image ?  "Replace image" : "Upload image"}
                                 </Button>

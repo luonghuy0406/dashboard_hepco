@@ -23,7 +23,7 @@ export default function EditProject() {
     const [image, setImage] = useState('')
     useEffect(()=>{
         async function fetchData() {
-            const postLists = await getPostById(id)
+            const postLists = await getPostById('project',id)
             if(postLists.result){
                 try {
                     const post = postLists.result 
@@ -31,7 +31,7 @@ export default function EditProject() {
                     setTitleEN(post.name_en || '')
                     setContent(post.content || '')
                     setContentEN(post.content_en || '')
-                    setCategory(categories[String(post.type_id)] || '')
+                    setCategory(categories[String(post.type_id)] || {name: 'Dự án đầu tư', value:'7'})
                     // setImage(`http://localhost:3001/read_image/${post.image}`)
                     setImage(`http://localhost:3001/read_image/${post.image}`)
                 } catch (error) {
@@ -51,19 +51,19 @@ export default function EditProject() {
     const handleEditPost = async (id,type_id,name,name_en,content,content_en) =>{
         if(name && name_en){
             const image = document.getElementById("file-upload-edit-post-"+id).files[0] || []
-            const response = await updatePost(id,type_id,name,name_en,content,content_en, image)
+            const response = await updatePost('project',id,type_id,name,name_en,content,content_en, image)
             Swal.fire(
                 response.result.status,
                 response.result.msg,
                 response.result.status
             )
             if(response.result.status == 'success'){
-                navigate('/dashboard/tintuc', { replace: true });
+                navigate('/dashboard/duan', { replace: true });
             }
         }
     }
     const handleCancel = () => {
-        navigate('/dashboard/tintuc', { replace: true })
+        navigate('/dashboard/duan', { replace: true })
     }
     const handleDeletePost = async (id)=>{
         Swal.fire({
@@ -75,14 +75,14 @@ export default function EditProject() {
             confirmButtonText: 'Yes, delete it!'
           }).then(async (result) => {
             if (result.isConfirmed) {
-                const response = await deletePost(id)
+                const response = await deletePost('project',id)
                 Swal.fire(
                     response.result.status,
                     response.result.msg,
                     response.result.status
                 )
                 if(response.result.status == 'success'){
-                    navigate('/dashboard/tintuc', { replace: true });
+                    navigate('/dashboard/duan', { replace: true });
                 }
             }
           })

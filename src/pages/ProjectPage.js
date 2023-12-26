@@ -30,7 +30,7 @@ export default function ProjectPage() {
     function doneTyping () {
         if(didMount.current){
           async function fetchData() {
-            const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
+            const postLists = await getPosts('project',itemsPerPage,valueFilter.value, keyword,page)
             if(postLists.result){
               setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
               setPostList(postLists.result.data)
@@ -45,15 +45,14 @@ export default function ProjectPage() {
   }, [keyword])
   useEffect(()=>{
     async function fetchData() {
-        const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
+        const postLists = await getPosts('project',itemsPerPage,valueFilter.value, keyword,page)
         if(postLists.result){
           setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
           setPostList(postLists.result.data)
-          setPage(1)
         }
     }
     fetchData()
-  },[itemsPerPage,valueFilter,page])
+  },[valueFilter,page])
   return (
     <>
       <Helmet>
@@ -65,7 +64,7 @@ export default function ProjectPage() {
           <Typography variant="h4" gutterBottom>
             Dự án
           </Typography>
-          <Link to="/dashboard/tintuc/add">
+          <Link to="/dashboard/duan/add">
               <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
                 Thêm dự án mới
               </Button>
@@ -78,7 +77,7 @@ export default function ProjectPage() {
 
         <Grid container spacing={3}>
           {postList.map((post, index) => (
-            <BlogPostCard key={post.id_post} post={post} categories={categories} />
+            <BlogPostCard key={post.id_project} type='duan' id={post.id_project} post={post} categories={categories} />
           ))}
         </Grid>
 

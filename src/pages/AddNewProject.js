@@ -27,15 +27,15 @@ export default function AddNewProject() {
     };
     const handleAddNewPost = async (type_id,title, title_en,content,content_en, image)=>{
         if(title && title_en && image){
-            const imageFile = document.getElementById('file-upload-new-post').files[0]
-            const response = await addNewPost(type_id, title, title_en, content, content_en, imageFile)
+            const imageFile = document.getElementById('file-upload-new-project').files[0]
+            const response = await addNewPost('project',type_id, title, title_en, content, content_en, imageFile)
             Swal.fire(
                 response.result.status,
                 response.result.msg,
                 response.result.status
             )
             if(response.result.status == 'success'){
-                navigate('/dashboard/tintuc', { replace: true });
+                navigate('/dashboard/duan', { replace: true });
             }
         }
     }
@@ -46,7 +46,7 @@ export default function AddNewProject() {
         setContent('')
         setContentEN('')
         setImage('')
-        navigate('/dashboard/tintuc', { replace: true })
+        navigate('/dashboard/duan', { replace: true })
     }
   return (
     <>
@@ -130,13 +130,13 @@ export default function AddNewProject() {
                         <div>
                             <input
                                 accept="image/*"
-                                id={"file-upload-new-post"}
+                                id={"file-upload-new-project"}
                                 type="file"
                                 style={{ display: 'none' }}
                                 onChange={(e)=>{handleImageUpload(e)}}
                             />
 
-                            <label htmlFor={"file-upload-new-post"}>
+                            <label htmlFor={"file-upload-new-project"}>
                                 <Button variant="text" color="primary" component="span">
                                    {image ?  "Replace image" : "Upload image"}
                                 </Button>

@@ -28,7 +28,7 @@ export default function EditPost() {
     const [key_post,setKeyPost] = useState(0)
     useEffect(()=>{
         async function fetchData() {
-            const postLists = await getPostById(id)
+            const postLists = await getPostById('post',id)
             if(postLists.result){
                 try {
                     const post = postLists.result 
@@ -61,7 +61,7 @@ export default function EditPost() {
 
     const handleEditPost = async (id,type_id,name,name_en,content,content_en,key_post,imageFile) =>{
         if(name && name_en){
-            const response = await updatePost(id,type_id,name,name_en,content,content_en, imageFile,key_post)
+            const response = await updatePost('post',id,type_id,name,name_en,content,content_en, imageFile,key_post)
             Swal.fire(
                 response.result.status,
                 response.result.msg,
@@ -85,7 +85,7 @@ export default function EditPost() {
             confirmButtonText: 'Yes, delete it!'
           }).then(async (result) => {
             if (result.isConfirmed) {
-                const response = await deletePost(id)
+                const response = await deletePost('post',id)
                 Swal.fire(
                     response.result.status,
                     response.result.msg,

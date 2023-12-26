@@ -7,13 +7,24 @@ import { fDate } from '../../../utils/formatTime';
 import StarsIcon from '@mui/icons-material/Stars';
 
 
-export default function BlogPostCard({ post, categories }) {
-  const { id_post, image, name, cre_date, type_id, key_post } = post
+export default function BlogPostCard({ id,type,post }) {
+  const { image, name, cre_date, type_id, key_post } = post
+  const categories = {
+    '1': {name: 'Hoạt động công ty', value:'1'},
+    '2': {name: 'Đảng Đoàn thể', value:'2'},
+    '3': {name: 'Pháp luật môi trường', value:'3'},
+    '5': {name: 'Thông báo', value:'5'},
+    '6': {name: 'Báo cáo', value:'6'},
+    '4': {name: 'Tin tức khác', value:'4'},
+    '7': {name: 'Dự án đầu tư', value:'7'},
+    '8': {name: 'Hợp tác trong nước', value:'8'},
+    '9': {name: 'Hợp tác nước ngoài', value:'9'}
+}
   return (
     <Grid item xs={12} sm={6} md={3} sx={{position:'relative'}}>
         <Card sx={{borderRadius:'0px', boxShadow:'unset'}}>
             <Link
-                to={`/dashboard/tintuc/${id_post}`}
+                to={`/dashboard/${type}/${id}`}
             >
                 <Box position='relative'>
                     <Box

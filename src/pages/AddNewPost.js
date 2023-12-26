@@ -31,7 +31,7 @@ export default function AddNewPost() {
     const handleAddNewPost = async (type_id,title, title_en,content,content_en, image,key_post)=>{
         if(title && title_en && image){
             const imageFile = document.getElementById('file-upload-new-post').files[0]
-            const response = await addNewPost(type_id, title, title_en, content, content_en, imageFile,key_post)
+            const response = await addNewPost('post',type_id, title, title_en, content, content_en, imageFile,key_post)
             Swal.fire(
                 response.result.status,
                 response.result.msg,

@@ -431,9 +431,18 @@ export const deleteCustomer = async (id)=>{
 }
 
 //-----post--------
-export const getPosts = async (itemsPerPage=12,type_id=0, keyword='',page=1) => {
+export const getPosts = async (type,itemsPerPage=12,type_id=0, keyword='',page=1) => {
   try {
-    const response = await api.get(`/post/list?c=${itemsPerPage}&type_id=${type_id}&title=${keyword}&p=${page-1}`);
+    const response = await api.get(`/${type}/list?c=${itemsPerPage}&type_id=${type_id}&title=${keyword}&p=${page-1}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getPostsHighlight = async () => {
+  try {
+    const response = await api.get(`/post/highlight`);
     return response.data;
   } catch (error) {
     throw error;
@@ -441,16 +450,16 @@ export const getPosts = async (itemsPerPage=12,type_id=0, keyword='',page=1) => 
 };
 
 
-export const getPostById = async (id) => {
+export const getPostById = async (type,id) => {
   try {
-    const response = await api.get(`post/detail/${id}`);
+    const response = await api.get(`${type}/detail/${id}`);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const addNewPost = async (type_id, name,name_en, content, content_en, image, key_post) => {
+export const addNewPost = async (type,type_id, name,name_en, content, content_en, image, key_post=0) => {
   try {
     const id_user = localStorage.getItem('user')
     const author = localStorage.getItem('name')
@@ -461,7 +470,7 @@ export const addNewPost = async (type_id, name,name_en, content, content_en, ima
     data.append('name_en', name_en);
     data.append('content', content);
     data.append('content_en', content_en);
-    data.append('key_post', key_post);
+    data.append(`key_${type}`, key_post);
     if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
@@ -472,10 +481,10 @@ export const addNewPost = async (type_id, name,name_en, content, content_en, ima
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
-      const response = await api.post('/post/add',data);
+      const response = await api.post(`/${type}/add`,data);
       return response.data;
     }else{
-      const response = await api.post('/post/add',data);
+      const response = await api.post(`/${type}/add`,data);
       return response.data;
     }
   } catch (error) {
@@ -487,15 +496,15 @@ export const addNewPost = async (type_id, name,name_en, content, content_en, ima
     throw error;
   }
 };
-export const updatePost =  async (id,type_id,name,name_en,content,content_en, image,key_post) => {
+export const updatePost =  async (type,id,type_id,name,name_en,content,content_en, image,key_post=0) => {
   try {
     const id_user = localStorage.getItem('user')
     const author = localStorage.getItem('name')
     const FormData = require('form-data');
     let data = new FormData();
-    data.append('id_post', id);
+    data.append(`id_${type}`, id);
     data.append('type_id', type_id);
-    data.append('key_post',key_post)
+    data.append(`key_${type}`,key_post)
     if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
@@ -510,10 +519,10 @@ export const updatePost =  async (id,type_id,name,name_en,content,content_en, im
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
-      const response = await api.put('/post/update',data);
+      const response = await api.put(`/${type}/update`,data);
       return response.data;
     }else{
-      const response = await api.put('/post/update',data);
+      const response = await api.put(`/${type}/update`,data);
       return response.data;
     }
   } catch (error) {
@@ -525,15 +534,15 @@ export const updatePost =  async (id,type_id,name,name_en,content,content_en, im
     throw error;
   }
 } 
-export const deletePost = async (id)=>{
+export const deletePost = async (type,id)=>{
   try {
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
-      const response = await api.delete(`/post/delete/${id}`);
+      const response = await api.delete(`/${type}/delete/${id}`);
       return response.data;
     }else{
-      const response = await api.delete(`/post/delete/${id}`);
+      const response = await api.delete(`/${type}/delete/${id}`);
       return response.data;
     }
   } catch (error) {
@@ -592,6 +601,90 @@ export const updateService = async (id_service,name,name_en,content,content_en, 
       return response.data;
     }else{
       const response = await api.put('/service/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+} 
+
+//------qna-------------
+export const getQuestion = async (itemsPerPage=12,page=1) => {
+  try {
+    const response = await api.get(`/qna/list?c=${itemsPerPage}&p=${page-1}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+export const deleteQuestion = async (id) => {
+  try {
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.delete(`/qna/delete/${id}`);
+      return response.data;
+    }else{
+      const response = await api.delete(`/qna/delete/${id}`);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+export const updateQuestion = async (id_qna,question,question_en,answer,answer_en, key_qna) => {
+  try {
+    let data = new FormData();
+    data.append('question', question);
+    data.append('question_en', question_en);
+    data.append('answer',answer)
+    data.append('answer_en',answer_en)
+    data.append('key_qna',key_qna)
+    data.append('id_qna',id_qna)
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/qna/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/qna/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+} 
+
+export const addQuestion = async (question,question_en,answer,answer_en) => {
+  try {
+    let data = new FormData();
+    data.append('question', question);
+    data.append('question_en', question_en);
+    data.append('answer',answer)
+    data.append('answer_en',answer_en)
+    data.append('key_qna','0')
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/qna/add',data);
+      return response.data;
+    }else{
+      const response = await api.post('/qna/add',data);
       return response.data;
     }
   } catch (error) {

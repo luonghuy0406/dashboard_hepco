@@ -4,7 +4,7 @@ import { Grid, Button, Container, Stack, Typography, Pagination, Box } from '@mu
 import { Link } from 'react-router-dom';
 import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSearch } from '../sections/@dashboard/blog';
-import {  getPosts } from 'src/api';
+import {  getPosts, getPostsHighlight } from 'src/api';
 
 export default function BlogPage() {
   const categories = {
@@ -30,9 +30,10 @@ export default function BlogPage() {
   useEffect(() => {
     const timeOutId = keyword && setTimeout(() => doneTyping(), 300);
     function doneTyping () {
-        if(didMount.current && valueFilter.value !=5){
+        if(didMount.current && valueFilter?.value !=5){
+          setPage(1)
           async function fetchData() {
-            const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
+            const postLists = await getPosts('post',itemsPerPage,valueFilter.value, keyword,page)
             if(postLists.result){
               setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
               setPostList(postLists.result.data)
@@ -47,24 +48,27 @@ export default function BlogPage() {
   }, [keyword])
   useEffect(()=>{
     async function fetchData() {
-        const postLists = await getPosts(itemsPerPage,valueFilter.value, keyword,page)
+        const postLists = await getPosts('post',itemsPerPage,valueFilter.value, keyword,page)
         if(postLists.result){
           setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
           setPostList(postLists.result.data)
-          setPage(1)
         }
     }
-    if(valueFilter.value !=5){
+    async function fetchData2() {
+      const dt = await getPostsHighlight()
+      if(dt){
+        setTotalPages(Math.ceil(dt.num_post/itemsPerPage))
+        setPostList(dt.data)
+        setPage(1)
+      }
+    }
+    if(valueFilter?.value !=5){
       fetchData()
     }else{
-     let  outstanding = postList.filter((post)=>{
-        return post.key_post == 1
-     })
-     setTotalPages(Math.ceil(outstanding.length/itemsPerPage))
-     setPostList(outstanding)
-     setPage(1)
+      
+      fetchData2()
     }
-  },[itemsPerPage,valueFilter,page])
+  },[valueFilter,page])
   return (
     <>
       <Helmet>
@@ -89,7 +93,7 @@ export default function BlogPage() {
 
         <Grid container spacing={3}>
           {postList.map((post, index) => (
-            <BlogPostCard key={post.id_post} post={post} categories={categories} />
+            <BlogPostCard key={post.id_post} type='tintuc' id={post.id_post} post={post} categories={categories} />
           ))}
         </Grid>
 
