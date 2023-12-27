@@ -1,103 +1,167 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Card, CardMedia,Container, useTheme, Typography, Box, Dialog, DialogContent, Pagination, Button, Stack,
     Modal,
     TextField,
-    FormControl,
     IconButton,
-    FormHelperText} from '@mui/material';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+    FormHelperText,
+    Tabs,
+    Tab,
+    CardContent} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import Iconify from 'src/components/iconify/Iconify';
+import { addAlbum, addListImages, deleteAlbum, deleteImage, getListAlbums, getListImages, updateAlbum, updateImage } from 'src/api';
+import PropTypes from 'prop-types';
+import Swal from 'sweetalert2';
+import { formatDateTime } from 'src/functions';
 
-const images = [
-  { id: 1,description: 'ác thông tin kháccác thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 2,description: 'Bạn có thể thêm các thác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'},
-  { id: 3,description: 'Bạn có thể thêm các thôngn khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg'},
-  { id: 4,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 5,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 6,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.techsmith.com/blog/wp-content/uploads/2022/03/resize-image.png'},
-  { id: 7,description: 'Bạn có thể thêmđây',url: 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'},
-  { id: 8,description: 'Bạn có thể thêm c tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg'},
-  { id: 9,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 10,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 11,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.techsmith.com/blog/wp-content/uploads/2022/03/resize-image.png'},
-  { id: 12,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 13,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'},
-  { id: 14,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg'},
-  { id: 15,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 16,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 17,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.techsmith.com/blog/wp-content/uploads/2022/03/resize-image.png'},
-  { id: 18,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'},
-  { id: 19,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg'},
-  { id: 20,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 21,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 22,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.techsmith.com/blog/wp-content/uploads/2022/03/resize-image.png'},
-  { id: 23,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 24,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'},
-  { id: 25,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg'},
-  { id: 26,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 27,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 28,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.techsmith.com/blog/wp-content/uploads/2022/03/resize-image.png'},
-  { id: 29,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg'},
-  { id: 30,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg'},
-  { id: 31,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 32,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.seiu1000.org/sites/main/files/imagecache/hero/main-images/camera_lense_0.jpeg'},
-  { id: 33,description: 'Bạn có thể thêm các thông tin khác tại đây Bạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đâyBạn có thể thêm các thông tin khác tại đây',url: 'https://www.techsmith.com/blog/wp-content/uploads/2022/03/resize-image.png'},
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
   
-  // Thêm các ảnh khác vào đây
-];
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+}
+
+CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+}
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    }
+}
 
 const Gallery = () => {
-    const theme = useTheme()
+    const [tab, setTab] = useState(0);
+
+    const handleChange = (event, newtab) => {
+        setTab(newtab);
+    };
+    return (
+            <Container 
+                maxWidth={'xl'} 
+            >
+                <Typography sx={{mb:3}} variant='h4' fontWeight={700} >{'Thư viện ảnh'}</Typography>
+                <Box sx={{ width: '100%' }}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={tab} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab label={"Toàn bộ ảnh"} {...a11yProps(0)} />
+                        <Tab label={"Album ảnh"} {...a11yProps(1)} />
+                        </Tabs>
+                    </Box>
+                    <CustomTabPanel value={tab} index={0}>
+                        <AllPhotos tab={tab}/>
+                    </CustomTabPanel>
+                    <CustomTabPanel value={tab} index={1}>
+                        <AllAlbums tab={tab}/>
+                    </CustomTabPanel>
+                </Box>
+            </Container>
+    );
+}
+
+export default Gallery;
+
+
+
+
+const AllPhotos = ({id_album}) => {
+    const [update, setUpdate] = useState(false)
     const [open,setOpen] = useState(false)
-
-    const [openModal,setOpenModal] = useState(false)
-    const [currentId,setCurrentId] = useState(null)
+    const [images,setImages] = useState([])
+    const [currentImage,setCurrentImage] = useState(null)
     const [page, setPage] = useState(1);
-    const itemsPerPage = 20; // Change this according to your needs
-
-    // Your data array
-    const data = [...images];
-
-    // Calculate the total number of pages
-    const totalPages = Math.ceil(data.length / itemsPerPage);
-
-    // Get the current page's data
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = page * itemsPerPage;
-    const currentPageData = data.slice(startIndex, endIndex);
-
+    const itemsPerPage = 20; 
+    const [totalPages,setTotalPages] = useState(0)
     // Handle page change
     const handlePageChange = (event, value) => {
         setPage(value);
     };
+
+    useEffect(()=>{
+        async function fetchData() {
+            const data = await getListImages(itemsPerPage,page,id_album || "0")
+            if(data.result){
+                setImages(data.result.data)
+                setTotalPages(Math.ceil(data.result.num_image / itemsPerPage))
+            }
+        }
+        fetchData()
+    },[update, page])
+
+    const handleAddListImages  = async (imageFile)=>{
+        if(imageFile?.length >15){
+            Swal.fire(
+                'warning',
+                'Cảnh báo',
+                'Chỉ được phép tải lên tối đa 15 hình'
+            )
+        }else{
+            const response = await addListImages(imageFile, id_album || "1")
+            Swal.fire(
+                response.result.status,
+                response.result.msg,
+                response.result.status
+            )
+            if(response.result.status == 'success'){
+                setUpdate(!update)
+            }
+        }
+    }
   return (
         <Container 
             maxWidth={'xl'} 
         >
-            <Typography sx={{mb:3}} variant='h4' fontWeight={700} >{'Thư viện ảnh'}</Typography>
-            <Button 
-                variant="contained" 
-                sx={{float:'right', m:2}} 
-                onClick={()=>{
-                    setOpenModal(true)
-                    // setAdd(true)
-                }} 
-                startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-                Add new
-            </Button>
-            <Modal
-                open={openModal}
-                onClose={()=>{setOpenModal(false)}}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
-            >
-                    <ModalAdd setOpenModal={setOpenModal}/>
-            </Modal>
+
+            <Box>
+                <input
+                    accept="image/*"
+                    id={"file-upload-list-image-new"}
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={(e)=>{handleAddListImages(e.target.files)}}
+                    multiple
+                />
+                <label 
+                    htmlFor={"file-upload-list-image-new"}
+                    style={{
+                        display: "flex",
+                        alignItems: "end",
+                        flexDirection: "column",
+                        paddingBottom: "25px"
+                    }}
+                >
+                    <Button 
+                        component="span"
+                        variant="contained" 
+                        sx={{float:'right', m:2}} 
+                        startIcon={<Iconify icon="eva:plus-fill" />}
+                    >
+                        Thêm ảnh mới
+                    </Button>
+                    <FormHelperText color="error" sx={{float:"right"}}>Tải lên tối đa 15 hình trong 1 lần</FormHelperText>
+                </label>
+
+            </Box>
             <Grid container spacing={2}>
-                {currentPageData.map((image, index) => (
+                {images.map((image, index) => (
                     <Grid key={index} item xs={6} sm={6} md={4} lg={3}>
                         <Card 
                             sx={{
@@ -105,31 +169,35 @@ const Gallery = () => {
                                 height: '100%',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                position:'relative'
-                            }}
-                            onClick={()=>{
-                                setOpen(true)
-                                setCurrentId(index)
+                                position:'relative',
+                                maxHeight: "300px"
                             }}
                         >
-                                <CardMedia 
-                                    component="img"
-                                    alt={`Image ${index + 1}`}
-                                    height="auto"
-                                    image={image.url}
-                                    sx={{flex: 1,
-                                    objectFit: 'cover'}}
-                                />
-                            <Box sx={{padding: 2,background: '#00000066',position:'absolute',left:0,right:0,bottom:0}}>
-                                <Typography 
-                                    sx={{
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }} 
-                                    color={"#ffffff"}
-                                    >{image.description}</Typography>
-                            </Box>
+                            <IconButton
+                                aria-label="delete" 
+                                sx={{
+                                    position: "absolute", 
+                                    right:"0", 
+                                    background: "#0000004d", 
+                                    color: "#fff",
+                                    "&:hover":{
+                                        background: "#00000080"
+                                    }
+                                }}
+                                onClick={()=>{
+                                    setOpen(true)
+                                    setCurrentImage(image)
+                                }}
+                            >
+                                <EditIcon />
+                            </IconButton>
+                            <CardMedia 
+                                component="img"
+                                alt={image.des}
+                                height="auto"
+                                image={`http://localhost:3001/read_image/${image.link}`}
+                                sx={{flex: 1,objectFit: 'cover', minHeight:"200px"}}
+                            />
                         </Card>
                     </Grid>
                 ))}
@@ -145,298 +213,409 @@ const Gallery = () => {
                     siblingCount={1}
                 />
             </Box>
-            <Dialog 
-                open={open} 
-                onClose={()=>{
-                    setOpen(false)
-                    setCurrentId(null)
-                }}
-                maxWidth="md"
-                fullWidth
-                
-            >
-                <Box sx={{padding: theme.spacing(2), position:'relative'}} className='wrap-image-dialog'>
-                    <Box 
-                            sx={{
-                                textAlign: 'center',
-                                width:'100%',
-                                overflow:'hidden',
-                                height:'700px',
-                                display:'flex',
-                                alignItems:'center', 
-                                justifyContent:'center'
-                            }}
-                        >
-                                <img
-                                    src={currentPageData?.[currentId]?.url}
-                                    alt="Fullscreen"
-                                    style={{
-                                        maxWidth: '100%',
-                                        // height: 'auto',
-                                        maxHeight:'700px',
-                                        objectFit: 'contain'
-                                    }}
-                                />
-                        </Box>
-                    <Box sx={{padding: theme.spacing(3),background: '#00000066',position:'absolute',left:0,right:0,bottom:0}}>
-                        <Typography 
-                            color={"#ffffff"}
-                            >{currentPageData?.[currentId]?.description}</Typography>
-                    </Box>
-                    <Box sx={{background: '#fff', borderBottom: '1px solid #0000002e',width: '100%', display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'end', padding:'10px', position:'absolute', right:0, top:0}}>
-                        <Button variant="text" color="error">Xoá</Button>
-                        <Box onClick={()=>{
-                            setOpen(false)
-                            setCurrentId(null)
-                        }} sx={{display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'center', width:'30px', color:'#000', height:'30px', borderRadius:'50%'}}>
-                            <CloseIcon/>
-                        </Box>
-                    </Box>
-                    <Box 
-                        className='button-next-image'
-                        onClick={()=>{
-                            if(currentId - 1 >= 0){
-                                setCurrentId(currentId - 1 )
-                            }
-                        }}
-                        sx={{
-                            transition: 'all .4s ease-in-out 0s',
-                            opacity:'.3', 
-                            marginLeft:'10px', 
-                            display:'flex',
-                            cursor:'pointer', 
-                            alignItems:'center',
-                            justifyContent:'center',
-                            width:'60px', 
-                            color:'#fff', 
-                            height:'60px', 
-                            borderRadius:'50%', 
-                            background: '#00000066', 
-                            position:'absolute', 
-                            left:0, 
-                            bottom:'50%'
-                        }}
-                        >
-                        <KeyboardArrowLeftIcon/>
-                    </Box>
-                    <Box 
-                    className='button-next-image'
-                    onClick={()=>{
-                        if(currentId + 1 <= images.length){
-                            setCurrentId(currentId + 1 )
-                        }
-                    }}
-                    sx={{
-                        transition: 'all .4s ease-in-out 0s',
-                        opacity:'.3', 
-                        marginRight:'10px', 
-                        display:'flex',
-                        cursor:'pointer', 
-                        alignItems:'center',
-                        justifyContent:'center',
-                        width:'60px', 
-                        color:'#fff', 
-                        height:'60px', 
-                        borderRadius:'50%', 
-                        background: '#00000066', 
-                        position:'absolute', 
-                        right:0, 
-                        bottom:'50%'
-                        }}
-                    >
-                        <KeyboardArrowRightIcon/>
-                    </Box>
-                </Box>
-            </Dialog>
+            {
+                currentImage &&
+                <EditImageDialog currentImage={currentImage} open={open} setOpen={setOpen} setCurrentImage={setCurrentImage} setUpdate={setUpdate} update={update}/>
+            }
         </Container>
   );
-};
+}
 
-export default Gallery;
+const EditImageDialog = ({currentImage, open, setOpen, setCurrentImage, setUpdate, update}) =>{
+    const theme = useTheme()
+    const [des,setDes] = useState(currentImage.des)
+    const [des_en,setDes_en] = useState(currentImage.des_en)
 
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    p: 2,
-    pt:0,
-    borderRadius: '4px',
-    width: '90%'
-  }
-const ModalAdd = ({setOpenModal}) =>{
-    // if(id){
-    //     data = data.filter((dt)=> dt.id == id)
-    // }
-    const [content,setContent] = useState('')
-    const [image, setImage] = useState()
-    const [imageFile, setImageFile] = useState('')
-    // useEffect(()=>{
-    //     if(customers?.length > 0){
-    //         toDataURL(`http://localhost:3001/read_image/${customers[0].image}`)
-    //         .then(dataUrl => {
-    //             var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
-    //             setImageFile(fileData)
-    //         })
-    //     }
-    // },[id])
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        setImage(URL.createObjectURL(file))
+    const handleEditImage = async (id,des,des_en) =>{
+        const response = await updateImage(id,des,des_en)
+        Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            setUpdate(!update)
+            handleCancel()
+        }
+    }
+    const handleCancel = () => {
+        setOpen(false)
+        setCurrentImage(null)
+    }
+    const handleDeleteImage = async (id)=>{
+        Swal.fire({
+            text: `Bạn có chắc chắn muốn xoá nó không?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đúng!'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deleteImage(id)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                if(response.result.status == 'success'){
+                    setUpdate(!update)
+                    handleCancel()
+                }
+            }
+          })
         
-    };
-    // const handleAddNew = async (name, image, id, update, add, customers, file)=>{
-    //     if(name && image){
-    //         const imageFile = document.getElementById("file-upload-new-customer"+id).files[0] || file
-    //         if(add){
-    //             const response = await addNewCustomer(name, imageFile)
-    //             Swal.fire(
-    //                 response.results.status,
-    //                 response.results.msg,
-    //                 response.results.status
-    //             )
-    //             setOpenModal(false)
-    //             setUpdate(!update)
-    //             handleCancel(add,id, customers)
-    //         }else{
-    //             const response = await updateCustomer(id, name, imageFile)
-    //             Swal.fire(
-    //                 response.results.status,
-    //                 response.results.msg,
-    //                 response.results.status
-    //             )
-    //             setOpenModal(false)
-    //             setUpdate(!update)
-    //             handleCancel(add,id, customers)
-    //         }
-    //     }
-    // }
-    // const handleCancel = (add,id, customers) => {
-    //     if(add){
-    //         setName('')
-    //         setImage('')
-    //         document.getElementById("file-upload-new-customer"+id).value = ''
-    //     }else{
-    //         setName(add ? '' : customers[0].name)
-    //         setImage(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
-    //         document.getElementById("file-upload-new-customer"+id).value = ''
-    //     }
-    //     setOpenModal(false)
-    // }
+    }
     return(
-        <Box sx={{ ...style}}>
-            <Box>
-                <Typography variant="h4" p={2} sx={{display:'inline-block'}}>{'Thêm ảnh mới'}</Typography>
-                <IconButton aria-label="close" color="error" sx={{margin:'10px', float:'right'}} onClick={()=>{setOpenModal(false)}}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
-            <Box sx={{  maxHeight: 700, minHeight: 500, overflowY: "auto" }}>
+        <Dialog 
+            open={open} 
+            onClose={()=>{
+                setOpen(false)
+                setCurrentImage(null)
+            }}
+            maxWidth="md"
+            fullWidth
             
-                <Stack  mb={5}>
-                    <Card sx={{ p: 2}}>
-                        <Grid container>
-                            <Grid item xs={12} md={12} lg={12}>
-                                <Typography variant="h6" gutterBottom>
-                                    Mô tả
-                                </Typography>
-                                <FormControl required={true} fullWidth={true}>
-                                <TextField
-                                    required
-                                    variant='standard'
-                                    // name={"customer_name"}
-                                    // onChange={(e)=>{setName(e.target.value)}}
-                                    // value={name}
-                                />
-                            </FormControl>
-                            </Grid>
+        >
+            <Box sx={{background: '#fff', borderBottom: '1px solid #0000002e',width: '100%', display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'end', padding:'10px'}}>
+                <Box onClick={()=>{
+                    handleCancel()
+                }} sx={{display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'center', width:'30px', color:'#000', height:'30px', borderRadius:'50%'}}>
+                    <CloseIcon/>
+                </Box>
+            </Box>
+            <Box sx={{padding: theme.spacing(2), position:'relative'}} className='wrap-image-dialog'>
+                <Box 
+                    sx={{
+                        textAlign: 'center',
+                        width:'100%',
+                        overflow:'hidden',
+                        display:'flex',
+                        alignItems:'center', 
+                        justifyContent:'center'
+                    }}
+                >
+                        <img
+                            src={`http://localhost:3001/read_image/${currentImage.link}`}
+                            alt={currentImage.des}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight:'300px',
+                                objectFit: 'contain'
+                            }}
+                        />
+                </Box>
+                <Box sx={{padding: theme.spacing(3)}}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Mô tả"
+                                multiline
+                                row={4}
+                                fullWidth
+                                value={des}
+                                onChange={(e)=>{setDes(e.target.value)}}
+                            />
                         </Grid>
-                        
-                    </Card>
-                </Stack>
-                <Stack  mb={5} >
-                    <Card sx={{ p: 2}}>
-                        <Stack  mb={5} sx={{alignItems:"center"}}>
-                            <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="baseline"
-                            spacing={2}
-                            sx={{width:'100%'}}
-                        >
-                            <h3>Ảnh</h3>
-                            <div>
-                                <input
-                                    accept="image/*"
-                                    id={"file-upload-new-customer"}
-                                    type="file"
-                                    style={{ display: 'none' }}
-                                    onChange={(e)=>{handleImageUpload(e)}}
-                                />
-
-                                <label htmlFor={"file-upload-new-customer"}>
-                                    <Button variant="text" color="primary" component="span">
-                                    {image ?  "Replace image" : "Upload image"}
-                                    </Button>
-                                </label>
-                            </div>
-                        </Stack>
-                        <Stack  mb={2} sx={{alignItems:"center"}}>
-                            <Box
-                                sx={{display: 'flex', alignItems:'center', flexDirection:'column'}}
-                            >
-                                <CardMedia
-                                    component="img"
-                                    sx={{ width: 200, height: 200, textAlign: "center" }}
-                                    image={`${image}`}
-                                    alt={content}
-                                />
-                            </Box>
-                        </Stack>
-
-                        <Stack sx={{alignItems:"center"}}>
-                            {
-                                !image &&
-                                <FormHelperText error>
-                                    Please upload image.
-                                </FormHelperText>
-                            }
-                        </Stack>
-
-                        </Stack>
-                    </Card>
-                </Stack>
-            
-                <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
-                    <Stack spacing={2} direction="row">
-                        <Button variant="contained">Save</Button>
-                        <Button variant="text" style={{color:"gray"}}>Cancel</Button>
-                    </Stack>
-                </Stack>    
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Mô tả (EN)"
+                                multiline
+                                row={4}
+                                fullWidth
+                                value={des_en}
+                                onChange={(e)=>{setDes_en(e.target.value)}}
+                            />
+                        </Grid>
+                    </Grid>
+                </Box>
             </Box>
-        </Box>
+            <Box sx={{padding:"20px", background: '#fff', borderBottom: '1px solid #0000002e',width: '100%', display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'end'}}>
+                <Button variant="text" color="error" onClick={()=>{handleDeleteImage(currentImage.id_image)}}>Xoá</Button>
+                <Button variant="contained" color="primary" onClick={()=>{handleEditImage(currentImage.id_image,des,des_en)}}>Lưu</Button>
+                
+            </Box>
+        </Dialog>
     )
 }
 
 
-const toDataURL = url => fetch(url)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
-     }))
+const AllAlbums = ({tab}) => {
+    const [update, setUpdate] = useState(false)
+    const [images,setImages] = useState([])
+    const [open, setOpen] = useState(false)
+    const [add, setAdd] = useState(false)
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 20; 
+    const [totalPages,setTotalPages] = useState(0)
+    const [currentAlbum, setCurrentAlbum] = useState(null)
+    // Handle page change
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
 
-
-
-function dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-    u8arr[n] = bstr.charCodeAt(n);
+    useEffect(()=>{
+        async function fetchData() {
+            const data = await getListAlbums(itemsPerPage,page,0) 
+            if(data.result){
+                setImages(data.result.data)
+                setTotalPages(Math.ceil(data.result.num_album / itemsPerPage))
+            }
+        }
+        fetchData()
+    },[update, page])
+    if(currentAlbum){
+        return(
+            <>
+                <AlbumDetail currentAlbum={currentAlbum} setCurrentAlbum={setCurrentAlbum} setOpen={setOpen} setAdd={setAdd}/> 
+                <AlbumDialog add={add} currentAlbum={currentAlbum} open={open} setOpen={setOpen} setCurrentAlbum={setCurrentAlbum} setUpdate={setUpdate} update={update}/>
+            </>
+        )
     }
-return new File([u8arr], filename, {type:mime});
+  return (
+        <Container 
+            maxWidth={'xl'} 
+        >
+
+            <Box>
+                <Button 
+                    component="span"
+                    variant="contained" 
+                    sx={{float:'right', m:2}} 
+                    startIcon={<Iconify icon="eva:plus-fill" />}
+                    onClick={()=>{
+                        setAdd(true)
+                        setOpen(true)
+                    }}
+                >
+                    Thêm album mới
+                </Button>
+            </Box>
+            <Grid container spacing={2}>
+                {images.map((image, index) => {
+                    if(image.id_album == 1){
+                        return <></>
+                    }
+                    return(
+                        <Grid key={index} item xs={6} sm={6} md={4} lg={3}>
+                            <Card 
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    position:'relative',
+                                    maxHeight: "300px"
+                                }}
+                                onClick={()=>{setCurrentAlbum(image)}}
+                            >
+                                <CardMedia 
+                                    component="img"
+                                    alt={image.des}
+                                    height="auto"
+                                    image={`http://localhost:3001/read_image/${image.avatar}`}
+                                    sx={{flex: 1,objectFit: 'cover', minHeight:"200px"}}
+                                />
+                                <CardContent>
+                                    <Typography variant='h7' fontWeight={700}>{ image?.name}</Typography>
+                                    <Typography >{`${image.num_image} ảnh`}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    )
+                })}
+            </Grid>
+            <Box sx={{width:'100%', marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <Pagination
+                    variant="outlined" 
+                    color="primary"
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    boundaryCount={1} 
+                    siblingCount={1}
+                />
+            </Box>
+            <AlbumDialog add={add} currentAlbum={currentAlbum} open={open} setOpen={setOpen} setCurrentAlbum={setCurrentAlbum} setUpdate={setUpdate} update={update}/>
+        </Container>
+  );
+}
+
+const AlbumDetail = ({currentAlbum, setCurrentAlbum, setOpen, setAdd})=>{
+    const theme = useTheme()
+    const handleDeleteAlbum = async (id)=>{
+        Swal.fire({
+            text: `Bạn có chắc chắn muốn xoá nó không?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đúng!'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deleteAlbum(id)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                if(response.result.status == 'success'){
+                    setCurrentAlbum(null)
+                }
+            }
+          })
+        
+    }
+    return(
+        <Container 
+            maxWidth={'xl'} 
+        >
+            <Box sx={{padding:"20px", borderBottom: '1px solid #0000002e',width: '100%', display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'space-between'}}>
+                <Box>
+                    <Button variant="contained" color="primary" onClick={()=>{setCurrentAlbum(null)}}>Quay lại</Button>
+                </Box>
+                <Box>
+                    <Button variant="text" color="error" onClick={()=>{handleDeleteAlbum(currentAlbum.id_album)}}>Xoá album</Button>
+                    <Button 
+                        variant="contained" 
+                        sx={{marginLeft:"10px"}} 
+                        color="primary" 
+                        onClick={()=>{
+                            setOpen(true)
+                            setAdd(false)
+                        }}
+                    >Sửa album</Button>
+                </Box>
+            </Box>
+            <Typography  sx={{marginTop:theme.spacing(4)}} variant='h5' textAlign={"center"} fontWeight={700} >{currentAlbum?.name}</Typography>
+            <Typography sx={{marginBottom:theme.spacing(4)}} textAlign={"center"} fontWeight={600} fontSize={'13px'}>{`${formatDateTime(currentAlbum.cre_date, '%d-%m-%Y')} - ${currentAlbum?.num_image} ảnh`}</Typography>
+            <Typography sx={{marginBottom:theme.spacing(4), padding:theme.spacing(4)}} >{currentAlbum?.des}</Typography>
+            <AllPhotos id_album={currentAlbum.id_album}/>
+        </Container>
+    )
+}
+const AlbumDialog = ({add, currentAlbum, open, setOpen, setCurrentAlbum, setUpdate, update}) =>{
+    const theme = useTheme()
+    const [des,setDes] = useState(currentAlbum?.des || ' ')
+    const [des_en,setDes_en] = useState(currentAlbum?.des_en || ' ')
+    const [name,setName] = useState(currentAlbum?.name || ' ')
+    const [name_en,setName_en] = useState(currentAlbum?.name_en || ' ')
+
+    const handleClick = async (id,name,name_en,des,des_en) =>{
+        if(add){
+            const response = await addAlbum(name,name_en,des,des_en)
+            Swal.fire(
+                response.result.status,
+                response.result.msg,
+                response.result.status
+            )
+            if(response.result.status == 'success'){
+                setUpdate(!update)
+                handleCancel()
+            }
+        }else{
+            const response = await updateAlbum(id,name,name_en,des,des_en)
+            Swal.fire(
+                response.result.status,
+                response.result.msg,
+                response.result.status
+            )
+            if(response.result.status == 'success'){
+                setUpdate(!update)
+                handleCancel()
+            }
+        }
+    }
+    const handleCancel = () => {
+        setOpen(false)
+    }
+    return(
+        <Dialog 
+            open={open} 
+            onClose={()=>{
+                setOpen(false)
+                setCurrentAlbum(null)
+            }}
+            maxWidth="md"
+            fullWidth
+            
+        >
+            <Box sx={{background: '#fff', borderBottom: '1px solid #0000002e',width: '100%', display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'end', padding:'10px'}}>
+                <Box onClick={()=>{
+                    handleCancel()
+                }} sx={{display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'center', width:'30px', color:'#000', height:'30px', borderRadius:'50%'}}>
+                    <CloseIcon/>
+                </Box>
+            </Box>
+            <Box sx={{padding: theme.spacing(2), position:'relative'}} className='wrap-image-dialog'>
+                {/* <Box 
+                    sx={{
+                        textAlign: 'center',
+                        width:'100%',
+                        overflow:'hidden',
+                        display:'flex',
+                        alignItems:'center', 
+                        justifyContent:'center'
+                    }}
+                >
+                        <img
+                            src={`http://localhost:3001/read_image/${currentAlbum?.avatar}`}
+                            alt={currentAlbum?.des}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight:'300px',
+                                objectFit: 'contain'
+                            }}
+                        />
+                </Box> */}
+                <Box sx={{padding: theme.spacing(3)}}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Tên album"
+                                multiline
+                                row={4}
+                                fullWidth
+                                value={name}
+                                onChange={(e)=>{setName(e.target.value)}}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Tên album (EN)"
+                                multiline
+                                row={4}
+                                fullWidth
+                                value={name_en}
+                                onChange={(e)=>{setName_en(e.target.value)}}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Mô tả"
+                                multiline
+                                row={4}
+                                fullWidth
+                                value={des}
+                                onChange={(e)=>{setDes(e.target.value)}}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Mô tả (EN)"
+                                multiline
+                                row={4}
+                                fullWidth
+                                value={des_en}
+                                onChange={(e)=>{setDes_en(e.target.value)}}
+                            />
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Box>
+            <Box sx={{padding:"20px", background: '#fff', borderBottom: '1px solid #0000002e',width: '100%', display:'flex',cursor:'pointer', alignItems:'center',justifyContent:'end'}}>
+                <Button variant="contained" color="primary" onClick={()=>{handleClick(currentAlbum?.id_album,name,name_en,des,des_en)}}>Lưu</Button>
+            </Box>
+        </Dialog>
+    )
 }

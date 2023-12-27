@@ -155,6 +155,7 @@ export default function AddNewPost() {
                                 type="file"
                                 style={{ display: 'none' }}
                                 onChange={(e)=>{handleImageUpload(e)}}
+                                multiple
                             />
 
                             <label htmlFor={"file-upload-new-post"}>

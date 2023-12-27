@@ -669,7 +669,6 @@ export const updateQuestion = async (id_qna,question,question_en,answer,answer_e
     throw error;
   }
 } 
-
 export const addQuestion = async (question,question_en,answer,answer_en) => {
   try {
     let data = new FormData();
@@ -696,3 +695,156 @@ export const addQuestion = async (question,question_en,answer,answer_en) => {
     throw error;
   }
 } 
+
+
+//--------gallery------
+
+export const getListImages = async (itemsPerPage=20,page=1,id_album) => {
+  try {
+    const response = await api.get(`/library/list?c=${itemsPerPage}&p=${page-1}&id_album=${id_album}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateImage = async (id_image, des, des_en) => {
+  try {
+    let data = new FormData();
+    data.append('id_image', id_image);
+    data.append('des', des);
+    data.append('des_en',des_en)
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/library/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/library/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+export const deleteImage = async (id) => {
+  try {
+    const response = await api.delete(`/library/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const addListImages = async (images=[],id_album="1", des=" ", des_en=" ") => {
+  try {
+    let data = new FormData();
+    data.append('id_album', id_album);
+    data.append('des', des);
+    data.append('des_en',des_en)
+    Object.values(images).forEach((image)=>{
+      data.append('image', image, image.name)
+    })
+    const author = localStorage.getItem('name')
+    data.append('author', author);
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/library/addmulti',data);
+      return response.data;
+    }else{
+      const response = await api.post('/library/addmulti',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+export const getListAlbums = async (itemsPerPage=20,page=1) => {
+  try {
+    const response = await api.get(`album/list?p=${page-1}&c=${itemsPerPage}&name=`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+export const deleteAlbum = async (id) => {
+  try {
+    if(id == "1"){
+      return {
+        "result": {
+            "status": "error",
+            "msg": "Không thể xoá album này"
+        }
+    }
+    }
+    const response = await api.delete(`/album/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateAlbum = async (id_album,name,name_en, des, des_en) => {
+  try {
+    let data = new FormData();
+    data.append('id_album', id_album);
+    data.append('des', des);
+    data.append('des_en',des_en)
+    data.append('name', name);
+    data.append('name_en',name_en)
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/album/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/album/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+export const addAlbum = async (name,name_en ,des, des_en) => {
+  try {
+    let data = new FormData();
+    data.append('des', des);
+    data.append('des_en',des_en)
+    data.append('name', name);
+    data.append('name_en',name_en)
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/album/add',data);
+      return response.data;
+    }else{
+      const response = await api.post('/album/add',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
