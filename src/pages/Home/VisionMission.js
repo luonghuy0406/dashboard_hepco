@@ -2,14 +2,14 @@ import { Helmet } from 'react-helmet-async';
 import React from 'react'
 import {  Container,Divider, Typography, Box,  CardMedia, Button, Paper, styled, Grid, FormControl, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getBanner } from 'src/api';
+import { getBanner, getListSharedtable, getVideoLink, updateSharedtable, updateWebinf } from 'src/api';
+import Swal from 'sweetalert2';
 
 
 
 // ----------------------------------------------------------------------
 
 export default function VisionMission() {
-    
   return (
     <>
       <Helmet>
@@ -27,6 +27,54 @@ export default function VisionMission() {
 }
 
 const VisMis = () =>{
+    const [data,setData] = useState(null)
+    const [img, setImg] = useState('')
+    const [videoLink, setVideoLink] = useState('')
+    useEffect(()=>{
+        async function fetchData() {
+            const response = await getListSharedtable("12")
+            let data = response.result
+            setData(data)
+        }
+        fetchData();
+        async function fetchData2() {
+            const response = await getVideoLink()
+            let data = response.result
+            setVideoLink(data)
+        }
+        fetchData2();
+        
+    },[])
+    const handleOnChange = (key,value,index)=>{
+        if(key== 'image'){
+            const file = value;
+            setImg(URL.createObjectURL(file))
+        }
+        const vis = [...data]
+        vis[index][key] = value
+        setData(vis)
+    }
+    const handleUpdate = async (vis) =>{
+       const response = await updateSharedtable(vis)
+       Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+    }
+
+    const saveVideoLink = async () =>{
+        const response = await updateWebinf(videoLink)
+        Swal.fire(
+             response.result.status,
+             response.result.msg,
+             response.result.status
+         )
+     }
+    
+    if(!data){
+        return <></>
+    }
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -34,133 +82,110 @@ const VisMis = () =>{
                     Tầm nhìn - Sứ mệnh 
                 </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sx={{paddingBottom:"10px"}}>
                 <FormControl required={true} fullWidth={true}>
                     <TextField
                         InputLabelProps={{ shrink: true }}
                         required
-                        label={"Tầm nhìn"}
                         multiline
                         maxRows={4}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
-                        // onChange={(e)=>{setContent1EN(e.target.value)}}
-                        // value={content1EN}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
+                        label={"Video link"}
+                        value={videoLink.data}
+                        onChange={(e)=>{
+                            const data = {...videoLink}
+                            data.data = e.target.value
+                            data.data_en = e.target.value
+                            setVideoLink(data)
+                        }}
+                        onBlur={()=>{saveVideoLink()}}
                     />
                 </FormControl>
             </Grid>
-            <Grid item xs={6}>
-                <FormControl required={true} fullWidth={true}>
-                    <TextField
-                        InputLabelProps={{ shrink: true }}
-                        required
-                        label={"Tầm nhìn (EN)"}
-                        multiline
-                        maxRows={4}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
-                        // onChange={(e)=>{setContent2EN(e.target.value)}}
-                        // value={content2EN}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-                <FormControl required={true} fullWidth={true}>
-                    <TextField
-                        InputLabelProps={{ shrink: true }}
-                        required
-                        label={"Sứ mệnh"}
-                        multiline
-                        maxRows={4}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
-                        // onChange={(e)=>{setContent1EN(e.target.value)}}
-                        // value={content1EN}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-                <FormControl required={true} fullWidth={true}>
-                    <TextField
-                        InputLabelProps={{ shrink: true }}
-                        required
-                        label={"Sứ mệnh (EN)"}
-                        multiline
-                        maxRows={4}
-                        // name={"head_"+key}
-                        // error={companyInfo?.[0]?.[key]?.invalid}
-                        // helperText={companyInfo?.[0]?.[key]?.msg}
-                        // onChange={(e)=>{setContent2EN(e.target.value)}}
-                        // value={content2EN}
-                        // defaultValue={companyInfo?.[0]?.[key]?.value}
-                    />
-                </FormControl>
-            </Grid>
-            <Grid item xs={6} sx={{display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative', flexDirection:'column'}}>
-                <Typography>Ảnh 1</Typography>
-                <CardMedia
-                    component="img"
-                    sx={{ width: '100%'}}
-                    image={`https://web-hepco-7ttu.vercel.app/assets/images/banner2.jpeg`}
-                    // alt={banner.id_bn}
-                />
-                <Box sx={{position:'absolute'}}>
-                    <input
-                        accept="image/*"
-                        id={"file-upload-vision-"+1}
-                        type="file"
-                        style={{ display: 'none' }}
-                        // onChange={(e)=>{handleImageUpload(e)}}
-                    />
+            {
+                data.map((dt,index)=>{
+                    return(
+                        <Grid item xs={12} spacing={2} container key={'vision-mission'+index}>
+                            <Typography variant="h6" fontWeight={700}>{dt.name}</Typography>
+                            <Grid item xs={12} sx={{display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative', flexDirection:'column'}}>
+                                <CardMedia
+                                    component="img"
+                                    sx={{ width: '200px', height:'400px'}}
+                                    image={typeof dt.image =='string' ? `http://localhost:3001/read_image/${dt.image}` : img}
+                                    alt={dt.name}
+                                />
+                                <Box sx={{position:'absolute'}}>
+                                    <input
+                                        accept="image/*"
+                                        id={"file-upload-vision-"+index}
+                                        type="file"
+                                        style={{ display: 'none' }}
+                                        onChange={(e)=>{handleOnChange('image',e.target.files[0],index)}}
+                                    />
 
-                    <label htmlFor={"file-upload-vision-"+1}>
-                        <Button variant="contained" color="primary" component="span">
-                        {"Replace image"}
-                        </Button>
-                    </label>
-                </Box>
-            </Grid>
-            <Grid item xs={6} sx={{display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative', flexDirection:'column'}}>
-                <Typography>Ảnh 2</Typography>
-                <CardMedia
-                    component="img"
-                    sx={{ width: '100%'}}
-                    image={`https://web-hepco-7ttu.vercel.app/assets/images/banner2.jpeg`}
-                    // alt={banner.id_bn}
-                />
-                <Box sx={{position:'absolute'}}>
-                    <input
-                        accept="image/*"
-                        id={"file-upload-vision-"+1}
-                        type="file"
-                        style={{ display: 'none' }}
-                        // onChange={(e)=>{handleImageUpload(e)}}
-                    />
+                                    <label htmlFor={"file-upload-vision-"+index}>
+                                        <Button variant="contained" color="primary" component="span">
+                                        {"Replace image"}
+                                        </Button>
+                                    </label>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControl required={true} fullWidth={true}>
+                                    <TextField
+                                        InputLabelProps={{ shrink: true }}
+                                        required
+                                        multiline
+                                        maxRows={4}
+                                        label={dt.name}
+                                        value={dt.content}
+                                        onChange={(e)=>{handleOnChange('content',e.target.value,index)}}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControl required={true} fullWidth={true}>
+                                    <TextField
+                                        InputLabelProps={{ shrink: true }}
+                                        required
+                                        
+                                        label={dt.name_en}
+                                        value={dt.content_en}
+                                        multiline
+                                        maxRows={4}
 
-                    <label htmlFor={"file-upload-vision-"+1}>
-                        <Button variant="contained" color="primary" component="span">
-                        {"Replace image"}
-                        </Button>
-                    </label>
-                </Box>
-            </Grid>
-            <Grid item xs={12}>
-                <Box
-                    sx={{display: 'flex', justifyContent:'flex-end'}}
-                >
-                    <Button variant="contained" onClick={()=>{}}>Lưu</Button>
-                </Box>
-            </Grid>
+                                        onChange={(e)=>{handleOnChange('content_en',e.target.value,index)}}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box
+                                    sx={{display: 'flex', justifyContent:'flex-end'}}
+                                >
+                                    <Button variant="contained" onClick={()=>{handleUpdate(dt)}}>Lưu</Button>
+                                </Box>
+                            </Grid>
+                            <hr/>
+                        </Grid>    
+                    )
+                })
+            }
         </Grid>
     )
 }
 const CoreValues = () =>{
+    const [data,setData] = useState(null)
+    useEffect(()=>{
+        async function fetchData() {
+            const response = await getListSharedtable("13")
+            let data = response.result
+            setData(data)
+        }
+        fetchData();
+        
+    },[])
+    if(!data){
+        return <></>
+    }
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -169,28 +194,35 @@ const CoreValues = () =>{
                 </Typography>
             </Grid>
             {
-                [1,2,3,4,5,6].map((id)=>{
+                data.map((dt,id)=>{
                     return(
-                        <CoreValuesItem id={id}/>
+                        <CoreValuesItem index={id} dt={dt} data={data} setData={setData}/>
                     )
                 })
             }
-            <Grid item xs={12}>
-                <Box
-                    sx={{display: 'flex', justifyContent:'flex-end'}}
-                >
-                    <Button variant="contained" onClick={()=>{}}>Lưu</Button>
-                </Box>
-            </Grid>
         </Grid>
     )
 }
-const CoreValuesItem = ({id}) =>{
+const CoreValuesItem = ({index,dt,data,setData}) =>{
+
+    const handleOnChange = (key,value,index)=>{
+        const vis = [...data]
+        vis[index][key] = value
+        setData(vis)
+    }
+    const handleUpdate = async (vis) =>{
+       const response = await updateSharedtable(vis)
+       Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+    }
     return (
         <>
         <Grid item xs={12}>
             <Typography variant="h5" >
-                Giá trị cốt lõi số {id}
+                Giá trị cốt lõi số {index+1}
             </Typography>
         </Grid>
         <Grid item xs={6}>
@@ -198,13 +230,9 @@ const CoreValuesItem = ({id}) =>{
                 <TextField
                     InputLabelProps={{ shrink: true }}
                     required
-                    label={"Tiêu đề"}
-                    // name={"head_"+key}
-                    // error={companyInfo?.[0]?.[key]?.invalid}
-                    // helperText={companyInfo?.[0]?.[key]?.msg}
-                    // onChange={(e)=>{setContent1EN(e.target.value)}}
-                    // value={content1EN}
-                    // defaultValue={companyInfo?.[0]?.[key]?.value}
+                    label={"Tên giá trị cốt lõi"}
+                    value={dt.name}
+                    onChange={(e)=>{handleOnChange('name',e.target.value,index)}}
                 />
             </FormControl>
         </Grid>
@@ -213,13 +241,9 @@ const CoreValuesItem = ({id}) =>{
                 <TextField
                     InputLabelProps={{ shrink: true }}
                     required
-                    label={"Tiêu đề (EN)"}
-                    // name={"head_"+key}
-                    // error={companyInfo?.[0]?.[key]?.invalid}
-                    // helperText={companyInfo?.[0]?.[key]?.msg}
-                    // onChange={(e)=>{setContent2EN(e.target.value)}}
-                    // value={content2EN}
-                    // defaultValue={companyInfo?.[0]?.[key]?.value}
+                    label={"Tên giá trị cốt lõi (EN)"}
+                    value={dt.name_en}
+                    onChange={(e)=>{handleOnChange('name_en',e.target.value,index)}}
                 />
             </FormControl>
         </Grid>
@@ -231,12 +255,8 @@ const CoreValuesItem = ({id}) =>{
                     label={"Nội dung"}
                     multiline
                     maxRows={4}
-                    // name={"head_"+key}
-                    // error={companyInfo?.[0]?.[key]?.invalid}
-                    // helperText={companyInfo?.[0]?.[key]?.msg}
-                    // onChange={(e)=>{setContent1EN(e.target.value)}}
-                    // value={content1EN}
-                    // defaultValue={companyInfo?.[0]?.[key]?.value}
+                    value={dt.content}
+                    onChange={(e)=>{handleOnChange('content',e.target.value,index)}}
                 />
             </FormControl>
         </Grid>
@@ -248,14 +268,17 @@ const CoreValuesItem = ({id}) =>{
                     label={"Nội dung (EN)"}
                     multiline
                     maxRows={4}
-                    // name={"head_"+key}
-                    // error={companyInfo?.[0]?.[key]?.invalid}
-                    // helperText={companyInfo?.[0]?.[key]?.msg}
-                    // onChange={(e)=>{setContent2EN(e.target.value)}}
-                    // value={content2EN}
-                    // defaultValue={companyInfo?.[0]?.[key]?.value}
+                    value={dt.content_en}
+                    onChange={(e)=>{handleOnChange('content_en',e.target.value,index)}}
                 />
             </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+            <Box
+                sx={{display: 'flex', justifyContent:'flex-end'}}
+            >
+                <Button variant="contained" onClick={()=>{handleUpdate(dt)}}>Lưu</Button>
+            </Box>
         </Grid>
     </>
     )

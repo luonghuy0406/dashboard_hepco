@@ -77,7 +77,7 @@ const OthersItem = ({id,name,content, content_en}) =>{
 
     const navigate = useNavigate();
     const handleUpdate = async (id,content,contentEN,name,image)=>{
-        const response = await updateAchieve(id,content,contentEN,name,name,image)
+        const response = await updateAchieve(id,content,contentEN,name,name,image,'achieve')
         Swal.fire(
             response.result.status,
             response.result.msg,
@@ -161,8 +161,6 @@ const Government= ({awardData, update, setUpdate}) =>{
                       <TableHead>
                         <TableRow>
                           <TableCell align="center">Tên</TableCell>
-                          <TableCell align="center">Tên(EN)</TableCell>
-                          <TableCell align="center">Nội dung</TableCell>
                           <TableCell align="center">Ảnh</TableCell>
                           <TableCell align="center">Hành động</TableCell>
                         </TableRow>
@@ -172,12 +170,6 @@ const Government= ({awardData, update, setUpdate}) =>{
                           <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                             <TableCell component="th" scope="row" align="center">
                               {row.name}
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="center">
-                              {row.name_en}
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="center">
-                              {row.content}
                             </TableCell>
                             <TableCell align="center">
                               <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -240,8 +232,6 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     }
     const [name,setName] = useState(add ? '' : data[0].name)
     const [nameEN,setNameEN] = useState(add ? '' : data[0].name_en)
-    const [content,setContent] = useState(add ? '' : data[0].content)
-    const [contentEN,setContentEN] = useState(add ? '' : data[0].content_en)
     const [image, setImage] = useState(add ? '' : `http://localhost:3001/read_image/${data[0].image}`)
     const [imageFile, setImageFile] = useState('')
     useEffect(()=>{
@@ -261,7 +251,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     const handleAddNew = async (achieve_id, name,name_en, content, content_en,  file)=>{
         if(name && image){
             if(add){
-                const response = await addNewAchieve(name,name_en, content, content_en, file)
+                const response = await addNewAchieve(name,name_en, content, content_en, file, 'achieve')
                 Swal.fire(
                     response.result.status,
                     response.result.msg,
@@ -271,7 +261,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                 handleCancel(add,id, data)
                 setUpdate(!update)
             }else{
-                const response = await updateAchieve(achieve_id,content, content_en,name,name_en,  file)
+                const response = await updateAchieve(achieve_id,content, content_en,name,name_en,  file,'achieve')
                 Swal.fire(
                     response.result.status,
                     response.result.msg,
@@ -287,17 +277,12 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
         if(add){
             setName('')
             setNameEN('')
-            setContent('')
-            setContentEN('')
-
             setImage('')
             setImageFile('')
             document.getElementById("file-upload-new-achieve"+id).value = ''
         }else{
             setName(data[0].name)
             setNameEN(data[0].name_en)
-            setContent(data[0].content)
-            setContentEN(data[0].content_en)
             setImage(`http://localhost:3001/read_image/${data[0].image}`)
             toDataURL(`http://localhost:3001/read_image/${data[0].image}`)
             .then(dataUrl => {
@@ -351,32 +336,6 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6} md={6} lg={6}>
-                                <Typography variant="h6" gutterBottom>
-                                    Nội dung
-                                </Typography>
-                                <FormControl required={true} fullWidth={true}>
-                                    <TextField
-                                        required
-                                        variant='standard'
-                                        onChange={(e)=>{setContent(e.target.value)}}
-                                        value={content}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6} md={6} lg={6}>
-                                <Typography variant="h6" gutterBottom>
-                                    Nội dung(EN)
-                                </Typography>
-                                <FormControl required={true} fullWidth={true}>
-                                    <TextField
-                                        required
-                                        variant='standard'
-                                        onChange={(e)=>{setContentEN(e.target.value)}}
-                                        value={contentEN}
-                                    />
-                                </FormControl>
-                            </Grid>
                         </Grid>
                         
                     </Card>
@@ -392,7 +351,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
                             sx={{width:'100%'}}
                         >
                             <h3>Ảnh</h3>
-                            <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh có tỉ lệ 1:1 hoặc 1:2 và size tối đa 1MB để có thể hiển thị tốt nhất</Typography>
+                            <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh có tỉ lệ  1:2 và size tối đa 1MB để có thể hiển thị tốt nhất</Typography>
                             <div>
                                 <input
                                     accept="image/*"
@@ -437,7 +396,7 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
             
                 <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                     <Stack spacing={2} direction="row">
-                        <Button variant="contained" onClick={()=>{handleAddNew(id,name,nameEN,content,contentEN,imageFile)}}>Save</Button>
+                        <Button variant="contained" onClick={()=>{handleAddNew(id,name,nameEN," "," ",imageFile)}}>Save</Button>
                         <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel(add, id,data)}}>Cancel</Button>
                     </Stack>
                 </Stack>    

@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import React from 'react'
+import React, { useEffect } from 'react'
 import {  Container,Divider, Typography, Box, Button, Grid,Table,
     TableBody,
     TableCell,
@@ -15,6 +15,8 @@ import {  Container,Divider, Typography, Box, Button, Grid,Table,
 import { useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/EditorComponent';
 import CloseIcon from '@mui/icons-material/Close';
+import { getSharedtable, updateSharedtable } from 'src/api';
+import Swal from 'sweetalert2';
 
 
 
@@ -42,6 +44,39 @@ export default function About() {
 const MailBox = () =>{
     const [content,setContent] = useState('')
     const [contentEN,setContentEN] = useState('')
+    const [letter,setLetter] = useState(null)
+    
+    useEffect(()=>{
+        async function fetchData() {
+            const datas = await getSharedtable('1')
+            let data = datas.result
+            setLetter(data)
+        }
+        fetchData();
+        
+    },[])
+    useEffect(()=>{
+        if(letter){
+            setContent(letter.content)
+            setContentEN(letter.content_en)
+        }
+        
+    },[letter])
+    const handleUpdate = async (data) =>{
+        const dt = {...data}
+        dt.content = content
+        dt.content_en = contentEN
+       const response = await updateSharedtable(dt)
+       Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+    }
+    if(!letter)
+    {
+        return <></>
+    }
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -75,11 +110,11 @@ const MailBox = () =>{
                     </label>
                 </Box>
             </Grid> */}
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <Typography fontWeight={700}>Tiếng Việt</Typography>
                 <EditorComponent val={content} setVal={setContent}/>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <Typography fontWeight={700}>Tiếng Anh</Typography>
                 <EditorComponent val={contentEN} setVal={setContentEN}/>
             </Grid>
@@ -87,7 +122,7 @@ const MailBox = () =>{
                 <Box
                     sx={{display: 'flex', justifyContent:'flex-end', mb: 5, mt: 5}}
                 >
-                    <Button variant="contained" onClick={()=>{}}>Lưu</Button>
+                    <Button variant="contained" onClick={()=>{handleUpdate(letter)}}>Lưu</Button>
                 </Box>
             </Grid>
         </Grid>

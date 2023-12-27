@@ -105,18 +105,7 @@ export default function Customer() {
                                 </Box>
                             </TableCell>
                             <TableCell align="center">
-                                <Button 
-                                    variant="text" 
-                                    onClick={()=>{
-                                        setOpenModal(true)
-                                        setAdd(false)
-                                        setId(row.id_customer)
-                                    }}
-                                >Update</Button>
                                 <Button variant="text" color="error" onClick={()=>{handleDelete(row, update, setUpdate)}}>Delete</Button>
-
-
-                            
                             </TableCell>
                         </TableRow>
                     ))}
@@ -128,7 +117,7 @@ export default function Customer() {
                     aria-labelledby="parent-modal-title"
                     aria-describedby="parent-modal-description"
                 >
-                        <ModalAdd add={add} setOpenModal={setOpenModal} customers={customers} id={id} update={update} setUpdate={setUpdate}/>
+                        <ModalAdd setOpenModal={setOpenModal} update={update} setUpdate={setUpdate}/>
                 </Modal>
             </Box>
         </Box>
@@ -148,70 +137,39 @@ const style = {
     borderRadius: '4px',
     width: '90%'
   }
-const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
-    if(id){
-        customers = customers.filter((customer)=> customer.id_customer == id)
-    }
-    const [name,setName] = useState(add ? '' : customers[0].name)
+const ModalAdd = ({setOpenModal,update, setUpdate}) =>{
+    const [name,setName] = useState('')
     
-    const [image, setImage] = useState(add ? '' : `http://localhost:3001/read_image/${customers[0].image}`)
+    const [image, setImage] = useState('')
     const [imageFile, setImageFile] = useState('')
-    useEffect(()=>{
-        if(customers?.length > 0){
-            toDataURL(`http://localhost:3001/read_image/${customers[0].image}`)
-            .then(dataUrl => {
-                var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
-                setImageFile(fileData)
-            })
-        }
-    },[id])
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         setImage(URL.createObjectURL(file))
         setImageFile(file)
     };
-    const handleAddNew = async (name, id, update, add, customers, imageFile)=>{
-        console.log(">>>",name, id, update, add, customers, imageFile)
+    const handleAddNew = async (name, update, imageFile)=>{
         if(name && image){
-            if(add){
-                const response = await addNewCustomer(name, imageFile)
-                Swal.fire(
-                    response.result.status,
-                    response.result.msg,
-                    response.result.status
-                )
-                setOpenModal(false)
-                setUpdate(!update)
-                handleCancel(add,id, customers)
-            }else{
-                const response = await updateCustomer(id, name, imageFile)
-                Swal.fire(
-                    response.result.status,
-                    response.result.msg,
-                    response.result.status
-                )
-                setOpenModal(false)
-                setUpdate(!update)
-                handleCancel(add,id, customers)
-            }
+            const response = await addNewCustomer(name, imageFile)
+            Swal.fire(
+                response.result.status,
+                response.result.msg,
+                response.result.status
+            )
+            setOpenModal(false)
+            setUpdate(!update)
+            handleCancel()
         }
     }
-    const handleCancel = (add,id, customers) => {
-        if(add){
-            setName('')
-            setImage('')
-            document.getElementById("file-upload-new-customer"+id).value = ''
-        }else{
-            setName(add ? '' : customers[0].name)
-            setImage(add ? '' : `http://localhost:3001/read_image/${customers[0].logo}`)
-            document.getElementById("file-upload-new-customer"+id).value = ''
-        }
+    const handleCancel = () => {
+        setName('')
+        setImage('')
+        document.getElementById("file-upload-new-customer").value = ''
         setOpenModal(false)
     }
     return(
         <Box sx={{ ...style}}>
             <Box>
-                <Typography variant="h4" p={2} sx={{display:'inline-block'}}>{add ? 'New customer' : 'Edit customer'}</Typography>
+                <Typography variant="h4" p={2} sx={{display:'inline-block'}}>Thêm khách hàng</Typography>
                 <IconButton aria-label="close" color="error" sx={{margin:'10px', float:'right'}} onClick={()=>{setOpenModal(false)}}>
                     <CloseIcon />
                 </IconButton>
@@ -223,17 +181,16 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
                         <Grid container>
                             <Grid item xs={12} md={12} lg={12}>
                                 <Typography variant="h6" gutterBottom>
-                                    Customer name
+                                    Tên khách hàng
                                 </Typography>
                                 <FormControl required={true} fullWidth={true}>
                                 <TextField
                                     required
                                     variant='standard'
-                                    name={"customer_name"}
                                     onChange={(e)=>{setName(e.target.value)}}
                                     error={name?.length == 0} 
                                     value={name}
-                                    helperText = {name?.length == 0 ? "Name cannot be empty" : ""}
+                                    helperText = {name?.length == 0 ? "Tên không được để trống" : ""}
                                 />
                             </FormControl>
                             </Grid>
@@ -251,19 +208,20 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
                             spacing={2}
                             sx={{width:'100%'}}
                         >
-                            <h3>Image</h3>
+                            <h3>Ảnh logo</h3>
+                            <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh có kích cỡ tương đồng nhau và size tối đa 500KB để có thể hiển thị tốt nhất</Typography>
                             <div>
                                 <input
                                     accept="image/*"
-                                    id={"file-upload-new-customer"+id}
+                                    id={"file-upload-new-customer"}
                                     type="file"
                                     style={{ display: 'none' }}
                                     onChange={(e)=>{handleImageUpload(e)}}
                                 />
 
-                                <label htmlFor={"file-upload-new-customer"+id}>
+                                <label htmlFor={"file-upload-new-customer"}>
                                     <Button variant="text" color="primary" component="span">
-                                    {image ?  "Replace image" : "Upload image"}
+                                    {image ?  "Thay ảnh khác" : "Tải ảnh mới"}
                                     </Button>
                                 </label>
                             </div>
@@ -274,7 +232,7 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
                             >
                                 <CardMedia
                                     component="img"
-                                    sx={{ width: 200, height: 200, textAlign: "center" }}
+                                    sx={{ width: 600, height: 200, textAlign: "center" }}
                                     image={`${image}`}
                                     alt={name}
                                 />
@@ -285,7 +243,7 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
                             {
                                 !image &&
                                 <FormHelperText error>
-                                    Please upload image.
+                                    Ảnh không được để trống
                                 </FormHelperText>
                             }
                         </Stack>
@@ -296,8 +254,8 @@ const ModalAdd = ({add, setOpenModal, customers, id ='',update, setUpdate}) =>{
             
                 <Stack sx={{ m: 2 }} spacing={2} direction="row" justifyContent="end">
                     <Stack spacing={2} direction="row">
-                        <Button variant="contained" onClick={()=>{handleAddNew(name, id, update,add, customers, imageFile)}}>Save</Button>
-                        <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel(add,id, customers)}}>Cancel</Button>
+                        <Button variant="contained" onClick={()=>{handleAddNew(name, update, imageFile)}}>Lưu</Button>
+                        <Button variant="text" style={{color:"gray"}} onClick={()=>{handleCancel()}}>Huỷ</Button>
                     </Stack>
                 </Stack>    
             </Box>

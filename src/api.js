@@ -166,7 +166,7 @@ export const updateBanner = async (id,content1,content1EN,content2,content2EN,im
 //---------archieve------------
 
 
-export const addNewAchieve= async (name,name_en, content, content_en, image) => {
+export const addNewAchieve= async (name,name_en, content, content_en, image,type='achieve') => {
   try {
     const FormData = require('form-data');
     let data = new FormData();
@@ -174,6 +174,7 @@ export const addNewAchieve= async (name,name_en, content, content_en, image) => 
     data.append('name_en', name_en);
     data.append('content', content);
     data.append('content_en', content_en);
+    data.append('type', type);
     if(typeof image == 'object'  && image?.name){
       data.append('image', image, Date.now());
     }else{
@@ -204,8 +205,19 @@ export const getAchieve = async () => {
   } catch (error) {
     throw error;
   }
-};
-export const updateAchieve = async (id,content,contentEN,name,nameEN,image) => {
+}
+
+export const getCertificate = async () => {
+  try {
+    const response = await api.get(`/certificate/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export const updateAchieve = async (id,content,contentEN,name,nameEN,image,type='achieve') => {
   try {
     const FormData = require('form-data');
     let data = new FormData();
@@ -214,6 +226,7 @@ export const updateAchieve = async (id,content,contentEN,name,nameEN,image) => {
     data.append('name_en', nameEN);
     data.append('content', content);
     data.append('content_en', contentEN);
+    data.append('type', type);
     if(typeof image == 'object'){
       data.append('image', image, Date.now());
     }else{
@@ -309,21 +322,26 @@ export const updateAboutUs = async (content,content_en,image1,image2,image3) => 
 //------company info-----
 export const getCompanyInfo = async () => {
   try {
-    const response = await api.get(`/webinf/list`);
+    const response = await api.get(`/company_data/list`);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
-export const updateWebinf = async (data) => {
+export const updateWebinf = async (info) => {
   try {
+    const FormData = require('form-data');
+    let data = new FormData();
+    Object.entries(info).forEach((dt)=>{
+      data.append(dt[0], dt[1])
+    })
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
-      const response = await api.put('/webinf/update',data);
+      const response = await api.put('/company_data/update',data);
       return response.data;
     }else{
-      const response = await api.put('/webinf/update',data);
+      const response = await api.put('/company_data/update',data);
       return response.data;
     }
   } catch (error) {
@@ -848,3 +866,60 @@ export const addAlbum = async (name,name_en ,des, des_en) => {
     throw error;
   }
 }
+
+//-------------vision-mission---------
+export const getSharedtable = async (id) => {
+  try {
+    const response = await api.get(`/sharedtable/detail/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getListSharedtable = async (id) => {
+  try {
+    const response = await api.get(`/sharedtable/father/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export const updateSharedtable = async (value) => {
+  try {
+    let data = new FormData();
+    Object.entries(value).forEach((dt)=>{
+      if(dt[0] == 'image' && typeof dt[1] == 'string'){
+        dt[1] = []
+      }
+      data.append(dt[0], dt[1])
+    })
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/sharedtable/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/sharedtable/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xãy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+export const getVideoLink = async () => {
+  try {
+    const response = await api.get(`/company_data/detail/15`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
