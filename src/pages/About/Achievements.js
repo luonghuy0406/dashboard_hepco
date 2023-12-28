@@ -176,7 +176,7 @@ const Government= ({awardData, update, setUpdate}) =>{
                                 <CardMedia
                                   component="img"
                                   sx={{ width: 350, textAlign: 'center' }}
-                                  image={`${process.env.REACT_APP_HOST}/read_image/${row.image}`}
+                                  image={`http://localhost:3001/read_image/${row.image}`}
                                   alt={row.name}
                                 />
                               </Box>
