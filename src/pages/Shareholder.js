@@ -9,8 +9,8 @@ import {  getPosts } from 'src/api';
 export default function ShareholderPage() {
   const categories = {
     '0': {name: 'Tất cả dự án', value:'0'},
-    '5': {name: t('Thông báo'), value:'5'},
-    '6': {name: t('Báo cáo'), value:'6'}
+    '5': {name: 'Thông báo', value:'5'},
+    '6': {name: 'Báo cáo', value:'6'}
   }
 
   const [valueFilter, setValueFilter] = useState({name: 'Tất cả dự án', value:'0'})

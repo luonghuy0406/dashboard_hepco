@@ -9,9 +9,9 @@ import {  getPosts } from 'src/api';
 export default function ProjectPage() {
   const categories = {
     '0': {name: 'Tất cả dự án', value:'0'},
-    '7': {name: t('Dự án đầu tư'), value:'7'},
-    '8': {name: t('Hợp tác trong nước'), value:'8'},
-    '9': {name: t('Hợp tác nước ngoài'), value:'9'}
+    '7': {name: 'Dự án đầu tư', value:'7'},
+    '8': {name: 'Hợp tác trong nước', value:'8'},
+    '9': {name: 'Hợp tác nước ngoài', value:'9'}
   }
 
   const [valueFilter, setValueFilter] = useState({name: 'Tất cả dự án', value:'0'})
