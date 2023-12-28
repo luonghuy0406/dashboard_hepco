@@ -122,7 +122,7 @@ export const addBanner = async (content1,content1EN,content2,content2EN,image) =
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -156,7 +156,7 @@ export const updateBanner = async (id,content1,content1EN,content2,content2EN,im
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -192,7 +192,7 @@ export const addNewAchieve= async (name,name_en, content, content_en, image,type
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -245,7 +245,7 @@ export const updateAchieve = async (id,content,contentEN,name,nameEN,image,type=
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -265,7 +265,7 @@ export const deleteAchieve = async (id)=>{
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -313,7 +313,7 @@ export const updateAboutUs = async (content,content_en,image1,image2,image3) => 
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -347,7 +347,7 @@ export const updateWebinf = async (info) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -388,7 +388,7 @@ export const addNewCustomer = async (name, image) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -421,7 +421,7 @@ export const updateCustomer =  async (id,name, image) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -441,7 +441,7 @@ export const deleteCustomer = async (id)=>{
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -508,7 +508,7 @@ export const addNewPost = async (type,type_id, name,name_en, content, content_en
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -546,7 +546,7 @@ export const updatePost =  async (type,id,type_id,name,name_en,content,content_e
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -566,7 +566,7 @@ export const deletePost = async (type,id)=>{
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -589,7 +589,7 @@ export const getDetailService = async (id) =>{
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -624,7 +624,7 @@ export const updateService = async (id_service,name,name_en,content,content_en, 
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -654,7 +654,7 @@ export const deleteQuestion = async (id) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -681,7 +681,7 @@ export const updateQuestion = async (id_qna,question,question_en,answer,answer_e
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -707,7 +707,7 @@ export const addQuestion = async (question,question_en,answer,answer_en) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -744,7 +744,7 @@ export const updateImage = async (id_image, des, des_en) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -783,7 +783,7 @@ export const addListImages = async (images=[],id_album="1", des=" ", des_en=" ")
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -835,7 +835,7 @@ export const updateAlbum = async (id_album,name,name_en, des, des_en) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -860,7 +860,7 @@ export const addAlbum = async (name,name_en ,des, des_en) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
@@ -908,7 +908,7 @@ export const updateSharedtable = async (value) => {
   } catch (error) {
     Swal.fire(
       'Error',
-      'Đã có lỗi xãy ra',
+      'Đã có lỗi xảy ra',
       'error'
     )
     throw error;
