@@ -923,3 +923,71 @@ export const getVideoLink = async () => {
     throw error;
   }
 };
+
+//---------history-----------
+
+export const getListHistory = async (id) => {
+  try {
+    const response = await api.get(`/history/list`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+export const updateHistory = async (value) => {
+  try {
+    let data = new FormData();
+    Object.entries(value).forEach((dt)=>{
+      data.append(dt[0], dt[1])
+    })
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/history/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/history/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xảy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+export const addHistory = async (value) => {
+  try {
+    let data = new FormData();
+    Object.entries(value).forEach((dt)=>{
+      data.append(dt[0], dt[1])
+    })
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.post('/history/add',data);
+      return response.data;
+    }else{
+      const response = await api.post('/history/add',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xảy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+export const deleteHistory = async (id) => {
+  try {
+    const response = await api.delete(`/history/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

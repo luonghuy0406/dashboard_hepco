@@ -15,8 +15,9 @@ import {  Container,Divider, Typography, Box, Button, Grid,Table,
 import { useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/EditorComponent';
 import CloseIcon from '@mui/icons-material/Close';
-import { getSharedtable, updateSharedtable } from 'src/api';
+import { addHistory, deleteHistory, getListHistory, getSharedtable, updateHistory, updateSharedtable } from 'src/api';
 import Swal from 'sweetalert2';
+import Iconify from 'src/components/iconify/Iconify';
 
 
 
@@ -129,24 +130,18 @@ const MailBox = () =>{
     )
 }
 const DevelopmentHistory = () =>{
-    const data = [
-        {
-            date : '01/05/1975',
-            content: 'Năm 1975, sau khi giải phóng hoàn toàn Miền nam, ngày 01/5/1975 Phòng Quản lý Đô thị và Nhà đất được thành lập, là tiền thân của đơn vị hiện nay',
-            contentEN: 'Năm 1975, sau khi giải phóng hoàn toàn Miền nam, ngày 01/5/1975 Phòng Quản lý Đô thị và Nhà đất được thành lập, là tiền thân của đơn vị hiện nay'
-        },
-        {
-            date : '28/12/1985',
-            content: 'UBND thành phố Huế ban hành Quyết định số 59/QĐ-UB thành lập Công ty Quản lý Công trình Đô thị Huế',
-            contentEN: 'UBND thành phố Huế ban hành Quyết định số 59/QĐ-UB thành lập Công ty Quản lý Công trình Đô thị Huế'
-        },
-        ,
-        {
-            date : '05/08/1991',
-            content: 'UBND thành phố Huế ban hành Quyết định số 501/QĐ-UB thành lập Trung tâm Quản lý Vệ sinh Môi trường Đô thị Huế',
-            contentEN: 'UBND thành phố Huế ban hành Quyết định số 501/QĐ-UB thành lập Trung tâm Quản lý Vệ sinh Môi trường Đô thị Huế'
+    const [data,setData] = useState([])
+    const [update,setUpdate] = useState(false)
+    const [openModal, setOpenModal] = useState(false)
+    useEffect(()=>{
+        async function fetchData() {
+            const historyData = await getListHistory('1')
+            let data = historyData.result.data
+            setData(data.reverse())
         }
-    ]
+        fetchData();
+        
+    },[update])
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -155,6 +150,21 @@ const DevelopmentHistory = () =>{
                 </Typography>
             </Grid>
             <Grid item xs={12}>
+                
+                <Box
+                    sx={{display: 'flex', justifyContent:'flex-end', mb: 5, mt: 5}}
+                >
+                    <Button 
+                        variant="contained" 
+                        sx={{float:'right', m:2}} 
+                        onClick={()=>{
+                            setOpenModal(true)
+                        }} 
+                        startIcon={<Iconify icon="eva:plus-fill" />}
+                    >
+                        Thêm mới
+                    </Button>
+                </Box>
                 <Table>
                     <TableHead>
                     <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -168,56 +178,42 @@ const DevelopmentHistory = () =>{
                     <TableBody>
                     {data.map((row, index) => {
                         return (
-                        <RowTable index={index} key={"table-row"+index} row={row}/>
+                        <RowTable index={index} key={"table-row"+index} row={row} update={update} setUpdate={setUpdate}/>
                         )}
                     )}
                     </TableBody>
                 </Table>
             </Grid>
+            <AddInfo openModal={openModal} setOpenModal={setOpenModal} update={update} setUpdate={setUpdate}/>
         </Grid>
     )
 }
 
-function RowTable({row,index}) {
-    // const [open, setOpen] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
-    const [addNew, setAddNew] = useState(false)
-    // const handleDeleteProduct = (row, setUpdate, update) =>{
-    //   Swal.fire({
-    //     text: `Are you sure you want to delete product ${row.name}?`,
-    //     icon: 'warning',
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     confirmButtonText: 'Yes, delete it!'
-    //   }).then(async (result) => {
-    //     if (result.isConfirmed) {
-    //       const response = await deleteProduct(row.id_product)
-    //       if(response.results.status == 'success'){
-    //         setOpen(false)
-    //         setUpdate(!update)
-    //       }
-    //       Swal.fire(
-    //         response.results.status,
-    //         response.results.msg,
-    //         response.results.status
-    //       )
-    //     }
-    //   })
-    // }
-    // const [subList,setSubList] = useState([])
-    // useEffect(()=>{
-    //     async function fetchData() {
-    //         const productLists = await getSubProducts()
-    //         if(productLists.results){
-    //           const subProduct = productLists.results.filter((sub)=> sub.id_product == row.id_product)
-    //           setSubList(subProduct)
-    //           // setProductListTemp(productLists.results)
-    //         }
-    //     }
-    //     fetchData();
+function RowTable({row,index,update,setUpdate}) {
+    const [openModal, setOpenModal] = useState(false)
+    const handleDelete = async (id)=>{
+        Swal.fire({
+            text: `Bạn có chắc chắn muốn xoá không?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deleteHistory(id)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                if(response.result.status == 'success'){
+                    setUpdate(!update)
+                }
+            }
+          })
         
-    // },[update])
+    }
     return (
       <>
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -226,29 +222,49 @@ function RowTable({row,index}) {
             {index+1}
           </TableCell>
           <TableCell align="center">
-            {row.date}
+            {row.time}
           </TableCell>
           <TableCell align="center">
             {row.content}
           </TableCell>
           <TableCell align="center">
-            {row.contentEN}
+            {row.content_en}
           </TableCell>
           <TableCell align="center">
             <Button variant="text" onClick={()=>{setOpenModal(true)}}>Chỉnh sửa</Button>
-            <Button variant="text" color="error">Xoá</Button>
+            <Button variant="text" color="error" onClick={()=>{handleDelete(row.id)}}>Xoá</Button>
             
           </TableCell>
         </TableRow>
-        <EditInfo openModal={openModal} setOpenModal={setOpenModal} row={row} index={index}/>
+        <EditInfo openModal={openModal} setOpenModal={setOpenModal} row={row} update={update} setUpdate={setUpdate}/>
       </>
     );
-  }
+}
 
-  const EditInfo = ({openModal, setOpenModal, row, index}) =>{
-    const [date,setDate] = useState(row.date)
+const EditInfo = ({openModal, setOpenModal, row,update,setUpdate}) =>{
+    const [date,setDate] = useState(row.time)
     const [content,setContent] = useState(row.content)
-    const [contentEN,setContentEN] = useState(row.contentEN)
+    const [contentEN,setContentEN] = useState(row.content_en)
+
+    const handleEditHistory = async (time,content,content_en) =>{
+        const data ={...row}
+        data['time'] = time
+        data['time_en'] = time
+        data['content'] = content
+        data['content_en'] = content_en
+        
+        const response = await updateHistory(data)
+        Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            setUpdate(!update)
+            setOpenModal(false)
+        }
+    }
+    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -258,7 +274,7 @@ function RowTable({row,index}) {
         p: 1,
         borderRadius: '4px',
         width: '60%'
-      };
+    }
     return(
         <Modal
             open={openModal}
@@ -276,56 +292,42 @@ function RowTable({row,index}) {
                 <Box sx={{p:4}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <FormControl required={true} fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <TextField
                                     InputLabelProps={{ shrink: true }}
-                                    required
                                     label={"Mốc thời gian"}
-                                    name={"head_"+index}
-                                    // error={companyInfo?.[0]?.[key]?.invalid}
-                                    // helperText={companyInfo?.[0]?.[key]?.msg}
                                     onChange={(e)=>{setDate(e.target.value)}}
                                     value={date}
-                                    defaultValue={date}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl required={true} fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <TextField
                                     InputLabelProps={{ shrink: true }}
-                                    required
                                     label={"Nội dung"}
-                                    name={"head_"+index}
                                     multiline
                                     maxRows={4}
                                     onChange={(e)=>{setContent(e.target.value)}}
                                     value={content}
-                                    defaultValue={content}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl required={true} fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <TextField
                                     InputLabelProps={{ shrink: true }}
-                                    required
                                     label={"Nội dung(EN)"}
-                                    name={"head_"+index}
                                     multiline
                                     maxRows={4}
-                                    // error={companyInfo?.[0]?.[key]?.invalid}
-                                    // helperText={companyInfo?.[0]?.[key]?.msg}
                                     onChange={(e)=>{setContentEN(e.target.value)}}
                                     value={contentEN}
-                                    defaultValue={contentEN}
                                 />
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} sx={{float:"right"}}>
                             <Stack spacing={2} direction="row" justifyContent={"end"}>
-                                <Button variant="contained" >Lưu</Button>
-                                <Button variant="text" style={{color:"gray"}} >Huỷ</Button>
+                                <Button variant="contained" onClick={()=>{handleEditHistory(date, content,contentEN)}}>Lưu</Button>
                             </Stack>
                         </Grid>
                     </Grid>
@@ -333,4 +335,99 @@ function RowTable({row,index}) {
             </Box>
         </Modal>
     )
-  }
+}
+
+const AddInfo = ({openModal, setOpenModal, update, setUpdate}) =>{
+    const [date,setDate] = useState('')
+    const [content,setContent] = useState('')
+    const [contentEN,setContentEN] = useState('')
+    const handleAdd = async (time,content,content_en) =>{
+        const data ={}
+        data['time'] = time
+        data['time_en'] = time
+        data['content'] = content
+        data['content_en'] = content_en
+        
+        const response = await addHistory(data)
+        Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            setUpdate(!update)
+            setOpenModal(false)
+        }
+    }
+    
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        bgcolor: 'background.paper',
+        p: 1,
+        borderRadius: '4px',
+        width: '60%'
+    }
+    return(
+        <Modal
+            open={openModal}
+            onClose={()=>{setOpenModal(false)}}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+        >
+            <Box sx={{ ...style}}>
+                <Box>
+                    <Typography variant="h4" p={2} sx={{display:'inline-block'}}>Thêm mốc thời gian</Typography>
+                    <IconButton aria-label="close" color="error" sx={{margin:'10px', float:'right'}} onClick={()=>{setOpenModal(false)}}>
+                        <CloseIcon />
+                    </IconButton>
+                </Box>
+                <Box sx={{p:4}}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth={true}>
+                                <TextField
+                                    InputLabelProps={{ shrink: true }}
+                                    label={"Mốc thời gian"}
+                                    onChange={(e)=>{setDate(e.target.value)}}
+                                    value={date}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth={true}>
+                                <TextField
+                                    InputLabelProps={{ shrink: true }}
+                                    label={"Nội dung"}
+                                    multiline
+                                    maxRows={4}
+                                    onChange={(e)=>{setContent(e.target.value)}}
+                                    value={content}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth={true}>
+                                <TextField
+                                    InputLabelProps={{ shrink: true }}
+                                    label={"Nội dung(EN)"}
+                                    multiline
+                                    maxRows={4}
+                                    onChange={(e)=>{setContentEN(e.target.value)}}
+                                    value={contentEN}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sx={{float:"right"}}>
+                            <Stack spacing={2} direction="row" justifyContent={"end"}>
+                                <Button variant="contained" onClick={()=>{handleAdd(date, content,contentEN)}}>Lưu</Button>
+                            </Stack>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Box>
+        </Modal>
+    )
+}
