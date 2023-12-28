@@ -48,11 +48,11 @@ const navConfig = [
         path: '/chucnang',
         icon: icon('ic_analytics'),
       },
-      // {
-      //   title: 'Sơ đồ tổ chức',
-      //   path: '/sodo',
-      //   icon: icon('ic_analytics'),
-      // },
+      {
+        title: 'Giới thiệu bộ máy',
+        path: '/bomay',
+        icon: icon('ic_analytics'),
+      },
       {
         title: 'Thành tựu',
         path: '/thanhtuu',
