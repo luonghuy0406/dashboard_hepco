@@ -32,7 +32,7 @@ export default function ShareholderPage() {
           async function fetchData() {
             const postLists = await getPosts('shareholder',itemsPerPage,valueFilter.value, keyword,page)
             if(postLists.result){
-              setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
+              setTotalPages(Math.ceil(postLists.result.num_shareholder/itemsPerPage))
               setPostList(postLists.result.data)
               setPage(1)
             }
@@ -47,7 +47,7 @@ export default function ShareholderPage() {
     async function fetchData() {
         const postLists = await getPosts('shareholder',itemsPerPage,valueFilter.value, keyword,page)
         if(postLists.result){
-          setTotalPages(Math.ceil(postLists.result.num_post/itemsPerPage))
+          setTotalPages(Math.ceil(postLists.result.num_shareholder/itemsPerPage))
           setPostList(postLists.result.data)
         }
     }

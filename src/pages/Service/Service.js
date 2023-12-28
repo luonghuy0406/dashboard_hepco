@@ -16,7 +16,7 @@ import {  Container,Divider, Typography, Box, Button, Grid,Table,
 import { useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/EditorComponent';
 import CloseIcon from '@mui/icons-material/Close';
-import { getDetailService, updateService } from 'src/api';
+import { getDetailService, getListSharedtable, updateService, updateSharedtable } from 'src/api';
 import { dataURLtoFile, toDataURL } from 'src/functions';
 import Swal from 'sweetalert2';
 
@@ -47,6 +47,8 @@ const ServiceItem = ({id}) =>{
     const [data,setData] = useState([])
     const [image,setImage] = useState()
     const [imageFile,setImageFile] = useState()
+    const [update, setUpdate] = useState(false)
+    const [dataItem,setDataItem] = useState([])
     useEffect(()=>{
         async function fetchData() {
             const service = await getDetailService(id)
@@ -65,7 +67,27 @@ const ServiceItem = ({id}) =>{
         }
         fetchData()
     },[id])
-
+    useEffect(()=>{
+        
+        const idList = {
+            "ser_01" : "16",
+            "ser_02" : "17",
+            "ser_03" : "18",
+            "ser_04" : "19",
+            "ser_05" : "20",
+            "ser_06" : "21",
+        }
+        async function fetchData2() {
+            const response = await getListSharedtable(idList[id])
+            let data = response.result
+            setDataItem(data)
+        }
+        if(id != "ser_05"){
+            fetchData2();
+        }else{
+            setDataItem(null)
+        }
+    },[id,update])
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -128,6 +150,102 @@ const ServiceItem = ({id}) =>{
                     <Button variant="contained" onClick={()=>{handleEdit(data.id_service,content,contentEN,imageFile)}}>Lưu</Button>
                 </Box>
             </Grid>
+            {
+                dataItem?.map((item)=>{
+                    return <ItemDetail item={item} update={update} setUpdate={setUpdate} id={id}/>
+                })
+            }
         </Grid>
+    )
+}
+
+const ItemDetail = ({item,update, setUpdate, id})=>{
+    
+    const [content,setContent] =useState(item.content)
+    const [content_en,setContent_en] =useState(item.content_en)
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        const data = {...item}
+        data.image = file
+        const response = await updateSharedtable(data)
+       Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            setUpdate(!update)
+        }
+    }
+    const handleChangeContent = async (key,value) => {
+        const data = {...item}
+        data[key] = value
+        const response = await updateSharedtable(data)
+       Swal.fire(
+            response.result.status,
+            response.result.msg,
+            response.result.status
+        )
+        if(response.result.status == 'success'){
+            setUpdate(!update)
+        }
+    }
+    if(!item) return <></>
+    return(
+        <>
+            <Typography variant="h6">{item?.name}</Typography>
+                
+            <Grid item xs={12} sx={{marginBottom:"20px",display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative', flexDirection:"column"}}>
+                <CardMedia
+                    component="img"
+                    sx={{ width: '300px', height:'300px', border:"1px solid #eee",margin:"30px"}}
+                    image={`http://localhost:3001/read_image/${item?.image}`}
+                    alt={item?.name}
+                />
+                <Box sx={{position:'absolute'}}>
+                    <input
+                        accept="image/*"
+                        id={"file-upload-image-service-"+item?.id_sharedtable}
+                        type="file"
+                        style={{ display: 'none' }}
+                        onChange={(e)=>{handleImageUpload(e)}}
+                    />
+
+                    <label htmlFor={"file-upload-image-service-"+item?.id_sharedtable}>
+                        <Button variant="contained" color="primary" component="span">
+                            Thay ảnh
+                        </Button>
+                    </label>
+                </Box>
+                {
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                                <TextField
+                                    InputLabelProps={{ shrink: true }}
+                                    fullWidth
+                                    label={'Nội dung'}
+                                    value={content}
+                                    onChange={(e)=>{setContent(e.target.value)}}
+                                    multiline
+                                    row={4}
+                                    onBlur={()=>{handleChangeContent("content",content)}}
+                                />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                InputLabelProps={{ shrink: true }}
+                                fullWidth
+                                label={'Nội dung(EN)'}
+                                value={content_en}
+                                onChange={(e)=>{setContent_en(e.target.value)}}
+                                multiline
+                                row={4}
+                                onBlur={()=>{handleChangeContent("content_en",content_en)}}
+                            />
+                        </Grid>
+                    </Grid>
+                }
+            </Grid>
+        </>
     )
 }
