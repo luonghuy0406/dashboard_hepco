@@ -196,6 +196,7 @@ const ItemDetail = ({item,update, setUpdate, id})=>{
             <Typography variant="h6">{item?.name}</Typography>
                 
             <Grid item xs={12} sx={{marginBottom:"20px",display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative', flexDirection:"column"}}>
+            <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh có tỉ lệ 1:1 size tối đa 500KB để có thể hiển thị tốt nhất</Typography>
                 <CardMedia
                     component="img"
                     sx={{ width: '300px', height:'300px', border:"1px solid #eee",margin:"30px"}}
@@ -217,7 +218,10 @@ const ItemDetail = ({item,update, setUpdate, id})=>{
                         </Button>
                     </label>
                 </Box>
-                {
+            </Grid>
+
+            {
+                    item?.fathertble == 21 &&
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                                 <TextField
@@ -245,7 +249,6 @@ const ItemDetail = ({item,update, setUpdate, id})=>{
                         </Grid>
                     </Grid>
                 }
-            </Grid>
         </>
     )
 }

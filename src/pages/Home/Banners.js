@@ -262,12 +262,10 @@ const ModalAddBanner = ({setOpenModal,openModal,update, setUpdate}) =>{
                                     InputLabelProps={{ shrink: true }}
                                     required
                                     label={"Nội dung 1"}
-                                    // name={"head_"+key}
                                     error={content1.length == 0}
                                     helperText={"Nội dung 1 không được trống"}
                                     onChange={(e)=>{setContent1(e.target.value)}}
                                     value={content1}
-                                    // defaultValue={companyInfo?.[0]?.[key]?.value}
                                 />
                             </FormControl>
                         </Grid>
