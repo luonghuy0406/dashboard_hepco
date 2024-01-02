@@ -28,7 +28,7 @@ export const refreshToken = async () => {
         }
         const config = {
           method: 'get',
-          url: `${process.env.REACT_APP_HOST}/refresh`,
+          url: `http://localhost:3001/refresh`,
           headers: { 
             'Authorization': refresh_token
           }

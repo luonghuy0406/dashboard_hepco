@@ -38,8 +38,8 @@ export default function EditPost() {
                     setContentEN(post.content_en || '')
                     setCategory(categories[String(post.type_id)] || '')
                     setKeyPost(post.key_post || 0)
-                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
-                    toDataURL(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
+                    setImage(`http://localhost:3001/read_image/${post.image}`)
+                    toDataURL(`http://localhost:3001/read_image/${post.image}`)
                     .then(dataUrl => {
                         var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                         setImageFile(fileData)

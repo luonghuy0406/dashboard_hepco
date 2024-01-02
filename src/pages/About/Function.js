@@ -120,7 +120,7 @@ const FunctionItem = ({row,index,setUpdate,update}) =>{
                     // height:'100%',
                     borderRadius:'10px',
                     height:'300px',
-                    backgroundImage: `url(${process.env.REACT_APP_HOST}/read_image/${row.image})`,
+                    backgroundImage: `url(http://localhost:3001/read_image/${row.image})`,
                     backgroundRepeat:'no-repeat',
                     backgroundSize:'cover',
                     backgroundPosition:'center'
@@ -142,7 +142,7 @@ const EditInfo = ({openModal, setOpenModal, row, index,setUpdate,update}) =>{
     const [nameEN,setNameEN] = useState(row.name_en)
     const [content,setContent] = useState(row.content)
     const [contentEN,setContentEN] = useState(row.content_en)
-    const [image, setImage] = useState(`${process.env.REACT_APP_HOST}/read_image/${row.image}`)
+    const [image, setImage] = useState(`http://localhost:3001/read_image/${row.image}`)
     const [imageFile, setImageFile] = useState('')
     const style = {
         position: 'absolute',
@@ -359,7 +359,7 @@ const LicenseCertification= () =>{
                                         <CardMedia
                                             component="img"
                                             sx={{ width: 350,textAlign: "center" }}
-                                            image={`${process.env.REACT_APP_HOST}/read_image/${row.image}`}
+                                            image={`http://localhost:3001/read_image/${row.image}`}
                                             alt={row.name}
                                         />
                                     </Box>

@@ -195,7 +195,7 @@ const AllPhotos = ({id_album}) => {
                                 component="img"
                                 alt={image.des}
                                 height="auto"
-                                image={`${process.env.REACT_APP_HOST}/read_image/${image.link}`}
+                                image={`http://localhost:3001/read_image/${image.link}`}
                                 sx={{flex: 1,objectFit: 'cover', minHeight:"200px"}}
                             />
                         </Card>
@@ -296,7 +296,7 @@ const EditImageDialog = ({currentImage, open, setOpen, setCurrentImage, setUpdat
                     }}
                 >
                         <img
-                            src={`${process.env.REACT_APP_HOST}/read_image/${currentImage.link}`}
+                            src={`http://localhost:3001/read_image/${currentImage.link}`}
                             alt={currentImage.des}
                             style={{
                                 maxWidth: '100%',
@@ -412,7 +412,7 @@ const AllAlbums = ({tab}) => {
                                     component="img"
                                     alt={image.des}
                                     height="auto"
-                                    image={`${process.env.REACT_APP_HOST}/read_image/${image.avatar}`}
+                                    image={`http://localhost:3001/read_image/${image.avatar}`}
                                     sx={{flex: 1,objectFit: 'cover', minHeight:"200px"}}
                                 />
                                 <CardContent>

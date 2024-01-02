@@ -32,7 +32,7 @@ export default function EditProject() {
                     setContent(post.content || '')
                     setContentEN(post.content_en || '')
                     setCategory(categories[String(post.type_id)] || {name: 'Dự án đầu tư', value:'7'})
-                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
+                    setImage(`http://localhost:3001/read_image/${post.image}`)
                 } catch (error) {
                     
                 }
