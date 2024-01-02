@@ -195,7 +195,7 @@ const AllPhotos = ({id_album}) => {
                                 component="img"
                                 alt={image.des}
                                 height="auto"
-                                image={`http://localhost:3001/read_image/${image.link}`}
+                                image={`${process.env.REACT_APP_HOST}/read_image/${image.link}`}
                                 sx={{flex: 1,objectFit: 'cover', minHeight:"200px"}}
                             />
                         </Card>
@@ -296,7 +296,7 @@ const EditImageDialog = ({currentImage, open, setOpen, setCurrentImage, setUpdat
                     }}
                 >
                         <img
-                            src={`http://localhost:3001/read_image/${currentImage.link}`}
+                            src={`${process.env.REACT_APP_HOST}/read_image/${currentImage.link}`}
                             alt={currentImage.des}
                             style={{
                                 maxWidth: '100%',
@@ -367,7 +367,7 @@ const AllAlbums = ({tab}) => {
     if(currentAlbum){
         return(
             <>
-                <AlbumDetail currentAlbum={currentAlbum} setCurrentAlbum={setCurrentAlbum} setOpen={setOpen} setAdd={setAdd}/> 
+                <AlbumDetail currentAlbum={currentAlbum} setCurrentAlbum={setCurrentAlbum} setOpen={setOpen} setAdd={setAdd} update={update} setUpdate={setUpdate}/> 
                 <AlbumDialog add={add} currentAlbum={currentAlbum} open={open} setOpen={setOpen} setCurrentAlbum={setCurrentAlbum} setUpdate={setUpdate} update={update}/>
             </>
         )
@@ -376,7 +376,6 @@ const AllAlbums = ({tab}) => {
         <Container 
             maxWidth={'xl'} 
         >
-
             <Box>
                 <Button 
                     component="span"
@@ -392,8 +391,8 @@ const AllAlbums = ({tab}) => {
                 </Button>
             </Box>
             <Grid container spacing={2}>
-                {images.map((image, index) => {
-                    if(image.id_album == 1){
+                {images?.map((image, index) => {
+                    if(image.id_album == 1 || image.id_album == 2){
                         return <></>
                     }
                     return(
@@ -413,7 +412,7 @@ const AllAlbums = ({tab}) => {
                                     component="img"
                                     alt={image.des}
                                     height="auto"
-                                    image={`http://localhost:3001/read_image/${image.avatar}`}
+                                    image={`${process.env.REACT_APP_HOST}/read_image/${image.avatar}`}
                                     sx={{flex: 1,objectFit: 'cover', minHeight:"200px"}}
                                 />
                                 <CardContent>
@@ -441,7 +440,7 @@ const AllAlbums = ({tab}) => {
   );
 }
 
-const AlbumDetail = ({currentAlbum, setCurrentAlbum, setOpen, setAdd})=>{
+const AlbumDetail = ({currentAlbum, setCurrentAlbum, setOpen, setAdd, update, setUpdate})=>{
     const theme = useTheme()
     const handleDeleteAlbum = async (id)=>{
         Swal.fire({
@@ -461,6 +460,7 @@ const AlbumDetail = ({currentAlbum, setCurrentAlbum, setOpen, setAdd})=>{
                 )
                 if(response.result.status == 'success'){
                     setCurrentAlbum(null)
+                    setUpdate(!update)
                 }
             }
           })
@@ -548,26 +548,6 @@ const AlbumDialog = ({add, currentAlbum, open, setOpen, setCurrentAlbum, setUpda
                 </Box>
             </Box>
             <Box sx={{padding: theme.spacing(2), position:'relative'}} className='wrap-image-dialog'>
-                {/* <Box 
-                    sx={{
-                        textAlign: 'center',
-                        width:'100%',
-                        overflow:'hidden',
-                        display:'flex',
-                        alignItems:'center', 
-                        justifyContent:'center'
-                    }}
-                >
-                        <img
-                            src={`http://localhost:3001/read_image/${currentAlbum?.avatar}`}
-                            alt={currentAlbum?.des}
-                            style={{
-                                maxWidth: '100%',
-                                maxHeight:'300px',
-                                objectFit: 'contain'
-                            }}
-                        />
-                </Box> */}
                 <Box sx={{padding: theme.spacing(3)}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

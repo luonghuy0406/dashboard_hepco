@@ -176,7 +176,7 @@ const Government= ({awardData, update, setUpdate}) =>{
                                 <CardMedia
                                   component="img"
                                   sx={{ width: 350, textAlign: 'center' }}
-                                  image={`http://localhost:3001/read_image/${row.image}`}
+                                  image={`${process.env.REACT_APP_HOST}/read_image/${row.image}`}
                                   alt={row.name}
                                 />
                               </Box>
@@ -232,11 +232,11 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
     }
     const [name,setName] = useState(add ? '' : data[0].name)
     const [nameEN,setNameEN] = useState(add ? '' : data[0].name_en)
-    const [image, setImage] = useState(add ? '' : `http://localhost:3001/read_image/${data[0].image}`)
+    const [image, setImage] = useState(add ? '' : `${process.env.REACT_APP_HOST}/read_image/${data[0].image}`)
     const [imageFile, setImageFile] = useState('')
     useEffect(()=>{
         if(data?.length > 0){
-            toDataURL(`http://localhost:3001/read_image/${data[0].image}`)
+            toDataURL(`${process.env.REACT_APP_HOST}PP_HOST}PP_HOST}/read_image/${data[0].image}`)
             .then(dataUrl => {
                 var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                 setImageFile(fileData)
@@ -283,8 +283,8 @@ const ModalAdd = ({add, setOpenModal, data, id ='',update, setUpdate}) =>{
         }else{
             setName(data[0].name)
             setNameEN(data[0].name_en)
-            setImage(`http://localhost:3001/read_image/${data[0].image}`)
-            toDataURL(`http://localhost:3001/read_image/${data[0].image}`)
+            setImage(`${process.env.REACT_APP_HOST}/read_image/${data[0].image}`)
+            toDataURL(`${process.env.REACT_APP_HOST}/read_image/${data[0].image}`)
             .then(dataUrl => {
                 var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                 setImageFile(fileData)

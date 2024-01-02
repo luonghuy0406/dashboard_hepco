@@ -22,7 +22,8 @@ export default function Customer() {
         async function fetchData() {
             const customer = await getCustomer()
             if(customer.data){
-                setCustomers(customer.data)
+                const cus = customer.data
+                setCustomers(cus.reverse())
             }
         }
         fetchData();
@@ -99,7 +100,7 @@ export default function Customer() {
                                     <CardMedia
                                         component="img"
                                         sx={{ width: 350,textAlign: "center" }}
-                                        image={`http://localhost:3001/read_image/${row.logo}`}
+                                        image={`${process.env.REACT_APP_HOST}/read_image/${row.logo}`}
                                         alt={row.name}
                                     />
                                 </Box>

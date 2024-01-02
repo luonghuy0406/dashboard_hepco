@@ -5,8 +5,7 @@ import { redirect } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const api = axios.create({
-  // baseURL: http://localhost:3001,
-    baseURL: 'http://localhost:3001'
+    baseURL: process.env.REACT_APP_HOST,
 });
 
 export const setAuthToken = (token) => {
@@ -28,7 +27,7 @@ export const refreshToken = async () => {
         }
         const config = {
           method: 'get',
-          url: `http://localhost:3001/refresh`,
+          url: `${process.env.REACT_APP_HOST}/refresh`,
           headers: { 
             'Authorization': refresh_token
           }
@@ -138,11 +137,7 @@ export const updateBanner = async (id,content1,content1EN,content2,content2EN,im
       data.append('content_1_en', content1EN);
       data.append('content_2', content2);
       data.append('content_2_en', content2EN);
-      if(typeof image == 'object'){
-        data.append('image', image, Date.now());
-      }else{
-        data.append('image', image);
-      }
+      data.append('image', image, Date.now())
       
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
@@ -175,11 +170,7 @@ export const addNewAchieve= async (name,name_en, content, content_en, image,type
     data.append('content', content);
     data.append('content_en', content_en);
     data.append('type', type);
-    if(typeof image == 'object'  && image?.name){
-      data.append('image', image, Date.now());
-    }else{
-      data.append('image', image);
-    }
+    data.append('image', image, Date.now())
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
@@ -216,7 +207,6 @@ export const getCertificate = async () => {
   }
 }
 
-
 export const updateAchieve = async (id,content,contentEN,name,nameEN,image,type='achieve') => {
   try {
     const FormData = require('form-data');
@@ -227,11 +217,7 @@ export const updateAchieve = async (id,content,contentEN,name,nameEN,image,type=
     data.append('content', content);
     data.append('content_en', contentEN);
     data.append('type', type);
-    if(typeof image == 'object'){
-      data.append('image', image, Date.now());
-    }else{
-      data.append('image', image);
-    }
+    data.append('image', image, Date.now())
     
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
@@ -271,54 +257,6 @@ export const deleteAchieve = async (id)=>{
     throw error;
   }
 }
-//-----------about us-----
-export const getAboutUs = async () => {
-  try {
-    const response = await api.get(`/about-us`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-export const updateAboutUs = async (content,content_en,image1,image2,image3) => {
-  try {
-    const FormData = require('form-data');
-    let data = new FormData();
-    data.append('content', content);
-    data.append('content_en', content_en);
-    if(typeof image1 == 'object' && image1?.name){
-      data.append('image1', image1, Date.now());
-    }else{
-      data.append('image1', image1);
-    }
-    if(typeof image2 == 'object' && image2?.name){
-      data.append('image2', image2, Date.now());
-    }else{
-      data.append('image2', image2);
-    }
-    if(typeof image3 == 'object' && image3?.name){
-      data.append('image3', image3, Date.now());
-    }else{
-      data.append('image3', image3);
-    }
-    if(checkTokenExpiration()){
-      const new_token = await refreshToken()
-      api.defaults.headers.common['Authorization'] = `${new_token}`;
-      const response = await api.put(`/about/update`,data);
-      return response.data;
-    }else{
-      const response = await api.put(`/about/update`,data);
-      return response.data;
-    }
-  } catch (error) {
-    Swal.fire(
-      'Error',
-      'Đã có lỗi xảy ra',
-      'error'
-    )
-    throw error;
-  }
-};
 //------company info-----
 export const getCompanyInfo = async () => {
   try {
@@ -368,11 +306,7 @@ export const addNewCustomer = async (name, image) => {
     const FormData = require('form-data');
     let data = new FormData();
     data.append('name', name);
-    if(typeof image == 'object' && image?.name){
-      data.append('logo', image, Date.now());
-    }else{
-      data.append('logo', image);
-    }
+    data.append('logo', image, Date.now())
     data.append('name_en', '');
     data.append('content', '');
     data.append('content_en', '');
@@ -401,11 +335,7 @@ export const updateCustomer =  async (id,name, image) => {
     data.append('id', id);
     
     data.append('name', name);
-    if(typeof image == 'object'  && image?.name){
-      data.append('image', image, Date.now());
-    }else{
-      data.append('image', image);
-    }
+    data.append('logo', image, Date.now())
     data.append('name_en', '');
     data.append('detail', '');
     data.append('detail_en', '');
@@ -489,11 +419,7 @@ export const addNewPost = async (type,type_id, name,name_en, content, content_en
     data.append('content', content);
     data.append('content_en', content_en);
     data.append(`key_${type}`, key_post);
-    if(typeof image == 'object'  && image?.name){
-      data.append('image', image, Date.now());
-    }else{
-      data.append('image', image);
-    }
+    data.append('image', image, Date.now())
     data.append('author', author);
     data.append('id_user', id_user);
     if(checkTokenExpiration()){
@@ -523,11 +449,7 @@ export const updatePost =  async (type,id,type_id,name,name_en,content,content_e
     data.append(`id_${type}`, id);
     data.append('type_id', type_id);
     data.append(`key_${type}`,key_post)
-    if(typeof image == 'object'  && image?.name){
-      data.append('image', image, Date.now());
-    }else{
-      data.append('image', image);
-    }
+    data.append('image', image, Date.now())
     data.append('name', name);
     data.append('name_en', name_en);
     data.append('content', content);
@@ -601,11 +523,7 @@ export const updateService = async (id_service,name,name_en,content,content_en, 
     const FormData = require('form-data');
     let data = new FormData();
     data.append('id_service', id_service);
-    if(typeof image == 'object'  && image?.name){
-      data.append('image', image, Date.now());
-    }else{
-      data.append('image', image);
-    }
+    data.append('image', image, Date.now())
     data.append('name', name);
     data.append('name_en', name_en);
     data.append('content', content);
@@ -766,8 +684,8 @@ export const addListImages = async (images=[],id_album="1", des=" ", des_en=" ")
     data.append('id_album', id_album);
     data.append('des', des);
     data.append('des_en',des_en)
-    Object.values(images).forEach((image)=>{
-      data.append('image', image, image.name)
+    Object.values(images).forEach((image,index)=>{
+      data.append('image', image, Date.now()+'.'+index)
     })
     const author = localStorage.getItem('name')
     data.append('author', author);
@@ -893,8 +811,12 @@ export const updateSharedtable = async (value) => {
     Object.entries(value).forEach((dt)=>{
       if(dt[0] == 'image' && typeof dt[1] == 'string'){
         dt[1] = []
+        data.append(dt[0], dt[1])
+      }else if(dt[0] == 'image'){
+        data.append('image', dt[1], Date.now())
+      }else{
+        data.append(dt[0], dt[1])
       }
-      data.append(dt[0], dt[1])
     })
     if(checkTokenExpiration()){
       const new_token = await refreshToken()

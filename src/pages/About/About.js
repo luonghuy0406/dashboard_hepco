@@ -85,32 +85,6 @@ const MailBox = () =>{
                     Thư ngỏ
                 </Typography>
             </Grid>
-            
-            {/* <Grid item xs={6} sx={{display: 'flex', alignItems:"center", justifyContent:"center", position: 'relative', flexDirection:'column'}}>
-                <Typography>Ảnh chính</Typography>
-                
-                <CardMedia
-                    component="img"
-                    sx={{ width: '100%'}}
-                    image={`https://web-hepco-7ttu.vercel.app/assets/images/banner2.jpeg`}
-                    // alt={banner.id_bn}
-                />
-                <Box sx={{position:'absolute'}}>
-                    <input
-                        accept="image/*"
-                        id={"file-upload-vision-"+1}
-                        type="file"
-                        style={{ display: 'none' }}
-                        // onChange={(e)=>{handleImageUpload(e)}}
-                    />
-
-                    <label htmlFor={"file-upload-vision-"+1}>
-                        <Button variant="contained" color="primary" component="span">
-                        {"Replace image"}
-                        </Button>
-                    </label>
-                </Box>
-            </Grid> */}
             <Grid item xs={12}>
                 <Typography fontWeight={700}>Tiếng Việt</Typography>
                 <EditorComponent val={content} setVal={setContent}/>

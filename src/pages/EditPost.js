@@ -24,7 +24,7 @@ export default function EditPost() {
     const [content,setContent] = useState('')
     const [content_en,setContentEN] = useState('')
     const [image, setImage] = useState('')
-    const [imageFile, setImageFile] = useState([])
+    const [imageFile, setImageFile] = useState('')
     const [key_post,setKeyPost] = useState(0)
     useEffect(()=>{
         async function fetchData() {
@@ -38,9 +38,8 @@ export default function EditPost() {
                     setContentEN(post.content_en || '')
                     setCategory(categories[String(post.type_id)] || '')
                     setKeyPost(post.key_post || 0)
-                    // setImage(`http://localhost:3001/read_image/${post.image}`)
-                    setImage(`http://localhost:3001/read_image/${post.image}`)
-                    toDataURL(`http://localhost:3001/read_image/${post.image}`)
+                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
+                    toDataURL(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
                     .then(dataUrl => {
                         var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                         setImageFile(fileData)
