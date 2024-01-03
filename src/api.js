@@ -138,7 +138,11 @@ export const updateBanner = async (id,content1,content1EN,content2,content2EN,im
       data.append('content_1_en', content1EN);
       data.append('content_2', content2);
       data.append('content_2_en', content2EN);
-      data.append('image', image, Date.now())
+      try {
+        data.append('image', image, Date.now())
+      } catch (error) {
+        data.append('image', image)
+      }
       
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
@@ -171,7 +175,11 @@ export const addNewAchieve= async (name,name_en, content, content_en, image,type
     data.append('content', content);
     data.append('content_en', content_en);
     data.append('type', type);
-    data.append('image', image, Date.now())
+    try {
+      data.append('image', image, Date.now())
+    } catch (error) {
+      data.append('image', image)
+    }
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
@@ -218,7 +226,11 @@ export const updateAchieve = async (id,content,contentEN,name,nameEN,image,type=
     data.append('content', content);
     data.append('content_en', contentEN);
     data.append('type', type);
-    data.append('image', image, Date.now())
+    try {
+      data.append('image', image, Date.now())
+    } catch (error) {
+      data.append('image', image)
+    }
     
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
@@ -307,7 +319,11 @@ export const addNewCustomer = async (name, image) => {
     const FormData = require('form-data');
     let data = new FormData();
     data.append('name', name);
-    data.append('logo', image, Date.now())
+    try {
+      data.append('logo', image, Date.now())
+    } catch (error) {
+      data.append('logo', image)
+    }
     data.append('name_en', '');
     data.append('content', '');
     data.append('content_en', '');
@@ -336,7 +352,11 @@ export const updateCustomer =  async (id,name, image) => {
     data.append('id', id);
     
     data.append('name', name);
-    data.append('logo', image, Date.now())
+    try {
+      data.append('logo', image, Date.now())
+    } catch (error) {
+      data.append('logo', image)
+    }
     data.append('name_en', '');
     data.append('detail', '');
     data.append('detail_en', '');
@@ -420,7 +440,11 @@ export const addNewPost = async (type,type_id, name,name_en, content, content_en
     data.append('content', content);
     data.append('content_en', content_en);
     data.append(`key_${type}`, key_post);
-    data.append('image', image, Date.now())
+    try {
+      data.append('image', image, Date.now())
+    } catch (error) {
+      data.append('image', image)
+    }
     data.append('author', author);
     data.append('id_user', id_user);
     if(checkTokenExpiration()){
@@ -450,7 +474,11 @@ export const updatePost =  async (type,id,type_id,name,name_en,content,content_e
     data.append(`id_${type}`, id);
     data.append('type_id', type_id);
     data.append(`key_${type}`,key_post)
-    data.append('image', image, Date.now())
+    try {
+      data.append('image', image, Date.now())
+    } catch (error) {
+      data.append('image', image)
+    }
     data.append('name', name);
     data.append('name_en', name_en);
     data.append('content', content);
@@ -524,7 +552,11 @@ export const updateService = async (id_service,name,name_en,content,content_en, 
     const FormData = require('form-data');
     let data = new FormData();
     data.append('id_service', id_service);
-    data.append('image', image, Date.now())
+    try {
+      data.append('image', image, Date.now())
+    } catch (error) {
+      data.append('image', image)
+    }
     data.append('name', name);
     data.append('name_en', name_en);
     data.append('content', content);
@@ -814,7 +846,11 @@ export const updateSharedtable = async (value) => {
         dt[1] = []
         data.append(dt[0], dt[1])
       }else if(dt[0] == 'image'){
-        data.append('image', dt[1], Date.now())
+        try {
+          data.append('image', dt[1], Date.now())
+        } catch (error) {
+          data.append('image', dt[1])
+        }
       }else{
         data.append(dt[0], dt[1])
       }

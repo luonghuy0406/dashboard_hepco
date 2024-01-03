@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import {  Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText, Checkbox } from '@mui/material';
+import {  Button, Container, Stack, Typography, TextField, Box, Card, CardMedia, FormHelperText, Checkbox, Grid, Autocomplete } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPostById, updatePost, deletePost } from 'src/api';
 import { useEffect, useState } from 'react';
@@ -18,7 +18,8 @@ export default function EditPost() {
         '3': {name: 'Pháp luật môi trường', value:'3'},
         '4': {name: 'Tin tức khác', value:'4'},
     }
-    const [category, setCategory] = useState()     
+    const [category, setCategory] = useState({name: 'Hoạt động công ty', value:'1'}) 
+    // const [category, setCategory] = useState()     
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
@@ -111,19 +112,45 @@ export default function EditPost() {
             </Stack>
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
-                    <Typography variant="h6" gutterBottom>
-                        Tin nổi bật
-                    </Typography>
-                    <Checkbox 
-                        checked={key_post == 1}
-                        onChange={(e)=>{
-                            if(e.target.checked){
-                                setKeyPost(1)
-                            }else{
-                                setKeyPost(0)
-                            }
-                        }}
-                    />
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                                <Typography variant="h6" gutterBottom>
+                                    Loại tin
+                                </Typography>
+                                <Autocomplete
+                                    id="tags-standard"
+                                    options={Object.values(categories)}
+                                    getOptionLabel={(option) => option.name}
+                                    value={category}
+                                    renderInput={(params) => (
+                                        <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        placeholder={"Chọn loại tin tức"}
+                                        />
+                                    )}
+
+                                    onChange={(e,value)=>{
+                                        setCategory(value)
+                                    }}
+                                />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="h6" gutterBottom>
+                                Tin nổi bật
+                            </Typography>
+                            <Checkbox  
+                                checked={key_post == 1}
+                                onChange={(e)=>{
+                                    if(e.target.checked){
+                                        setKeyPost(1)
+                                    }else{
+                                        setKeyPost(0)
+                                    }
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
                 </Card>
             </Stack>
             <Stack  mb={5}>

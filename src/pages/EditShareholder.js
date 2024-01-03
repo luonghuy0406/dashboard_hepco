@@ -15,7 +15,7 @@ export default function EditShareholder() {
         '5': {name: 'Thông báo', value:'5'},
         '6': {name: 'Báo cáo', value:'6'}
     }
-    const [category, setCategory] = useState()     
+    const [category, setCategory] = useState({name: 'Thông báo', value:'5'})     
     const [title,setTitle] = useState('')
     const [title_en,setTitleEN] = useState('')
     const [content,setContent] = useState('')
@@ -50,7 +50,7 @@ export default function EditShareholder() {
 
     const handleEditPost = async (id,type_id,name,name_en,content,content_en) =>{
         if(name && name_en){
-            const image = document.getElementById("file-upload-edit-post-"+id).files[0] || []
+            const image = document.getElementById("file-upload-edit-post-"+id).files[0] || ''
             const response = await updatePost('shareholder',id,type_id,name,name_en,content,content_en, image)
             Swal.fire(
                 response.result.status,
@@ -99,6 +99,34 @@ export default function EditShareholder() {
             <Typography variant="h4" gutterBottom>
                 Edit post {id}
             </Typography>
+            </Stack>
+            <Stack  mb={5}>
+                <Card sx={{ p: 2}}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                                <Typography variant="h6" gutterBottom>
+                                    Loại tin
+                                </Typography>
+                                <Autocomplete
+                                    id="tags-standard-sha"
+                                    options={Object.values(categories)}
+                                    getOptionLabel={(option) => option.name}
+                                    value={category}
+                                    renderInput={(params) => (
+                                        <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        placeholder={"Chọn loại tin tức"}
+                                        />
+                                    )}
+
+                                    onChange={(e,value)=>{
+                                        setCategory(value)
+                                    }}
+                                />
+                        </Grid>
+                    </Grid>
+                </Card>
             </Stack>
             <Stack  mb={5}>
                 <Card sx={{ p: 2}}>
