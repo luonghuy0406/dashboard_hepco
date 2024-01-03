@@ -22,8 +22,8 @@ export default function Customer() {
         async function fetchData() {
             const customer = await getCustomer()
             if(customer.data){
-                const cus = customer.data
-                setCustomers(cus.reverse())
+                const cus = customer.data.reverse()
+                setCustomers(cus)
             }
         }
         fetchData();
