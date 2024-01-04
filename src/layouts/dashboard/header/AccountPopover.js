@@ -5,6 +5,8 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
 import account from '../../../_mock/account';
+import Swal from 'sweetalert2';
+import { updateUser } from 'src/api';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +32,55 @@ export default function AccountPopover() {
     // Redirect to the dashboard page
     navigate('/', { replace: true });
   }
-
+  const handleChangePass = () => {
+    setOpen(null)
+    Swal.fire({
+      title: "Nhập mật khẩu mới",
+      input: "text",
+      inputAutoFocus: true,
+      showCancelButton: true,
+      confirmButtonText: "Xác nhận",
+      showLoaderOnConfirm: true,
+      preConfirm: async (pw) => {
+        try {
+          const response = await updateUser(pw)
+          return response;
+        } catch (error) {
+          Swal.showValidationMessage(`
+            Update lỗi: ${error}
+          `);
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let timerInterval;
+          Swal.fire({
+            icon: `${result.value.result.status}`,
+            title: `${result.value.result.status}`,
+            text: `Tự động logout sau 5s, hãy đăng nhập lại`,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+              const timer = Swal.getPopup().querySelector("b");
+              timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+              logout()
+            }
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              logout()
+            }
+          });
+      }
+    });
+  };
   return (
     <>
       <IconButton
@@ -76,6 +126,9 @@ export default function AccountPopover() {
         
         <MenuItem onClick={logout} sx={{ m: 1 }}>
           Logout
+        </MenuItem>
+        <MenuItem onClick={handleChangePass} sx={{ m: 1 }}>
+          Đổi mật khẩu
         </MenuItem>
       </Popover>
     </>

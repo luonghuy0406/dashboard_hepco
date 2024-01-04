@@ -82,6 +82,39 @@ export const checkTokenExpiration = () => {
 };
 
 //----------GET DATA------------
+//user---
+
+
+export const updateUser = async (pw) => {
+  try {
+    const id = localStorage.getItem('user')
+    const name = localStorage.getItem('name')
+    let data = {
+      "id_user": id,
+      "name": name,
+      "pw": pw
+    }
+    if(checkTokenExpiration()){
+      const new_token = await refreshToken()
+      api.defaults.headers.common['Authorization'] = `${new_token}`;
+      const response = await api.put('/user/update',data);
+      return response.data;
+    }else{
+      const response = await api.put('/user/update',data);
+      return response.data;
+    }
+  } catch (error) {
+    Swal.fire(
+      'Error',
+      'Đã có lỗi xảy ra',
+      'error'
+    )
+    throw error;
+  }
+}
+
+
+
 //banner----------
 export const getBanner = async () => {
   try {
