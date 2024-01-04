@@ -12,7 +12,6 @@ export default function EditorComponent({val,setVal}) {
         <div>
             
             <CKEditor
-                style={{height:'300px'}}
                 editor={ Editor }
                 data={value}
                 onChange={ ( event, editor ) => {

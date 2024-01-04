@@ -30,6 +30,7 @@ import EditProject from './pages/EditProject';
 import AddNewProject from './pages/AddNewProject';
 import Service from './pages/Service/Service';
 import Structure from './pages/About/Structure';
+import Chart from './pages/About/Chart';
 
 // Protected route component that redirects to login if not authenticated
 const PrivateRoute = ({ element, ...rest }) => {
@@ -79,6 +80,7 @@ export default function Router() {
         { path: 'gioithieu', element: <PrivateRoute element={<About />} /> },
         { path: 'gioithieu/vehepco', element: <PrivateRoute element={<About />} /> },
         { path: 'gioithieu/chucnang', element: <PrivateRoute element={<Function />} /> },
+        { path: 'gioithieu/sodotochuc', element: <PrivateRoute element={<Chart />} /> },
         { path: 'gioithieu/bomay', element: <PrivateRoute element={<Structure />} /> },
         { path: 'gioithieu/thanhtuu', element: <PrivateRoute element={<Achievements />} /> },
         { path: 'gioithieu/thuvien', element: <PrivateRoute element={<Gallery />} /> },

@@ -49,6 +49,11 @@ const navConfig = [
         icon: icon('ic_analytics'),
       },
       {
+        title: 'Sơ đồ tổ chức',
+        path: '/sodotochuc',
+        icon: icon('ic_analytics'),
+      },
+      {
         title: 'Giới thiệu bộ máy',
         path: '/bomay',
         icon: icon('ic_analytics'),
