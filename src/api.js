@@ -895,7 +895,7 @@ export const updateSharedtable = async (value) => {
           data.append('image', dt[1])
         }
       }else{
-        data.append(dt[0], dt[1])
+        data.append(dt[0], dt[1] || " ")
       }
     })
     if(checkTokenExpiration()){
