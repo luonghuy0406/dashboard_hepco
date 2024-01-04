@@ -6,7 +6,7 @@ import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover 
 // mocks_
 import account from '../../../_mock/account';
 import Swal from 'sweetalert2';
-import { updateUser } from 'src/api';
+import { checkPass, updateUser } from 'src/api';
 
 // ----------------------------------------------------------------------
 
@@ -32,32 +32,64 @@ export default function AccountPopover() {
     // Redirect to the dashboard page
     navigate('/', { replace: true });
   }
-  const handleChangePass = () => {
-    setOpen(null)
-    Swal.fire({
-      title: "Nhập mật khẩu mới",
-      input: "text",
-      inputAutoFocus: true,
-      showCancelButton: true,
-      confirmButtonText: "Xác nhận",
-      showLoaderOnConfirm: true,
-      preConfirm: async (pw) => {
-        try {
-          const response = await updateUser(pw)
-          return response;
-        } catch (error) {
-          Swal.showValidationMessage(`
-            Update lỗi: ${error}
-          `);
+
+function handleChangePass() {
+  setOpen(null)
+  Swal.fire({
+    title: 'Thay đổi mật khẩu',
+    html:
+      '<input type="password" id="currentPassword" placeholder="Mật khẩu hiện tại" class="swal2-input">' +
+      '<input type="password" id="newPassword" placeholder="Mật khẩu mới" class="swal2-input">' +
+      '<input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu mới" class="swal2-input">',
+    focusConfirm: false,
+    preConfirm: async () => {
+      const currentPassword = Swal.getPopup().querySelector('#currentPassword').value;
+      const newPassword = Swal.getPopup().querySelector('#newPassword').value;
+      const confirmPassword = Swal.getPopup().querySelector('#confirmPassword').value;
+      if(!currentPassword || !newPassword || !confirmPassword){
+        Swal.showValidationMessage('Hãy nhập đủ thông tin');
+      }else{
+        const response = await checkPass(currentPassword)
+
+        if (response) {
+          if (newPassword !== confirmPassword) {
+            Swal.showValidationMessage('Mật khẩu mới không khớp');
+          } else {
+              try {
+                const response = await updateUser(newPassword)
+                return response;
+              } catch (error) {
+                Swal.showValidationMessage(`
+                  Update lỗi: ${error}
+                `);
+              }
+            // Gửi yêu cầu thay đổi mật khẩu tới server
+            // Ví dụ: fetch('/api/changepassword', {method: 'POST', body: {currentPassword, newPassword}})
+            // .then(response => response.json())
+            // .then(data => {
+            //   // Kiểm tra kết quả từ server và hiển thị thông báo tương ứng
+            //   if (data.success) {
+            //     Swal.fire('Thay đổi mật khẩu thành công!', '', 'success');
+            //   } else {
+            //     Swal.fire('Lỗi khi thay đổi mật khẩu!', data.error, 'error');
+            //   }
+            // })
+            // .catch(error => {
+            //   Swal.fire('Lỗi khi thay đổi mật khẩu!', error.message, 'error');
+            // });
+          }
+        } else {
+          Swal.showValidationMessage('Mật khẩu hiện tại không đúng');
         }
-      },
+      }
+    },
       allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && result.value.result.status == 'success') {
         let timerInterval;
           Swal.fire({
             icon: `${result.value.result.status}`,
-            title: `${result.value.result.status}`,
+            title: `${result.value.result.msg}`,
             text: `Tự động logout sau 5s, hãy đăng nhập lại`,
             timer: 5000,
             timerProgressBar: true,
@@ -80,7 +112,7 @@ export default function AccountPopover() {
           });
       }
     });
-  };
+}
   return (
     <>
       <IconButton

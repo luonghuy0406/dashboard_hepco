@@ -84,6 +84,16 @@ export const checkTokenExpiration = () => {
 //----------GET DATA------------
 //user---
 
+export const checkPass = async (pw) => {
+  try {
+    const id = localStorage.getItem('user')
+    const data = { id_user: id, pw : pw }
+    const response = await api.post('/user/login', data)
+    return response.data.status
+  } catch (error) {
+    return false;
+  }
+}
 
 export const updateUser = async (pw) => {
   try {
