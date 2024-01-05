@@ -925,7 +925,14 @@ export const getVideoLink = async () => {
     throw error;
   }
 };
-
+export const deleteImageSharetable = async (id) => {
+  try {
+    const response = await api.put(`/sharedtable/removeimage/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 //---------history-----------
 
 export const getListHistory = async (id) => {

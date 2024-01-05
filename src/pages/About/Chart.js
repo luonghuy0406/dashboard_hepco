@@ -19,7 +19,7 @@ import { useState } from 'react';
 import EditorComponent from 'src/sections/@dashboard/EditorComponent';
 import CloseIcon from '@mui/icons-material/Close';
 import Iconify from 'src/components/iconify/Iconify';
-import { addNewAchieve, deleteAchieve, getCertificate, getListSharedtable, updateSharedtable } from 'src/api';
+import { addNewAchieve, deleteAchieve, deleteImageSharetable, getCertificate, getListSharedtable, updateSharedtable } from 'src/api';
 import Swal from 'sweetalert2';
 
 
@@ -157,7 +157,32 @@ const EditInfo = ({openModal, setOpenModal, row, index,setUpdate,update}) =>{
         const file = event.target.files[0];
         setImage(URL.createObjectURL(file))
         setImageFile(file)
-    };
+    }
+    const handleImageDelete = async (id)=>{
+        Swal.fire({
+            text: `Bạn có chắc chắn muốn xoá không?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await deleteImageSharetable(id)
+                Swal.fire(
+                    response.result.status,
+                    response.result.msg,
+                    response.result.status
+                )
+                if(response.result.status == 'success'){
+                    setUpdate(!update)
+                    setImage('')
+                    setImageFile('')
+                }
+            }
+          })
+        
+    }
 
     const handleUpdate = async (data) =>{
        if(name && nameEN){
@@ -248,9 +273,15 @@ const EditInfo = ({openModal, setOpenModal, row, index,setUpdate,update}) =>{
 
                                 <label htmlFor={"file-upload-edit-function"+index} style={{textAlign:"center"}}>
                                     <Button variant="text" color="primary" component="span">
-                                    {image ?  "Thay ảnh khác" : "Tải ảnh mới"}
+                                        {image ?  "Thay ảnh khác" : "Tải ảnh mới"}
                                     </Button>
                                 </label>
+                                {image &&
+                                
+                                    <Button variant="text" color="error" component="span" onClick={(e)=>{handleImageDelete(row.id_sharedtable)}}>
+                                        Xoá ảnh
+                                    </Button>
+                                }
                                 <Typography textAlign={"center"} p={2} pt={4} sx={{width:"100%"}} color="error">Hãy tải lên ảnh có tỉ lệ 1:1 và size tối đa 200KB để có thể hiển thị tốt nhất</Typography>
                                 
                             </Box>
