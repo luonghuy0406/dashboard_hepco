@@ -10,19 +10,21 @@ import ThemeProvider from './theme';
 // components
 import { StyledChart } from './components/chart';
 import ScrollToTop from './components/scroll-to-top';
+import EditorComponent from './sections/@dashboard/blog/EditorComponent';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
   return (
-    <HelmetProvider>
-      <BrowserRouter>
-        <ThemeProvider>
-          <ScrollToTop />
-          <StyledChart />
-          <Router/>
-        </ThemeProvider>
-      </BrowserRouter>
-    </HelmetProvider>
+    <EditorComponent/>
+    // <HelmetProvider>
+    //   <BrowserRouter>
+    //     <ThemeProvider>
+    //       <ScrollToTop />
+    //       <StyledChart />
+    //       <Router/>
+    //     </ThemeProvider>
+    //   </BrowserRouter>
+    // </HelmetProvider>
   );
 }
