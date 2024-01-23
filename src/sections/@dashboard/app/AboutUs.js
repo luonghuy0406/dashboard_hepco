@@ -43,22 +43,22 @@ export default function AboutUs() {
     useEffect(()=>{
         if(Object.keys(aboutUs).length > 0){
             setImage({
-                image1 : `http://localhost:3001/read_image/${aboutUs.image1}`,
-                image2 : `http://localhost:3001/read_image/${aboutUs.image2}`,
-                image3 : `http://localhost:3001/read_image/${aboutUs.image3}`
+                image1 : `${process.env.REACT_APP_HOST}/read_image/${aboutUs.image1}`,
+                image2 : `${process.env.REACT_APP_HOST}/read_image/${aboutUs.image2}`,
+                image3 : `${process.env.REACT_APP_HOST}/read_image/${aboutUs.image3}`
             })
             setContentEn(aboutUs.content_en)
             setContent(aboutUs.content)
             let imageTemp ={...imageFile}
-            toDataURL(`http://localhost:3001/read_image/${aboutUs.image1}`)
+            toDataURL(`${process.env.REACT_APP_HOST}/read_image/${aboutUs.image1}`)
             .then(dataUrl => {
                 var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                 imageTemp = {...imageTemp,image1:fileData}
-                toDataURL(`http://localhost:3001/read_image/${aboutUs.image2}`)
+                toDataURL(`${process.env.REACT_APP_HOST}/read_image/${aboutUs.image2}`)
                 .then(dataUrl => {
                     var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                     imageTemp = {...imageTemp,image2:fileData}
-                    toDataURL(`http://localhost:3001/read_image/${aboutUs.image3}`)
+                    toDataURL(`${process.env.REACT_APP_HOST}/read_image/${aboutUs.image3}`)
                     .then(dataUrl => {
                         var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                         imageTemp = {...imageTemp,image3:fileData}

@@ -67,7 +67,7 @@ export default function Banners() {
 }
 
 const BannerItem = ({banner,index, update,setUpdate}) =>{
-    const [image, setImage] = useState(`http://localhost:3001/read_image/${banner.image}`)
+    const [image, setImage] = useState(`${process.env.REACT_APP_HOST}/read_image/${banner.image}`)
     const [imageFile, setImageFile] = useState()
     const [content1, setContent1] = useState(banner.content_1)
     const [content2, setContent2] = useState(banner.content_2)
@@ -75,7 +75,7 @@ const BannerItem = ({banner,index, update,setUpdate}) =>{
     const [content2EN, setContent2EN] = useState(banner.content_2_en)
     useEffect(()=>{
         if(banner.image){
-            toDataURL(`http://localhost:3001/read_image/${banner.image}`)
+            toDataURL(`${process.env.REACT_APP_HOST}/read_image/${banner.image}`)
             .then(dataUrl => {
                 var fileData = dataURLtoFile(dataUrl, `${Date.now()}.jpg`);
                 setImageFile(fileData)

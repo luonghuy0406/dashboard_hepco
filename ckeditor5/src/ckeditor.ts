@@ -113,7 +113,7 @@ class Editor extends ClassicEditor {
 			]
 		},
 		simpleUpload: {
-            uploadUrl: 'http://localhost:3001/post/upimg',
+            uploadUrl: 'http://api.hepco.com.vn/post/upimg',
         }
 	};
 }

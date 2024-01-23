@@ -5,8 +5,8 @@ import { redirect } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const api = axios.create({
-    // baseURL: process.env.REACT_APP_HOST,
-    baseURL: 'http://localhost:3001'
+    baseURL: process.env.REACT_APP_HOST,
+    // baseURL: 'http://localhost:3001'
 });
 
 export const setAuthToken = (token) => {
@@ -28,7 +28,7 @@ export const refreshToken = async () => {
         }
         const config = {
           method: 'get',
-          url: `http://localhost:3001/refresh`,
+          url: `${process.env.REACT_APP_HOST}/refresh`,
           headers: { 
             'Authorization': refresh_token
           }

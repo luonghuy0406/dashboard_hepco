@@ -5,10 +5,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 
 export default function EditorComponent({des,setDes}) {
     const [value, setValue] = useState('')
-    console.log(">>>",value)
-    // useEffect(()=>{
-    //     setValue(des)
-    // },[des])
+    useEffect(()=>{
+        setValue(des)
+    },[des])
     return (
         <div>
             
@@ -21,7 +20,7 @@ export default function EditorComponent({des,setDes}) {
                 } }
                 onBlur={ ( event, editor ) => {
                     const data = editor.getData();
-                    // setDes(data)
+                    setDes(data)
                 } }
             />
         </div>
