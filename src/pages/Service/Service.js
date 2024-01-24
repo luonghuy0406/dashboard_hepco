@@ -57,8 +57,8 @@ const ServiceItem = ({id}) =>{
                 setData(data)
                 setContent(data.content)
                 setContentEN(data.content_en)
-                setImage(`${process.env.REACT_APP_HOST}/read_image/${data.image}`)
-                toDataURL(`${process.env.REACT_APP_HOST}/read_image/${data.image}`)
+                setImage(`${process.env.REACT_APP_HOST}/read_image/${data.image?.replace(/%2f|%2F/g,'%252F')}`)
+                toDataURL(`${process.env.REACT_APP_HOST}/read_image/${data.image?.replace(/%2f|%2F/g,'%252F')}`)
                 .then(dataUrl => {
                     var fileData = dataURLtoFile(dataUrl, `${Date.now()}.jpg`);
                     setImageFile(fileData)
@@ -200,7 +200,7 @@ const ItemDetail = ({item,update, setUpdate, id})=>{
                 <CardMedia
                     component="img"
                     sx={{ width: '300px', height:'300px', border:"1px solid #eee",margin:"30px"}}
-                    image={`${process.env.REACT_APP_HOST}/read_image/${item?.image}`}
+                    image={`${process.env.REACT_APP_HOST}/read_image/${item?.image?.replace(/%2f|%2F/g,'%252F')}`}
                     alt={item?.name}
                 />
                 <Box sx={{position:'absolute'}}>

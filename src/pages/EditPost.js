@@ -39,8 +39,8 @@ export default function EditPost() {
                     setContentEN(post.content_en || '')
                     setCategory(categories[String(post.type_id)] || '')
                     setKeyPost(post.key_post || 0)
-                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
-                    toDataURL(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
+                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image?.replace(/%2f|%2F/g,'%252F')}`)
+                    toDataURL(`${process.env.REACT_APP_HOST}/read_image/${post.image?.replace(/%2f|%2F/g,'%252F')}`)
                     .then(dataUrl => {
                         var fileData = dataURLtoFile(dataUrl, "imageName.jpg");
                         setImageFile(fileData)

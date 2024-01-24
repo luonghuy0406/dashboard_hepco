@@ -32,8 +32,7 @@ export default function EditShareholder() {
                     setContent(post.content || '')
                     setContentEN(post.content_en || '')
                     setCategory(categories[String(post.type_id)] || {name: 'Thông báo', value:'5'})
-                    // setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
-                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image}`)
+                    setImage(`${process.env.REACT_APP_HOST}/read_image/${post.image?.replace(/%2f|%2F/g,'%252F')}`)
                 } catch (error) {
                     
                 }

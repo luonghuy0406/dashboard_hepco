@@ -100,7 +100,7 @@ export default function Customer() {
                                     <CardMedia
                                         component="img"
                                         sx={{ width: 350,textAlign: "center" }}
-                                        image={`${process.env.REACT_APP_HOST}/read_image/${row.logo}`}
+                                        image={`${process.env.REACT_APP_HOST}/read_image/${row.logo?.replace(/%2f|%2F/g,'%252F')}`}
                                         alt={row.name}
                                     />
                                 </Box>

@@ -35,7 +35,7 @@ export default function BlogPostCard({ id,type,post }) {
                                 md: '300px',
                                 lg: '250px'
                             },
-                            backgroundImage: `linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 100%), url("${process.env.REACT_APP_HOST}/read_image/${image}")`,
+                            backgroundImage: `linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 100%), url("${process.env.REACT_APP_HOST}/read_image/${image?.replace(/%2f|%2F/g,'%252F')}")`,
                             backgroundSize: 'cover',
                             backgroundRepeat: 'no-repeat',
                             backgroundPosition: 'center',

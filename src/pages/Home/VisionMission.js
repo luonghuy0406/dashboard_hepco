@@ -110,7 +110,7 @@ const VisMis = () =>{
                                 <CardMedia
                                     component="img"
                                     sx={{ width: '200px', height:'400px'}}
-                                    image={typeof dt.image =='string' ? `${process.env.REACT_APP_HOST}/read_image/${dt.image}` : img}
+                                    image={typeof dt.image =='string' ? `${process.env.REACT_APP_HOST}/read_image/${dt.image?.replace(/%2f|%2F/g,'%252F')}` : img}
                                     alt={dt.name}
                                 />
                                 <Box sx={{position:'absolute'}}>
