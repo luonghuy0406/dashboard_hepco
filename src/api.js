@@ -6,6 +6,9 @@ import Swal from 'sweetalert2';
 
 const api = axios.create({
     baseURL: process.env.REACT_APP_HOST,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
     // baseURL: 'http://localhost:3001'
 });
 
