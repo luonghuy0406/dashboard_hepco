@@ -5,11 +5,10 @@ import { redirect } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_HOST,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    // baseURL: 'http://localhost:3001'
+    baseURL: process.env.REACT_APP_HOST
+});
+const api_get = axios.create({
+  baseURL: process.env.REACT_APP_HOST
 });
 
 export const setAuthToken = (token) => {
@@ -56,6 +55,7 @@ export const refreshToken = async () => {
 
 export const login = async (id_user, pw) => {
   try {
+    api.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
     const response = await api.post('/user/login', { id_user, pw });
     if(response.data.token){
       const { token, refresh_token } = {token: response.data.token, refresh_token: response.data.refresh_token};
@@ -91,6 +91,8 @@ export const checkPass = async (pw) => {
   try {
     const id = localStorage.getItem('user')
     const data = { id_user: id, pw : pw }
+    api.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+    
     const response = await api.post('/user/login', data)
     return response.data.status
   } catch (error) {
@@ -110,9 +112,13 @@ export const updateUser = async (pw) => {
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
+      api.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+    
       const response = await api.put('/user/update',data);
       return response.data;
     }else{
+      api.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+    
       const response = await api.put('/user/update',data);
       return response.data;
     }
@@ -131,7 +137,7 @@ export const updateUser = async (pw) => {
 //banner----------
 export const getBanner = async () => {
   try {
-    const response = await api.get(`/banner/list`);
+    const response = await api_get.get(`/banner/list`);
     return response.data;
   } catch (error) {
     throw error;
@@ -246,7 +252,7 @@ export const addNewAchieve= async (name,name_en, content, content_en, image,type
 };
 export const getAchieve = async () => {
   try {
-    const response = await api.get(`/achieve/list`);
+    const response = await api_get.get(`/achieve/list`);
     return response.data;
   } catch (error) {
     throw error;
@@ -255,7 +261,7 @@ export const getAchieve = async () => {
 
 export const getCertificate = async () => {
   try {
-    const response = await api.get(`/certificate/list`);
+    const response = await api_get.get(`/certificate/list`);
     return response.data;
   } catch (error) {
     throw error;
@@ -319,7 +325,7 @@ export const deleteAchieve = async (id)=>{
 //------company info-----
 export const getCompanyInfo = async () => {
   try {
-    const response = await api.get(`/company_data/list`);
+    const response = await api_get.get(`/company_data/list`);
     return response.data;
   } catch (error) {
     throw error;
@@ -332,6 +338,8 @@ export const updateWebinf = async (info) => {
     Object.entries(info).forEach((dt)=>{
       data.append(dt[0], dt[1])
     })
+    api.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+    
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
@@ -353,7 +361,7 @@ export const updateWebinf = async (info) => {
 //------partner---------
 export const getCustomer = async () => {
   try {
-    const response = await api.get(`/customer/list`);
+    const response = await api_get.get(`/customer/list`);
     return response.data;
   } catch (error) {
     throw error;
@@ -448,7 +456,7 @@ export const deleteCustomer = async (id)=>{
 //-----post--------
 export const getPosts = async (type,itemsPerPage=12,type_id=0, keyword='',page=1) => {
   try {
-    const response = await api.get(`/${type}/list?c=${itemsPerPage}&type_id=${type_id}&title=${keyword}&p=${page-1}`);
+    const response = await api_get.get(`/${type}/list?c=${itemsPerPage}&type_id=${type_id}&title=${keyword}&p=${page-1}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -457,7 +465,7 @@ export const getPosts = async (type,itemsPerPage=12,type_id=0, keyword='',page=1
 
 export const getPostsHighlight = async () => {
   try {
-    const response = await api.get(`/post/highlight`);
+    const response = await api_get.get(`/post/highlight`);
     return response.data;
   } catch (error) {
     throw error;
@@ -467,7 +475,7 @@ export const getPostsHighlight = async () => {
 
 export const getPostById = async (type,id) => {
   try {
-    const response = await api.get(`${type}/detail/${id}`);
+    const response = await api_get.get(`${type}/detail/${id}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -493,6 +501,7 @@ export const addNewPost = async (type,type_id, name,name_en, content, content_en
     }
     data.append('author', author);
     data.append('id_user', id_user);
+    api.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
@@ -577,10 +586,10 @@ export const getDetailService = async (id) =>{
     if(checkTokenExpiration()){
       const new_token = await refreshToken()
       api.defaults.headers.common['Authorization'] = `${new_token}`;
-      const response = await api.get(`/service/detail/${id}`);
+      const response = await api_get.get(`/service/detail/${id}`);
       return response.data;
     }else{
-      const response = await api.get(`/service/detail/${id}`);
+      const response = await api_get.get(`/service/detail/${id}`);
       return response.data;
     }
   } catch (error) {
@@ -631,7 +640,7 @@ export const updateService = async (id_service,name,name_en,content,content_en, 
 //------qna-------------
 export const getQuestion = async (itemsPerPage=12,page=1) => {
   try {
-    const response = await api.get(`/qna/list?c=${itemsPerPage}&p=${page-1}`);
+    const response = await api_get.get(`/qna/list?c=${itemsPerPage}&p=${page-1}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -716,7 +725,7 @@ export const addQuestion = async (question,question_en,answer,answer_en) => {
 
 export const getListImages = async (itemsPerPage=20,page=1,id_album) => {
   try {
-    const response = await api.get(`/library/list?c=${itemsPerPage}&p=${page-1}&id_album=${id_album}`);
+    const response = await api_get.get(`/library/list?c=${itemsPerPage}&p=${page-1}&id_album=${id_album}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -789,7 +798,7 @@ export const addListImages = async (images=[],id_album="1", des=" ", des_en=" ")
 
 export const getListAlbums = async (itemsPerPage=20,page=1) => {
   try {
-    const response = await api.get(`album/list?p=${page-1}&c=${itemsPerPage}&name=`);
+    const response = await api_get.get(`album/list?p=${page-1}&c=${itemsPerPage}&name=`);
     return response.data;
   } catch (error) {
     throw error;
@@ -867,7 +876,7 @@ export const addAlbum = async (name,name_en ,des, des_en) => {
 //-------------vision-mission---------
 export const getSharedtable = async (id) => {
   try {
-    const response = await api.get(`/sharedtable/detail/${id}`);
+    const response = await api_get.get(`/sharedtable/detail/${id}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -876,7 +885,7 @@ export const getSharedtable = async (id) => {
 
 export const getListSharedtable = async (id) => {
   try {
-    const response = await api.get(`/sharedtable/father/${id}`);
+    const response = await api_get.get(`/sharedtable/father/${id}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -922,7 +931,7 @@ export const updateSharedtable = async (value) => {
 
 export const getVideoLink = async () => {
   try {
-    const response = await api.get(`/company_data/detail/15`);
+    const response = await api_get.get(`/company_data/detail/15`);
     return response.data;
   } catch (error) {
     throw error;
@@ -940,7 +949,7 @@ export const deleteImageSharetable = async (id) => {
 
 export const getListHistory = async (id) => {
   try {
-    const response = await api.get(`/history/list`);
+    const response = await api_get.get(`/history/list`);
     return response.data;
   } catch (error) {
     throw error;
